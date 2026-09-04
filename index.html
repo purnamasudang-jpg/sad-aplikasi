@@ -3,115 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAD - Sistem Arsip Digital</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Login - Sistem Arsip Digital</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #1e3a8a; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #374151; }
+        input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #2563eb; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #1d4ed8; }
+        .switch-text { text-align: center; margin-top: 15px; font-size: 14px; }
+        .switch-text a { color: #2563eb; text-decoration: none; cursor: pointer; }
+        .switch-text a:hover { text-decoration: underline; }
+        .hidden { display: none; }
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 14px; text-align: center; }
+        .alert-error { background-color: #fee2e2; color: #991b1b; }
+        .alert-success { background-color: #d1fae5; color: #065f46; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>SAD (Sistem Arsip Digital)</h1>
-        <p class="subtitle">Manajemen Arsip Digital Berbasis Folder</p>
 
-        <!-- HALAMAN LOGIN / DAFTAR -->
-        <div id="viewAuth" style="max-width: 400px; margin: 40px auto; background: #edf2f7; padding: 25px; border-radius: 8px; border: 1px solid #cbd5e0;">
-            <h2 id="authTitle" style="text-align: center; margin-bottom: 20px; color: #2b6cb0;">Login Akun SAD</h2>
-            <form id="authForm" style="padding:0; background:transparent; border:none;">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Username / Email</label>
-                    <input type="text" id="auth_username" placeholder="Masukkan username" required style="width:100%;">
+    <div class="card">
+        <!-- FORM LOGIN -->
+        <div id="login-box">
+            <h2>Login Akun SAD</h2>
+            <div id="login-alert"></div>
+            <form id="form-login">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-user" required placeholder="Masukkan username">
                 </div>
-                <div class="form-group" style="margin-bottom: 20px;">
+                <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="auth_password" placeholder="Masukkan password" required style="width:100%;">
+                    <input type="password" id="login-pass" required placeholder="Masukkan password">
                 </div>
-                <button type="submit" id="btnAuthSubmit" style="width:100%; background: #2b6cb0; color: white; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer;">Masuk</button>
+                <button type="submit">Masuk</button>
             </form>
-            <p style="text-align: center; margin-top: 15px; font-size: 13px;">
-                <span id="authToggleText">Belum punya akun?</span> 
-                <a href="#" id="authToggleLink" style="color: #2b6cb0; font-weight: bold;">Daftar Akun Baru</a>
-            </p>
+            <div class="switch-text">
+                Belum punya akun? <a onclick="tukarForm('register')">Daftar Akun Baru</a>
+            </div>
         </div>
 
-        <!-- HALAMAN UTAMA APLIKASI -->
-        <div id="viewMain" style="display: none;">
-            
-            <!-- BAR INFORMASI USER (BERSIH TANPA TEKS KUOTA) -->
-            <div style="background: #2b6cb0; color: white; padding: 12px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <div>Selamat datang, <strong id="lblUsername">-</strong>!</div>
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <!-- Elemen kuota disembunyikan dari layar tapi sistem tetap baca data -->
-                    <span id="lblKuota" style="display: none;">0</span>
-                    <button id="btnLogout" style="background: #e53e3e; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">Keluar</button>
+        <!-- FORM PENDAFTARAN -->
+        <div id="register-box" class="hidden">
+            <h2>Daftar Akun Baru</h2>
+            <div id="reg-alert"></div>
+            <form id="form-register">
+                <div class="form-group">
+                    <label>Username Baru</label>
+                    <input type="text" id="reg-user" required placeholder="Buat username">
                 </div>
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" id="reg-pass" required placeholder="Buat password">
+                </div>
+                <button type="submit">Buat Akun</button>
+            </form>
+            <div class="switch-text">
+                Sudah punya akun? <a onclick="tukarForm('login')">Kembali ke Login</a>
             </div>
-
-            <!-- VIEW DAFTAR FOLDER -->
-            <div id="viewFolders">
-                <div style="background: #edf2f7; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-                    <h3>📁 Buat Folder Baru</h3>
-                    <form id="folderForm" style="display: flex; gap: 10px; margin-top: 10px; padding: 0; background: transparent; border: none;">
-                        <input type="text" id="nama_folder_input" placeholder="Nama folder (contoh: Arsip Ijazah 2026)" required style="flex: 1;">
-                        <button type="submit" style="background: #2b6cb0; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">+ Buat Folder</button>
-                    </form>
-                </div>
-
-                <h2>Daftar Folder</h2>
-                <div id="folderGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px;"></div>
-            </div>
-
-            <!-- VIEW ISI FOLDER -->
-            <div id="viewInsideFolder" style="display: none;">
-                <button id="btnBack" style="background: #718096; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 15px; font-weight: bold;">⬅️ Kembali ke Daftar Folder</button>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 id="currentFolderName" style="color: #2b6cb0;">📁 Nama Folder</h2>
-                    <button id="btnToggleUpload" style="background: #38a169; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">📤 Upload Dokumen Baru</button>
-                </div>
-
-                <!-- FORM UPLOAD -->
-                <div id="uploadBox" style="display: none; background: #f7fafc; padding: 20px; border-radius: 8px; border: 1px solid #cbd5e0; margin-bottom: 25px;">
-                    <h3 style="margin-bottom: 15px;">Simpan Dokumen ke Folder Ini</h3>
-                    <form id="arsipForm" enctype="multipart/form-data" style="padding: 0; background: transparent; border: none;">
-                        <input type="hidden" id="folder_id_hidden">
-                        <div class="form-group"><label>Judul Dokumen *</label><input type="text" id="judul_arsip" required></div>
-                        <div class="form-group"><label>Nomor Surat / Berkas</label><input type="text" id="nomor_surat"></div>
-                        <div class="form-group"><label>Instansi Asal / Pengirim</label><input type="text" id="instansi_asal"></div>
-                        <div class="form-group"><label>Tanggal Dokumen *</label><input type="date" id="tanggal_dokumen" required></div>
-                        <div class="form-group"><label>Lokasi Fisik (Rak/Laci)</label><input type="text" id="lokasi_fisik"></div>
-                        <div class="form-group full-width"><label>Keterangan Tambahan</label><input type="text" id="keterangan"></div>
-                        <div class="form-group full-width"><label class="file-label">Pilih Berkas File</label><input type="file" id="berkas"></div>
-                        <button type="submit" class="btn-submit">Simpan Dokumen</button>
-                    </form>
-                </div>
-
-                <div class="search-box">
-                    <h3>Isi Berkas Dokumen</h3>
-                    <input type="text" id="searchInput" placeholder="🔍 Cari di folder ini...">
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Judul Dokumen & No. Surat</th>
-                            <th>Pengirim</th>
-                            <th>Lokasi Fisik</th>
-                            <th>Berkas</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTable"></tbody>
-                </table>
-            </div>
-
         </div>
-
-        <!-- FOOTER HAK CIPTA -->
-        <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #718096; font-size: 13px;">
-            <p>© 2026 SAD (Sistem Arsip Digital) • Created & Developed by <strong>Asep Sudang Purnawan</strong>. All Rights Reserved.</p>
-        </footer>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        function tukarForm(target) {
+            if(target === 'register') {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('register-box').classList.remove('hidden');
+            } else {
+                document.getElementById('register-box').classList.add('hidden');
+                document.getElementById('login-box').classList.remove('hidden');
+            }
+        }
+
+        // Proses Login
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-user').value;
+            const password = document.getElementById('login-pass').value;
+            const alertBox = document.getElementById('login-alert');
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alertBox.innerHTML = `<div class="alert alert-error">${data.message}</div>`;
+                }
+            } catch (err) {
+                alertBox.innerHTML = `<div class="alert alert-error">Terjadi kesalahan koneksi ke server.</div>`;
+            }
+        });
+
+        // Proses Pendaftaran
+        document.getElementById('form-register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('reg-user').value;
+            const password = document.getElementById('reg-pass').value;
+            const alertBox = document.getElementById('reg-alert');
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    alertBox.innerHTML = `<div class="alert alert-success">Akun berhasil dibuat! Silakan login.</div>`;
+                    setTimeout(() => tukarForm('login'), 1500);
+                } else {
+                    alertBox.innerHTML = `<div class="alert alert-error">${data.message}</div>`;
+                }
+            } catch (err) {
+                alertBox.innerHTML = `<div class="alert alert-error">Terjadi kesalahan koneksi ke server.</div>`;
+            }
+        });
+    </script>
 </body>
 </html>
