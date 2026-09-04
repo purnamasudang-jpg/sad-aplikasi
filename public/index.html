@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Arsip Digital (SAD)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- CONTAINER AUTH (LOGIN & REGISTER) -->
+    <div id="auth-container" class="auth-box">
+        <div class="auth-header">
+            <i class="fas fa-folder-open logo-icon"></i>
+            <h2>Sistem Arsip Digital</h2>
+            <p>Kelola dokumen dan arsip Anda secara terorganisir.</p>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form id="login-form">
+            <h3>Login Pengguna</h3>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="login-username" required placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="login-password" required placeholder="Masukkan password">
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+            <p class="switch-auth">Belum punya akun? <a href="#" id="show-register">Daftar sekarang</a></p>
+        </form>
+
+        <!-- FORM REGISTER -->
+        <form id="register-form" class="hidden">
+            <h3>Pendaftaran Akun Baru</h3>
+            <div class="form-group">
+                <label><i class="fas fa-user-plus"></i> Username Baru</label>
+                <input type="text" id="reg-username" required placeholder="Buat username">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-key"></i> Password</label>
+                <input type="password" id="reg-password" required placeholder="Buat password">
+            </div>
+            <button type="submit" class="btn btn-success"><i class="fas fa-user-check"></i> Buat Akun</button>
+            <p class="switch-auth">Sudah punya akun? <a href="#" id="show-login">Kembali ke Login</a></p>
+        </form>
+    </div>
+
+    <!-- CONTAINER DASHBOARD UTAMA -->
+    <div id="main-container" class="dashboard hidden">
+        <header class="navbar">
+            <div class="brand">
+                <i class="fas fa-archive"></i>
+                <span>SAD (Sistem Arsip Digital)</span>
+            </div>
+            <div class="user-menu">
+                <span id="welcome-user"><i class="fas fa-user-circle"></i> User</span>
+                <button id="logout-btn" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <!-- SECTION FOLDER -->
+            <section class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-folder"></i> Kelola Folder Arsip</h3>
+                </div>
+                <div class="card-body">
+                    <form id="add-folder-form" class="inline-form">
+                        <input type="text" id="folder-name" placeholder="Nama Folder Baru (misal: Surat Masuk 2026)" required>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-folder-plus"></i> Buat Folder</button>
+                    </form>
+                    <div id="folder-list" class="folder-grid">
+                        <!-- List folder dimasukkan secara dinamis via app.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION ARSIP DOKUMEN -->
+            <section class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-alt"></i> Upload & Simpan Dokumen Arsip</h3>
+                </div>
+                <div class="card-body">
+                    <form id="add-arsip-form" enctype="multipart/form-data">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Pilih Folder</label>
+                                <select id="arsip-folder-select" required>
+                                    <option value="">-- Pilih Folder --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Judul Arsip / Dokumen</label>
+                                <input type="text" id="judul-arsip" placeholder="Judul arsip" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nomor Surat / Dokumen</label>
+                                <input type="text" id="nomor-surat" placeholder="Nomor surat (opsional)">
+                            </div>
+                            <div class="form-group">
+                                <label>Instansi Asal / Tujuan</label>
+                                <input type="text" id="instansi-asal" placeholder="Instansi terkait (opsional)">
+                            </div>
+                            <div class="form-group">
+                                <label>Tanggal Dokumen</label>
+                                <input type="date" id="tanggal-dokumen" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Lokasi Fisik Dokumen</label>
+                                <input type="text" id="lokasi-fisik" placeholder="misal: Lemari A, Boks No. 3 (opsional)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Keterangan Tambahan</label>
+                            <textarea id="keterangan-arsip" placeholder="Catatan/keterangan singkat (opsional)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Unggah Berkas (PDF/Gambar/Doc)</label>
+                            <input type="file" id="berkas-file" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-upload"></i> Simpan Arsip Dokumen</button>
+                    </form>
+
+                    <hr class="divider">
+
+                    <h4>Daftar Dokumen Tersimpan</h4>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Judul Dokumen</th>
+                                    <th>No. Surat</th>
+                                    <th>Instansi</th>
+                                    <th>Tanggal</th>
+                                    <th>Lokasi Fisik</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="arsip-table-body">
+                                <!-- Data arsip dimasukkan secara dinamis via app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
