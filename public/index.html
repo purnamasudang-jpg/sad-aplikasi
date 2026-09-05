@@ -90,7 +90,6 @@
 
         <!-- DASHBOARD SECTION (Hidden by default until logged in) -->
         <div id="dashboard-section" class="hidden space-y-8">
-            <!-- Konten Folder & Arsip Anda yang sudah ada -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
                     <i class="fa-solid fa-folder-open text-indigo-600 mr-2"></i> Kelola Folder Arsip
@@ -107,7 +106,7 @@
 
             <!-- List Folder & Arsip container -->
             <div id="folder-list-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Dinamis dari JavaScript Anda -->
+                <!-- Dinamis dari JavaScript -->
             </div>
         </div>
 
@@ -118,7 +117,7 @@
         &copy; 2026 Sistem Arsip Digital. All rights reserved.
     </footer>
 
-    <!-- JavaScript Penghubung -->
+    <!-- JavaScript Logika Aplikasi -->
     <script>
         function switchTab(tab) {
             const loginForm = document.getElementById('login-form');
@@ -139,7 +138,158 @@
             }
         }
 
-        // Fungsi interaksi login/register/dashboard disesuaikan dengan script Anda sebelumnya
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    checkAuth();
+                } else {
+                    alert(data.error || "Gagal masuk");
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi.");
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Registrasi berhasil! Silakan masuk.");
+                    switchTab('login');
+                } else {
+                    alert(data.error || "Gagal mendaftar");
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi.");
+            }
+        }
+
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const authSection = document.getElementById('auth-section');
+            const dashboardSection = document.getElementById('dashboard-section');
+            const userNav = document.getElementById('user-nav');
+            const usernameDisplay = document.getElementById('username-display');
+
+            if (user) {
+                authSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                userNav.classList.remove('hidden');
+                usernameDisplay.innerText = user.username;
+                loadFolders();
+            } else {
+                authSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+                userNav.classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            checkAuth();
+        }
+
+        async function loadFolders() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+
+            try {
+                const res = await fetch('/api/folders', {
+                    headers: { 'user-id': user.id }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const container = document.getElementById('folder-list-container');
+                    container.innerHTML = '';
+                    if (data.data.length === 0) {
+                        container.innerHTML = '<p class="text-sm text-slate-400 col-span-3 text-center py-8">Belum ada folder arsip. Buat folder baru di atas.</p>';
+                        return;
+                    }
+                    data.data.forEach(folder => {
+                        container.innerHTML += `
+                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-slate-800"><i class="fa-solid fa-folder text-amber-500 mr-2"></i>${folder.nama_folder}</h3>
+                                    <p class="text-xs text-slate-400 mt-1">${folder.jumlah_arsip || 0} Dokumen tersimpan</p>
+                                </div>
+                                <button onclick="hapusFolder(${folder.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function buatFolder() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const nama_folder = document.getElementById('nama-folder').value;
+            if (!nama_folder) return alert("Nama folder tidak boleh kosong!");
+
+            try {
+                const res = await fetch('/api/folders', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'user-id': user.id
+                    },
+                    body: JSON.stringify({ nama_folder })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('nama-folder').value = '';
+                    loadFolders();
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Gagal membuat folder.");
+            }
+        }
+
+        async function hapusFolder(id) {
+            if (!confirm("Hapus folder beserta seluruh isinya?")) return;
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            try {
+                const res = await fetch(`/api/folders/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'user-id': user.id }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    loadFolders();
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Gagal menghapus folder.");
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        checkAuth();
     </script>
 </body>
 </html>
