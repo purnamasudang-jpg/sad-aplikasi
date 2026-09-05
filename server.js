@@ -158,12 +158,11 @@ app.delete('/api/folders/:id', async (req, res) => {
     }
 });
 
-// ==================== ARSIP / DOKUMEN ====================
+// ==================== ARsip / DOKUMEN ====================
 app.get('/api/folders/:id/arsip', async (req, res) => {
     const folderId = req.params.id;
     try {
         const database = await getDb();
-        // Cek apakah kolom tipe_file sudah ada, jika belum tangani aman
         const resQuery = database.exec(`SELECT * FROM arsip WHERE folder_id = ${folderId}`);
         let arsipList = [];
         if (resQuery.length > 0) {
@@ -186,11 +185,10 @@ app.post('/api/folders/:id/arsip', async (req, res) => {
     try {
         const database = await getDb();
         
-        // Pastikan kolom tipe_file ada di tabel arsip (migrasi otomatis jika belum ada)
         try {
             database.run(`ALTER TABLE arsip ADD COLUMN tipe_file TEXT;`);
         } catch (err) {
-            // Kolom mungkin sudah ada, abaikan error
+            // Kolom sudah ada
         }
 
         database.run(`INSERT INTO arsip (folder_id, nama_dokumen, file_url, tipe_file) VALUES (?, ?, ?, ?)`, [folderId, nama_dokumen, file_url, tipe_file || 'FILE']);
