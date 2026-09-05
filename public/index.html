@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Arsip Digital (SAD)</title>
-    <!-- Tailwind CSS untuk Desain Elegan & Modern -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,7 +12,7 @@
     <!-- Header / Navbar -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="kembaliKeHome()">
                 <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
                     <i class="fa-solid fa-box-archive text-xl"></i>
                 </div>
@@ -34,7 +33,7 @@
     <!-- Main Content Container -->
     <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
 
-        <!-- AUTH SECTION (Login & Register Tab) -->
+        <!-- AUTH SECTION -->
         <div id="auth-section" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden my-12">
             <div class="flex border-b border-slate-100 bg-slate-50/50">
                 <button id="tab-login-btn" onclick="switchTab('login')" class="flex-1 py-4 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 bg-white transition">Masuk Akun</button>
@@ -42,7 +41,6 @@
             </div>
 
             <div class="p-8">
-                <!-- Form Login -->
                 <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Username</label>
@@ -64,7 +62,6 @@
                     </button>
                 </form>
 
-                <!-- Form Register -->
                 <form id="register-form" onsubmit="handleRegister(event)" class="space-y-5 hidden">
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Buat Username</label>
@@ -88,13 +85,12 @@
             </div>
         </div>
 
-        <!-- DASHBOARD SECTION (Hidden by default until logged in) -->
+        <!-- DASHBOARD SECTION (Halaman Utama Folder) -->
         <div id="dashboard-section" class="hidden space-y-8">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
                     <i class="fa-solid fa-folder-open text-indigo-600 mr-2"></i> Kelola Folder Arsip
                 </h2>
-                <!-- Form Buat Folder -->
                 <div class="flex gap-3">
                     <input type="text" id="nama-folder" placeholder="Nama Folder (Contoh: Surat Masuk 2026)" class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <button onclick="buatFolder()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
@@ -104,9 +100,44 @@
                 </div>
             </div>
 
-            <!-- List Folder & Arsip container -->
             <div id="folder-list-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Dinamis dari JavaScript -->
+                <!-- List folder dinamis -->
+            </div>
+        </div>
+
+        <!-- DETAIL FOLDER SECTION (Halaman Isi Arsip dalam Folder) -->
+        <div id="folder-detail-section" class="hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center space-x-3">
+                    <button onclick="kembaliKeHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <h2 id="current-folder-title" class="text-xl font-bold text-slate-800">Nama Folder</h2>
+                        <p class="text-xs text-slate-400">Daftar dokumen di dalam folder ini</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Tambah Dokumen -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-up text-indigo-600 mr-2"></i> Tambah Dokumen Baru</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input type="text" id="nama-dokumen" placeholder="Nama Dokumen (Contoh: SK Pembagian Tugas)" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="url" id="file-url" placeholder="Link File (Google Drive / PDF URL)" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button onclick="tambahArsip()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>Simpan Dokumen</span>
+                </button>
+            </div>
+
+            <!-- List Arsip / Dokumen -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 font-semibold text-sm text-slate-700">Daftar Dokumen</div>
+                <div id="arsip-list-container" class="divide-y divide-slate-100">
+                    <!-- List arsip dinamis -->
+                </div>
             </div>
         </div>
 
@@ -117,8 +148,11 @@
         &copy; 2026 Sistem Arsip Digital. All rights reserved.
     </footer>
 
-    <!-- JavaScript Logika Aplikasi -->
+    <!-- Script Logika -->
     <script>
+        let activeFolderId = null;
+        let activeFolderName = '';
+
         function switchTab(tab) {
             const loginForm = document.getElementById('login-form');
             const regForm = document.getElementById('register-form');
@@ -188,24 +222,40 @@
             const user = JSON.parse(localStorage.getItem('user'));
             const authSection = document.getElementById('auth-section');
             const dashboardSection = document.getElementById('dashboard-section');
+            const detailSection = document.getElementById('folder-detail-section');
             const userNav = document.getElementById('user-nav');
             const usernameDisplay = document.getElementById('username-display');
 
             if (user) {
                 authSection.classList.add('hidden');
-                dashboardSection.classList.remove('hidden');
                 userNav.classList.remove('hidden');
                 usernameDisplay.innerText = user.username;
-                loadFolders();
+                
+                if (activeFolderId) {
+                    dashboardSection.classList.add('hidden');
+                    detailSection.classList.remove('hidden');
+                    loadArsip(activeFolderId);
+                } else {
+                    dashboardSection.classList.remove('hidden');
+                    detailSection.classList.add('hidden');
+                    loadFolders();
+                }
             } else {
                 authSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
+                detailSection.classList.add('hidden');
                 userNav.classList.add('hidden');
             }
         }
 
         function logout() {
             localStorage.removeItem('user');
+            activeFolderId = null;
+            checkAuth();
+        }
+
+        function kembaliKeHome() {
+            activeFolderId = null;
             checkAuth();
         }
 
@@ -227,12 +277,12 @@
                     }
                     data.data.forEach(folder => {
                         container.innerHTML += `
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex justify-between items-center">
-                                <div>
-                                    <h3 class="font-bold text-slate-800"><i class="fa-solid fa-folder text-amber-500 mr-2"></i>${folder.nama_folder}</h3>
+                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex justify-between items-center group">
+                                <div onclick="bukaFolder(${folder.id}, '${folder.nama_folder}')" class="cursor-pointer flex-grow">
+                                    <h3 class="font-bold text-slate-800 group-hover:text-indigo-600 transition"><i class="fa-solid fa-folder text-amber-500 mr-2"></i>${folder.nama_folder}</h3>
                                     <p class="text-xs text-slate-400 mt-1">${folder.jumlah_arsip || 0} Dokumen tersimpan</p>
                                 </div>
-                                <button onclick="hapusFolder(${folder.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="hapusFolder(event, ${folder.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         `;
                     });
@@ -268,7 +318,8 @@
             }
         }
 
-        async function hapusFolder(id) {
+        async function hapusFolder(event, id) {
+            event.stopPropagation();
             if (!confirm("Hapus folder beserta seluruh isinya?")) return;
             const user = JSON.parse(localStorage.getItem('user'));
 
@@ -288,7 +339,87 @@
             }
         }
 
-        // Jalankan saat halaman dimuat
+        function bukaFolder(id, nama) {
+            activeFolderId = id;
+            activeFolderName = nama;
+            document.getElementById('current-folder-title').innerText = nama;
+            checkAuth();
+        }
+
+        async function loadArsip(folderId) {
+            try {
+                const res = await fetch(`/api/folders/${folderId}/arsip`);
+                const data = await res.json();
+                if (data.success) {
+                    const container = document.getElementById('arsip-list-container');
+                    container.innerHTML = '';
+                    if (data.data.length === 0) {
+                        container.innerHTML = '<p class="text-sm text-slate-400 text-center py-6">Belum ada dokumen di dalam folder ini.</p>';
+                        return;
+                    }
+                    data.data.forEach(arsip => {
+                        container.innerHTML += `
+                            <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition">
+                                <div class="flex items-center space-x-3">
+                                    <div class="bg-indigo-50 text-indigo-600 p-2 rounded-lg">
+                                        <i class="fa-solid fa-file-lines"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-slate-800">${arsip.nama_dokumen}</h4>
+                                        <a href="${arsip.file_url}" target="_blank" class="text-xs text-indigo-600 hover:underline flex items-center mt-0.5">
+                                            <i class="fa-solid fa-external-link-alt mr-1"></i> Buka Link Dokumen
+                                        </a>
+                                    </div>
+                                </div>
+                                <button onclick="hapusArsip(${arsip.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function tambahArsip() {
+            const nama_dokumen = document.getElementById('nama-dokumen').value;
+            const file_url = document.getElementById('file-url').value;
+            if (!nama_dokumen || !file_url) return alert("Nama dokumen dan link file wajib diisi!");
+
+            try {
+                const res = await fetch(`/api/folders/${activeFolderId}/arsip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nama_dokumen, file_url })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('nama-dokumen').value = '';
+                    document.getElementById('file-url').value = '';
+                    loadArsip(activeFolderId);
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Gagal menyimpan dokumen.");
+            }
+        }
+
+        async function hapusArsip(id) {
+            if (!confirm("Hapus dokumen ini dari arsip?")) return;
+            try {
+                const res = await fetch(`/api/arsip/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    loadArsip(activeFolderId);
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Gagal menghapus dokumen.");
+            }
+        }
+
         checkAuth();
     </script>
 </body>
