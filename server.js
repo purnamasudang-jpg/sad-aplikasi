@@ -19,9 +19,10 @@ const dbPath = path.join('/tmp', 'database.sqlite');
 async function getDb() {
     if (db) return db;
     
-    // Konfigurasi locateFile agar sql.js menemukan file wasm-nya di dalam node_modules
+    // Cari lokasi file wasm secara aman baik di serverless Vercel maupun local
+    const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist');
     const SQL = await initSqlJs({
-        locateFile: file => path.join(__dirname, 'node_modules', 'sql.js', 'dist', file)
+        locateFile: file => path.join(wasmPath, file)
     });
     
     if (fs.existsSync(dbPath)) {
