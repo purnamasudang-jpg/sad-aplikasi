@@ -18,7 +18,11 @@ const dbPath = path.join('/tmp', 'database.sqlite');
 
 async function getDb() {
     if (db) return db;
-    const SQL = await initSqlJs();
+    
+    // Konfigurasi locateFile agar sql.js menemukan file wasm-nya di dalam node_modules
+    const SQL = await initSqlJs({
+        locateFile: file => path.join(__dirname, 'node_modules', 'sql.js', 'dist', file)
+    });
     
     if (fs.existsSync(dbPath)) {
         const filebuffer = fs.readFileSync(dbPath);
