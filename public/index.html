@@ -143,6 +143,21 @@
 
     </main>
 
+    <!-- Modal Preview Dokumen -->
+    <div id="preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                <h3 id="preview-title" class="font-bold text-slate-800 text-sm">Preview Dokumen</h3>
+                <button onclick="tutupPreview()" class="text-slate-400 hover:text-slate-700 bg-white p-2 rounded-lg shadow-sm transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 flex-grow overflow-auto flex items-center justify-center bg-slate-50" id="preview-content-container">
+                <!-- Konten Preview Dinamis -->
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
         &copy; 2026 Sistem Arsip Digital. Hak cipta dilindungi oleh <span class="font-semibold text-slate-600">Asep Sudang Purnawan</span>.
@@ -365,6 +380,10 @@
                         else if (t.includes('WORD') || t.includes('DOC')) badgeColor = 'bg-blue-50 text-blue-600 border border-blue-200';
                         else if (t.includes('EXCEL') || t.includes('SHEET') || t.includes('XLS')) badgeColor = 'bg-green-50 text-green-700 border border-green-200';
 
+                        // Menyimpan data URL dengan aman menggunakan escape kutip
+                        const safeUrl = arsip.file_url.replace(/'/g, "\\'");
+                        const safeTitle = arsip.nama_dokumen.replace(/'/g, "\\'");
+
                         container.innerHTML += `
                             <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition">
                                 <div class="flex items-center space-x-3">
@@ -376,9 +395,15 @@
                                             <h4 class="font-semibold text-sm text-slate-800">${arsip.nama_dokumen}</h4>
                                             <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${badgeColor}">${arsip.tipe_file || 'FILE'}</span>
                                         </div>
-                                        <a href="${arsip.file_url}" download="${arsip.nama_dokumen}" class="text-xs text-indigo-600 hover:underline flex items-center mt-1 font-medium">
-                                            <i class="fa-solid fa-download mr-1"></i> Unduh / Lihat File
-                                        </a>
+                                        <div class="flex items-center space-x-3 mt-1 text-xs">
+                                            <button onclick="bukaPreview('${safeTitle}', '${safeUrl}', '${t}')" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center transition">
+                                                <i class="fa-solid fa-eye mr-1"></i> Lihat
+                                            </button>
+                                            <span class="text-slate-300">|</span>
+                                            <a href="${arsip.file_url}" download="${arsip.nama_dokumen}" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center transition">
+                                                <i class="fa-solid fa-download mr-1"></i> Unduh
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <button onclick="hapusArsip(${arsip.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
@@ -389,6 +414,39 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function bukaPreview(title, url, type) {
+            const modal = document.getElementById('preview-modal');
+            const titleEl = document.getElementById('preview-title');
+            const container = document.getElementById('preview-content-container');
+
+            titleEl.innerText = `Preview: ${title}`;
+            container.innerHTML = '';
+
+            if (type.includes('IMAGE') || type.includes('JPG') || type.includes('PNG')) {
+                container.innerHTML = `<img src="${url}" class="max-h-[70vh] rounded-xl shadow-md object-contain">`;
+            } else if (type.includes('PDF')) {
+                container.innerHTML = `<iframe src="${url}" class="w-full h-[70vh] rounded-xl border border-slate-200"></iframe>`;
+            } else {
+                container.innerHTML = `
+                    <div class="text-center py-12 space-y-3">
+                        <i class="fa-solid fa-file-circle-exclamation text-4xl text-amber-500"></i>
+                        <p class="text-sm text-slate-600 font-medium">Format file ini tidak mendukung preview langsung.</p>
+                        <a href="${url}" download="${title}" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-medium shadow-sm hover:bg-indigo-700 transition">
+                            <i class="fa-solid fa-download mr-1"></i> Unduh untuk Membuka File
+                        </a>
+                    </div>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function tutupPreview() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.add('hidden');
+            document.getElementById('preview-content-container').innerHTML = '';
         }
 
         async function uploadArsip() {
