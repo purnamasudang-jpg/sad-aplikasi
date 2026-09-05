@@ -145,7 +145,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
-        &copy; 2026 Sistem Arsip Digital. All rights reserved.
+        &copy; 2026 Sistem Arsip Digital. Hak cipta dilindungi oleh <span class="font-semibold text-slate-600">Asep Sudang Purnawan</span>.
     </footer>
 
     <!-- Script Logika -->
@@ -402,9 +402,8 @@
             const reader = new FileReader();
 
             reader.onload = async function(event) {
-                const file_url = event.target.result; // Data Base64 file
+                const file_url = event.target.result;
                 
-                // Tentukan jenis file berdasarkan ekstensi atau mime type
                 let tipe_file = "FILE";
                 const mime = file.type;
                 const name = file.name.toLowerCase();
