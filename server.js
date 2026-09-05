@@ -8,7 +8,6 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-// Rute Utama untuk melayani file index.html secara eksplisit
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -19,7 +18,6 @@ const dbPath = path.join('/tmp', 'database.sqlite');
 async function getDb() {
     if (db) return db;
     
-    // Cari lokasi file wasm secara aman baik di serverless Vercel maupun local
     const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist');
     const SQL = await initSqlJs({
         locateFile: file => path.join(wasmPath, file)
@@ -60,9 +58,7 @@ function saveDb() {
     fs.writeFileSync(dbPath, buffer);
 }
 
-// ==================== ENDPOINT AUTH ====================
-
-// Register
+// ==================== AUTH ====================
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -82,7 +78,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Login
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -94,24 +89,19 @@ app.post('/api/login', async (req, res) => {
             const columns = resQuery[0].columns;
             const values = resQuery[0].values[0];
             const user = {};
-            columns.forEach((col, index) => {
-                user[col] = values[index];
-            });
+            columns.forEach((col, index) => { user[col] = values[index]; });
 
             const isValid = await bcrypt.compare(password, user.password);
             if (!isValid) return res.json({ success: false, error: "Password salah!" });
             return res.json({ success: true, user: { id: user.id, username: user.username } });
         }
-        
         res.json({ success: false, error: "Akun tidak ditemukan!" });
     } catch (e) {
         res.json({ success: false, error: "Terjadi kesalahan server: " + e.message });
     }
 });
 
-// ==================== ENDPOINT FOLDER ====================
-
-// Ambil Daftar Folder
+// ==================== FOLDERS ====================
 app.get('/api/folders', async (req, res) => {
     const userId = req.headers['user-id'];
     try {
@@ -139,7 +129,6 @@ app.get('/api/folders', async (req, res) => {
     }
 });
 
-// Buat Folder Baru
 app.post('/api/folders', async (req, res) => {
     const userId = req.headers['user-id'];
     const { nama_folder } = req.body;
@@ -153,13 +142,58 @@ app.post('/api/folders', async (req, res) => {
     }
 });
 
-// Hapus Folder
 app.delete('/api/folders/:id', async (req, res) => {
     const folderId = req.params.id;
     try {
         const database = await getDb();
         database.run(`DELETE FROM arsip WHERE folder_id = ?`, [folderId]);
         database.run(`DELETE FROM folders WHERE id = ?`, [folderId]);
+        saveDb();
+        res.json({ success: true });
+    } catch (e) {
+        res.json({ success: false, error: e.message });
+    }
+});
+
+// ==================== ARSIP / DOKUMEN ====================
+app.get('/api/folders/:id/arsip', async (req, res) => {
+    const folderId = req.params.id;
+    try {
+        const database = await getDb();
+        const resQuery = database.exec(`SELECT * FROM arsip WHERE folder_id = ${folderId}`);
+        let arsipList = [];
+        if (resQuery.length > 0) {
+            const cols = resQuery[0].columns;
+            arsipList = resQuery[0].values.map(row => {
+                let obj = {};
+                cols.forEach((c, i) => obj[c] = row[i]);
+                return obj;
+            });
+        }
+        res.json({ success: true, data: arsipList });
+    } catch (e) {
+        res.json({ success: false, error: e.message });
+    }
+});
+
+app.post('/api/folders/:id/arsip', async (req, res) => {
+    const folderId = req.params.id;
+    const { nama_dokumen, file_url } = req.body;
+    try {
+        const database = await getDb();
+        database.run(`INSERT INTO arsip (folder_id, nama_dokumen, file_url) VALUES (?, ?, ?)`, [folderId, nama_dokumen, file_url]);
+        saveDb();
+        res.json({ success: true });
+    } catch (e) {
+        res.json({ success: false, error: e.message });
+    }
+});
+
+app.delete('/api/arsip/:id', async (req, res) => {
+    const arsipId = req.params.id;
+    try {
+        const database = await getDb();
+        database.run(`DELETE FROM arsip WHERE id = ?`, [arsipId]);
         saveDb();
         res.json({ success: true });
     } catch (e) {
