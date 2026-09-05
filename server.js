@@ -1,6 +1,6 @@
 const express = require('express');
 const initSqlJs = require('sql.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
@@ -20,7 +20,6 @@ async function getDb() {
         db = new SQL.Database(filebuffer);
     } else {
         db = new SQL.Database();
-        // Buat tabel jika belum ada
         db.run(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +59,6 @@ app.post('/api/register', async (req, res) => {
         const database = await getDb();
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        // Cek duplikat username
         const check = database.exec(`SELECT * FROM users WHERE username = '${username.replace(/'/g, "''")}'`);
         if (check.length > 0 && check[0].values.length > 0) {
             return res.json({ success: false, error: "Username sudah dipakai!" });
