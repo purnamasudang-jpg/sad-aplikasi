@@ -5,7 +5,9 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-app.use(express.json());
+// Perbesar limit JSON agar bisa menerima file ukuran sedang (misal 10MB)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
@@ -43,7 +45,8 @@ async function getDb() {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 folder_id INTEGER,
                 nama_dokumen TEXT,
-                file_url TEXT
+                file_url TEXT,
+                tipe_file TEXT
             );
         `);
         saveDb();
@@ -160,6 +163,7 @@ app.get('/api/folders/:id/arsip', async (req, res) => {
     const folderId = req.params.id;
     try {
         const database = await getDb();
+        // Cek apakah kolom tipe_file sudah ada, jika belum tangani aman
         const resQuery = database.exec(`SELECT * FROM arsip WHERE folder_id = ${folderId}`);
         let arsipList = [];
         if (resQuery.length > 0) {
@@ -178,10 +182,18 @@ app.get('/api/folders/:id/arsip', async (req, res) => {
 
 app.post('/api/folders/:id/arsip', async (req, res) => {
     const folderId = req.params.id;
-    const { nama_dokumen, file_url } = req.body;
+    const { nama_dokumen, file_url, tipe_file } = req.body;
     try {
         const database = await getDb();
-        database.run(`INSERT INTO arsip (folder_id, nama_dokumen, file_url) VALUES (?, ?, ?)`, [folderId, nama_dokumen, file_url]);
+        
+        // Pastikan kolom tipe_file ada di tabel arsip (migrasi otomatis jika belum ada)
+        try {
+            database.run(`ALTER TABLE arsip ADD COLUMN tipe_file TEXT;`);
+        } catch (err) {
+            // Kolom mungkin sudah ada, abaikan error
+        }
+
+        database.run(`INSERT INTO arsip (folder_id, nama_dokumen, file_url, tipe_file) VALUES (?, ?, ?, ?)`, [folderId, nama_dokumen, file_url, tipe_file || 'FILE']);
         saveDb();
         res.json({ success: true });
     } catch (e) {
