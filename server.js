@@ -70,6 +70,11 @@ const authMiddleware = (req, res, next) => {
 
 // ================= API ROUTES =================
 
+// Rute utama untuk melayani file index.html dari folder public
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
 // Register
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
