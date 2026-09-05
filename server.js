@@ -11,7 +11,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+
+// Perbaikan jalur static folder public agar terbaca di Vercel
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Folder uploads untuk sementara di serverless
 const uploadDir = path.join('/tmp', 'uploads');
@@ -72,7 +74,7 @@ const authMiddleware = (req, res, next) => {
 
 // Rute utama untuk melayani file index.html dari folder public
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
 // Register
