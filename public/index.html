@@ -23,26 +23,29 @@
         .user-info h4 { margin: 0; font-size: 16px; color: #2d3748; }
         .user-info p { margin: 3px 0 0 0; font-size: 12px; color: #718096; }
         
-        .btn-keluar { background: #e53e3e; color: white; border: none; padding: 8px 18px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 13px; }
-        .btn-keluar:hover { background: #c53030; }
+        .btn-keluar { background: #f56565; color: white; border: none; padding: 8px 18px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        .btn-keluar:hover { background: #e53e3e; }
 
         /* Kelola Folder Arsip Box */
         .section-box { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .section-title { font-weight: bold; font-size: 15px; color: #2d3748; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .section-title-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .section-title { font-weight: bold; font-size: 16px; color: #2d3748; display: flex; align-items: center; gap: 6px; margin: 0; }
+        .btn-menu-utama { background: #3182ce; color: white; border: none; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; }
         
-        .form-inline { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .form-inline { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
         .form-inline input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
         .btn-buat { background: #2b6cb0; color: white; border: none; padding: 10px 22px; font-weight: bold; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 14px; }
         .btn-buat:hover { background: #2c5282; }
 
-        /* List Folder Style sesuai gambar */
-        .folder-list-container { display: flex; flex-direction: column; gap: 10px; }
-        .folder-item { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .folder-item:hover { background: #edf2f7; border-color: #cbd5e0; }
-        .folder-item.active { background: #ebf8ff; border-color: #3182ce; border-left: 5px solid #3182ce; }
+        /* List Folder Berderet Menyamping (Grid Card) Sesuai Gambar */
+        .folder-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .folder-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .folder-item:hover { border-color: #cbd5e0; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
+        .folder-item.active { border-color: #3182ce; border-left: 5px solid #3182ce; background: #f7fafc; }
         
-        .folder-item-left { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 14px; color: #2d3748; }
-        .badge-count { background: #3182ce; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: normal; margin-left: 8px; }
+        .folder-item-left { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 14px; color: #2d3748; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .folder-item-right { display: flex; align-items: center; gap: 10px; }
+        .badge-count { background: #ebf8ff; color: #3182ce; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid #bee3f8; }
         
         /* Form Dokumen & Tabel */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -50,7 +53,6 @@
         .form-group.full { grid-column: span 2; }
         label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #444; }
         input[type="text"], input[type="date"], input[type="file"], select, textarea { padding: 9px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; width: 100%; box-sizing: border-box; }
-        textarea { resize: vertical; height: 60px; }
         
         .btn-primary { background: #2c5282; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; }
         .btn-primary:hover { background: #1a365d; }
@@ -65,10 +67,10 @@
         .badge-folder { background: #e2e8f0; color: #2d3748; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
         .btn-file { background: #38a169; color: white; padding: 6px 12px; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold; display: inline-block; }
         .btn-file:hover { background: #2f855a; }
-        .btn-danger-sm { background: #fff; color: #e53e3e; border: 1px solid #fed7d7; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .btn-danger-sm:hover { background: #fff5f5; }
+        .btn-danger-sm { background: transparent; color: #a0aec0; border: none; cursor: pointer; font-size: 16px; padding: 4px; }
+        .btn-danger-sm:hover { color: #e53e3e; }
 
-        /* Footer Gelap Persis Gambar */
+        /* Footer Gelap */
         .footer-dark { background: #1a202c; color: #a0aec0; padding: 35px 40px; border-radius: 12px; font-size: 13px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 30px; }
         .footer-col h5 { color: white; margin-top: 0; margin-bottom: 12px; font-size: 14px; font-weight: bold; }
@@ -108,9 +110,6 @@
                 <input type="password" id="password" placeholder="Masukkan password">
             </div>
             <button class="btn-masuk" onclick="login()">Masuk</button>
-            <div style="text-align: center; font-size: 13px; color: #4a5568; margin-top: 15px;">
-                Belum punya akun? <a href="#" onclick="alert('Silakan hubungi administrator.'); return false;" style="color: #2b6cb0; text-decoration: none; font-weight: bold;">Daftar Akun Baru</a>
-            </div>
             <p id="loginMsg" class="error-msg"></p>
         </div>
     </div>
@@ -136,22 +135,26 @@
 
             <!-- Kelola Folder Arsip -->
             <div class="section-box">
-                <div class="section-title">📁 Kelola Folder Arsip</div>
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">📁 Kelola Folder Arsip</h2>
+                    <button class="btn-menu-utama" onclick="location.reload()">MENU UTAMA</button>
+                </div>
+
                 <div class="form-inline">
                     <input type="text" id="nama_folder_input" placeholder="Nama Folder (Contoh: Surat Masuk 2026)">
-                    <input type="date" id="folder_tanggal" style="width: 150px; flex: none;">
+                    <input type="date" id="folder_tanggal" style="width: 150px; flex: none; display:none;">
                     <button type="button" class="btn-buat" onclick="buatFolder()">Buat Folder</button>
                 </div>
 
-                <!-- Daftar Folder List -->
+                <!-- Daftar Folder List (Grid Card Menyamping) -->
                 <div id="folderListContainer" class="folder-list-container">
                     <!-- List folder dimuat di sini -->
                 </div>
             </div>
 
             <!-- Form Tambah Dokumen ke Folder yang Dipilih -->
-            <div class="section-box" id="formDokumenBox" style="display: none; border-left: 5px solid #d69e2e;">
-                <h3 style="margin-top:0; color: #2c5282; font-size: 16px;">Tambah Dokumen ke Folder: <span id="activeFolderName" style="color: #d69e2e;">-</span></h3>
+            <div class="section-box" id="formDokumenBox" style="display: none; border-left: 5px solid #3182ce;">
+                <h3 style="margin-top:0; color: #2c5282; font-size: 16px;">Tambah Dokumen ke Folder: <span id="activeFolderName" style="color: #3182ce;">-</span></h3>
                 
                 <div class="form-grid">
                     <div class="form-group">
@@ -207,7 +210,7 @@
             </div>
         </div>
 
-        <!-- Footer Gelap Sesuai Gambar -->
+        <!-- Footer Gelap -->
         <div class="footer-dark">
             <div class="footer-grid">
                 <div class="footer-col">
@@ -253,15 +256,12 @@ window.onload = () => {
     } else {
         document.getElementById('loginSection').style.display = 'block';
     }
-    document.getElementById('folder_tanggal').valueAsDate = new Date();
     document.getElementById('dok_tanggal').valueAsDate = new Date();
     
-    // Muat foto profil tersimpan jika ada
     const savedFoto = localStorage.getItem('userProfileFoto');
     if(savedFoto) {
         document.getElementById('userProfileImg').src = savedFoto;
     } else {
-        // Default avatar placeholder
         document.getElementById('userProfileImg').src = "https://www.w3schools.com/howto/img_avatar.png";
     }
 }
@@ -325,10 +325,6 @@ async function loadData() {
             globalData = data;
             renderFolders();
             renderTabel();
-            
-            if(globalData.folders.length > 0 && !selectedFolderId) {
-                selectFolder(globalData.folders[0].id);
-            }
         }
     } catch(err) {
         console.error('Gagal memuat data', err);
@@ -350,9 +346,11 @@ function renderFolders() {
         <div class="folder-item ${isActive}" onclick="selectFolder(${f.id})">
             <div class="folder-item-left">
                 📁 <span>${f.nama_folder}</span>
-                <span class="badge-count">${f.jumlah_dokumen} File</span>
             </div>
-            <button class="btn-danger-sm" onclick="event.stopPropagation(); hapusFolder(${f.id})" title="Hapus Folder">🗑️</button>
+            <div class="folder-item-right">
+                <span class="badge-count">${f.jumlah_dokumen} Arsip</span>
+                <button class="btn-danger-sm" onclick="event.stopPropagation(); hapusFolder(${f.id})" title="Hapus Folder">🗑️</button>
+            </div>
         </div>`;
     });
     container.innerHTML = html;
@@ -370,7 +368,7 @@ function selectFolder(folderId) {
 
 async function buatFolder() {
     const nama_folder = document.getElementById('nama_folder_input').value.trim();
-    const tanggal = document.getElementById('folder_tanggal').value;
+    const tanggal = new Date().toISOString().split('T')[0];
 
     if(!nama_folder) {
         alert('Nama folder wajib diisi!');
@@ -385,7 +383,6 @@ async function buatFolder() {
     const data = await res.json();
     if(data.success) {
         document.getElementById('nama_folder_input').value = '';
-        document.getElementById('folder_tanggal').valueAsDate = new Date();
         loadData();
         selectFolder(data.data.id);
     } else {
@@ -398,7 +395,10 @@ async function hapusFolder(id) {
     const res = await fetch(`/api/folders/${id}`, { method: 'DELETE' });
     const data = await res.json();
     if(data.success) {
-        selectedFolderId = null;
+        if(selectedFolderId === id) {
+            selectedFolderId = null;
+            document.getElementById('formDokumenBox').style.display = 'none';
+        }
         loadData();
     } else {
         alert('Gagal menghapus folder');
