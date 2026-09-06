@@ -7,9 +7,14 @@
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; color: #333; margin: 0; }
         .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
-        .section-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .section-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .form-inline { display: flex; gap: 10px; align-items: center; }
+        .form-inline input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+        .btn-buat { background: #2b6cb0; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 14px; }
+        .btn-buat:hover { background: #2c5282; }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full { grid-column: span 2; }
@@ -66,40 +71,36 @@
 
     <!-- Dashboard Utama -->
     <div id="dashboard">
-        <div class="header-top">
-            <h2 style="margin:0; color: #2d3748;">Sistem Arsip Digital - SAD</h2>
-            <button onclick="logout()" class="btn-danger" style="width: auto; padding: 8px 16px;">Logout</button>
+        <!-- Header Judul Persis Gambar -->
+        <div class="header-top" style="flex-direction: column; text-align: center; border-bottom: none; margin-bottom: 15px; padding-bottom: 0;">
+            <div style="width: 100%; display: flex; justify-content: flex-end; margin-bottom: -20px;">
+                <button onclick="logout()" class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 12px;">Logout</button>
+            </div>
+            <h1 style="margin: 0; color: #1a365d; font-size: 26px;">SAD (Sistem Arsip Digital)</h1>
+            <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Penyimpanan Dokumen Berbasis Folder</p>
         </div>
 
-        <!-- 1. Daftar Kotak Folder di Halaman Utama -->
+        <!-- Box Buat Folder Baru (Sesuai Gambar Referensi) -->
         <div class="section-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="margin:0; color: #2c5282;">Deretan Folder Arsip</h3>
-                <button onclick="toggleBuatFolderForm()" style="background: #3182ce; color:white; border:none; padding: 6px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size: 13px;">+ Buat Folder Baru</button>
+            <div style="font-weight: bold; margin-bottom: 10px; color: #2d3748; display: flex; align-items: center; gap: 6px;">
+                📁 Buat Folder Baru
             </div>
-
-            <!-- Form Buat Folder (Hidden by default, bisa dibuka tutup) -->
-            <div id="buatFolderFormContainer" style="display: none; background: #edf2f7; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-                <div class="form-grid" style="align-items: flex-end; margin-bottom: 10px;">
-                    <div class="form-group">
-                        <label>Nama Folder Baru</label>
-                        <input type="text" id="nama_folder_input" placeholder="Contoh: Arsip Keuangan 2026">
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal Pembuatan Folder</label>
-                        <input type="date" id="folder_tanggal">
-                    </div>
-                </div>
-                <button type="button" onclick="buatFolder()" style="background: #2b6cb0; color:white; border:none; padding: 8px; border-radius:4px; font-weight:bold; cursor:pointer; width: 100%;">Simpan Folder</button>
+            <div class="form-inline">
+                <input type="text" id="nama_folder_input" placeholder="Contoh: ARSIPIJAZAH SMA TAHUN 2026">
+                <input type="date" id="folder_tanggal" style="width: 160px; flex: none;">
+                <button type="button" class="btn-buat" onclick="buatFolder()">+ Buat Folder</button>
             </div>
+        </div>
 
-            <!-- Grid Kotak Folder -->
+        <!-- Daftar Folder Arsip -->
+        <div style="margin-bottom: 25px;">
+            <h3 style="margin: 0 0 15px 0; color: #2d3748;">Daftar Folder Arsip</h3>
             <div id="folderGridContainer" class="folder-grid-container">
                 <!-- List Folder akan dimuat di sini -->
             </div>
         </div>
 
-        <!-- 2. Form Tambah Dokumen ke Folder yang Dipilih -->
+        <!-- Form Tambah Dokumen ke Folder yang Dipilih -->
         <div class="section-box" id="formDokumenBox" style="display: none; border-left: 5px solid #d69e2e;">
             <h3 style="margin-top:0; color: #2c5282;">Tambah Dokumen ke Folder: <span id="activeFolderName" style="color: #d69e2e;">-</span></h3>
             
@@ -132,7 +133,7 @@
             <button class="btn-primary" onclick="simpanDokumen()">Simpan Dokumen ke Folder Ini</button>
         </div>
 
-        <!-- 3. Tabel Daftar Seluruh Dokumen -->
+        <!-- Tabel Daftar Seluruh Dokumen -->
         <div class="table-container">
             <h3 style="display: inline-block; margin:0;">Daftar Seluruh Dokumen</h3>
             <input type="text" id="searchKeyword" class="search-box" placeholder="Cari dokumen..." onkeyup="renderTabel()">
@@ -214,7 +215,6 @@ async function loadData() {
             renderFolders();
             renderTabel();
             
-            // Auto pilih folder pertama jika ada dan belum terpilih
             if(globalData.folders.length > 0 && !selectedFolderId) {
                 selectFolder(globalData.folders[0].id);
             }
@@ -224,15 +224,10 @@ async function loadData() {
     }
 }
 
-function toggleBuatFolderForm() {
-    const formBox = document.getElementById('buatFolderFormContainer');
-    formBox.style.display = formBox.style.display === 'none' ? 'block' : 'none';
-}
-
 function renderFolders() {
     const container = document.getElementById('folderGridContainer');
     if(globalData.folders.length === 0) {
-        container.innerHTML = '<span style="color:#718096; font-size:13px; grid-column: span 2;">Belum ada folder. Silakan klik tombol "+ Buat Folder Baru".</span>';
+        container.innerHTML = '<span style="color:#718096; font-size:13px; grid-column: span 2;">Belum ada folder. Silakan buat folder baru di atas.</span>';
         document.getElementById('formDokumenBox').style.display = 'none';
         return;
     }
@@ -283,7 +278,6 @@ async function buatFolder() {
     if(data.success) {
         document.getElementById('nama_folder_input').value = '';
         document.getElementById('folder_tanggal').valueAsDate = new Date();
-        document.getElementById('buatFolderFormContainer').style.display = 'none';
         loadData();
         selectFolder(data.data.id);
     } else {
