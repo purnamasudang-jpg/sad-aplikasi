@@ -54,11 +54,8 @@ function saveDb() {
     fs.writeFileSync(dbPath, Buffer.from(data));
 }
 
-// Middleware DIPERBAIKI: sekarang wajib ada user-id
 function verifyUser(req, res, next) {
-    // Sekarang kita terima dari 3 tempat: header, body, query
     const userId = req.headers['user-id'] || req.body.user_id || req.query.user_id;
-
     if (!userId || userId === 'undefined' || userId === 'null') {
         return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
     }
@@ -73,16 +70,13 @@ app.post('/api/register', async (req, res) => {
     }
     try {
         const database = await getDb();
-
         const stmtCheck = database.prepare(`SELECT * FROM users WHERE username =?`);
         stmtCheck.bind([username]);
         const exists = stmtCheck.step();
         stmtCheck.free();
-
         if (exists) {
             return res.status(400).json({ success: false, error: 'Username sudah digunakan!' });
         }
-
         database.run(`INSERT INTO users (username, password) VALUES (?,?)`, [username, password]);
         saveDb();
         res.json({ success: true, message: 'Registrasi berhasil!' });
@@ -97,11 +91,9 @@ app.post('/api/login', async (req, res) => {
         const database = await getDb();
         const stmt = database.prepare(`SELECT * FROM users WHERE username =? AND password =?`);
         stmt.bind([username, password]);
-
         if (stmt.step()) {
             const row = stmt.getAsObject();
             stmt.free();
-            // PENTING: Kirim id nya ke frontend
             return res.json({ success: true, user: { id: row.id, username: row.username } });
         }
         stmt.free();
@@ -116,13 +108,9 @@ app.get('/api/folders', verifyUser, async (req, res) => {
         const database = await getDb();
         const stmt = database.prepare(`SELECT * FROM folders WHERE user_id =?`);
         stmt.bind([req.userId]);
-
         let rows = [];
-        while (stmt.step()) {
-            rows.push(stmt.getAsObject());
-        }
+        while (stmt.step()) { rows.push(stmt.getAsObject()); }
         stmt.free();
-
         res.json({ success: true, data: rows });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
@@ -132,7 +120,6 @@ app.get('/api/folders', verifyUser, async (req, res) => {
 app.post('/api/folders', verifyUser, async (req, res) => {
     const { nama_folder } = req.body;
     if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder harus diisi.' });
-
     try {
         const database = await getDb();
         database.run(`INSERT INTO folders (user_id, nama_folder) VALUES (?,?)`, [req.userId, nama_folder]);
@@ -162,13 +149,9 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
         const database = await getDb();
         const stmt = database.prepare(`SELECT * FROM arsip WHERE folder_id =? AND user_id =?`);
         stmt.bind([folderId, req.userId]);
-
         let rows = [];
-        while (stmt.step()) {
-            rows.push(stmt.getAsObject());
-        }
+        while (stmt.step()) { rows.push(stmt.getAsObject()); }
         stmt.free();
-
         res.json({ success: true, data: rows });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
@@ -177,13 +160,15 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
 
 app.post('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     const folderId = req.params.id;
-    const { nama_dokumen, file_url, tipe_file } = req.body;
+    const { nama_dokumen, file_url, tipe_file, user_id } = req.body; // <-- TAMBAH user_id dari body
     if (!nama_dokumen) return res.status(400).json({ success: false, error: 'Nama dokumen wajib diisi.' });
+    if (!user_id) return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
 
     try {
         const database = await getDb();
-        database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?)`,
-            [folderId, req.userId, nama_dokumen, file_url || '', tipe_file || 'FILE']);
+        // YG DIBENERIN: dari 4 tanda tanya jadi 5 tanda tanya
+        database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
+            [folderId, user_id, nama_dokumen, file_url || '', tipe_file || 'FILE']); // <-- Pake user_id dari body
         saveDb();
         res.json({ success: true });
     } catch (e) {
