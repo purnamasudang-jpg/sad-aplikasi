@@ -1,25 +1,17 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Pastikan folder uploads ada
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Konfigurasi Multer untuk penyimpanan file sementara di memori
+// Gunakan Memory Storage untuk Multer (aman untuk lingkungan Serverless Vercel)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Database sementara (Mock DB)
+// Database sementara dalam memori
 let dbData = {
     users: [{ id: 1, username: 'admin', password: '123' }],
     folders: [
@@ -61,24 +53,18 @@ app.get('/api/folders/:id/arsip', (req, res) => {
     res.json({ success: true, data: arsipList });
 });
 
-// Route Upload Arsip ke Folder
+// Route Upload Arsip (Simpan info dokumen tanpa menulis file fisik ke disk)
 app.post('/api/folders/:id/arsip', upload.single('berkas'), (req, res) => {
     const folderId = parseInt(req.params.id);
     const { judul_arsip } = req.body;
 
     if (!judul_arsip) return res.status(400).json({ success: false, error: 'Judul arsip wajib diisi' });
 
-    let fileName = null;
-    if (req.file) {
-        fileName = `${Date.now()}-${req.file.originalname}`;
-        fs.writeFileSync(path.join(uploadDir, fileName), req.file.buffer);
-    }
-
     const newArsip = {
         id: Date.now(),
         folder_id: folderId,
         nama_dokumen: judul_arsip,
-        file_url: fileName
+        file_nama: req.file ? req.file.originalname : null
     };
 
     dbData.arsip.push(newArsip);
@@ -91,5 +77,4 @@ if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => console.log(`Server lokal berjalan di port ${PORT}`));
 }
 
-// Wajib diekspor agar terbaca sebagai Serverless Function di Vercel
 module.exports = app;
