@@ -8,10 +8,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Gunakan Memory Storage untuk Multer (aman untuk lingkungan Serverless Vercel)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Database sementara dalam memori
 let dbData = {
     users: [{ id: 1, username: 'admin', password: '123' }],
     folders: [
@@ -31,9 +29,13 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-// Route Ambil Daftar Folder
+// Route Ambil Daftar Folder & Arsip Sekaligus
 app.get('/api/folders', (req, res) => {
-    res.json({ success: true, data: dbData.folders });
+    const foldersWithArsip = dbData.folders.map(folder => ({
+        ...folder,
+        arsip: dbData.arsip.filter(a => a.folder_id === folder.id)
+    }));
+    res.json({ success: true, data: foldersWithArsip });
 });
 
 // Route Buat Folder Baru
@@ -46,32 +48,34 @@ app.post('/api/folders', (req, res) => {
     res.json({ success: true, data: newFolder });
 });
 
-// Route Ambil Arsip Berdasarkan Folder
-app.get('/api/folders/:id/arsip', (req, res) => {
-    const folderId = parseInt(req.params.id);
-    const arsipList = dbData.arsip.filter(a => a.folder_id === folderId);
-    res.json({ success: true, data: arsipList });
-});
-
-// Route Upload Arsip (Simpan info dokumen ke memori)
+// Route Upload Arsip
 app.post('/api/folders/:id/arsip', upload.single('berkas'), (req, res) => {
     const folderId = parseInt(req.params.id);
     const { judul_arsip } = req.body;
 
     if (!judul_arsip) return res.status(400).json({ success: false, error: 'Judul arsip wajib diisi' });
 
+    let fileExtension = 'FILE';
+    let originalName = null;
+
+    if (req.file) {
+        originalName = req.file.originalname;
+        const ext = path.extname(originalName).replace('.', '').toUpperCase();
+        if (ext) fileExtension = ext;
+    }
+
     const newArsip = {
         id: Date.now(),
         folder_id: folderId,
         nama_dokumen: judul_arsip,
-        file_nama: req.file ? req.file.originalname : null
+        file_nama: originalName,
+        tipe_file: fileExtension
     };
 
     dbData.arsip.push(newArsip);
     res.json({ success: true, data: newArsip });
 });
 
-// Jalankan server lokal jika bukan di Vercel
 const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => console.log(`Server lokal berjalan di port ${PORT}`));
