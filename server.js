@@ -11,12 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// UPLOAD KE /tmp DENGAN PEMBUATAN FOLDER OTOMATIS
-const uploadDir = '/tmp/uploads';
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-const upload = multer({ dest: uploadDir + '/' });
+// Gunakan memoryStorage agar file bisa dibaca sebagai buffer di Vercel
+const upload = multer({ storage: multer.memoryStorage() });
 
 let db = null;
 const dbPath = path.join('/tmp', 'database.sqlite');
@@ -100,7 +96,7 @@ app.post('/api/folders', verifyUser, async (req, res) => {
 });
 
 app.delete('/api/folders/:id', verifyUser, async (req, res) => {
-    const database = await getDb();
+    const database =აზე getDb();
     database.run(`DELETE FROM arsip WHERE folder_id =? AND user_id =?`, [req.params.id, req.userId]);
     database.run(`DELETE FROM folders WHERE id =? AND user_id =?`, [req.params.id, req.userId]);
     saveDb();
@@ -115,17 +111,26 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     res.json({ success: true, data: rows });
 });
 
-// UPLOAD ARSIP
+// UPLOAD ARSIP DENGAN MEMORY STORAGE & PENYIMPANAN KE /tmp
 app.post('/api/folders/:id/arsip', upload.single('berkas'), verifyUser, async (req, res) => {
     try {
         const { judul_arsip } = req.body; 
         const file = req.file;
         const database = await getDb();
-        const file_url = file ? file.filename : '';
-        const tipe_file = file ? path.extname(file.originalname) : 'FILE';
+        
+        let filename = '';
+        let tipe_file = 'FILE';
+
+        if (file) {
+            const ext = path.extname(file.originalname);
+            filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
+            const targetPath = path.join('/tmp', filename);
+            fs.writeFileSync(targetPath, file.buffer);
+            tipe_file = ext;
+        }
         
         database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-            [req.params.id, req.userId, judul_arsip, file_url, tipe_file]);
+            [req.params.id, req.userId, judul_arsip, filename, tipe_file]);
         saveDb();
         res.json({ success: true });
     } catch (e) {
