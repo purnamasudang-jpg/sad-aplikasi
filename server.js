@@ -11,8 +11,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// UPLOAD KE /tmp
-const upload = multer({ dest: '/tmp/uploads/' });
+// UPLOAD KE /tmp DENGAN PEMBUATAN FOLDER OTOMATIS
+const uploadDir = '/tmp/uploads';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+const upload = multer({ dest: uploadDir + '/' });
 
 let db = null;
 const dbPath = path.join('/tmp', 'database.sqlite');
@@ -43,7 +47,7 @@ function saveDb() {
     fs.writeFileSync(dbPath, Buffer.from(data));
 }
 
-// FUNGSI VERIFIKASI USER (DIPERKUAT AGAR MENANGKAP USER ID DARI MULTIPART/BODY)
+// FUNGSI VERIFIKASI USER
 function verifyUser(req, res, next) {
     const userId = req.headers['user-id'] || req.headers['User-Id'] || (req.body && req.body.user_id);
     if (!userId) {
@@ -111,18 +115,22 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     res.json({ success: true, data: rows });
 });
 
-// UPLOAD ARSIP (MULTER DILETAKKAN SEBELUM VERIFYUSER AGAR REQ.BODY TERBACA)
+// UPLOAD ARSIP
 app.post('/api/folders/:id/arsip', upload.single('berkas'), verifyUser, async (req, res) => {
-    const { judul_arsip } = req.body; 
-    const file = req.file;
-    const database = await getDb();
-    const file_url = file ? file.filename : '';
-    const tipe_file = file ? path.extname(file.originalname) : 'FILE';
-    
-    database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-        [req.params.id, req.userId, judul_arsip, file_url, tipe_file]);
-    saveDb();
-    res.json({ success: true });
+    try {
+        const { judul_arsip } = req.body; 
+        const file = req.file;
+        const database = await getDb();
+        const file_url = file ? file.filename : '';
+        const tipe_file = file ? path.extname(file.originalname) : 'FILE';
+        
+        database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
+            [req.params.id, req.userId, judul_arsip, file_url, tipe_file]);
+        saveDb();
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
 });
 
 app.delete('/api/arsip/:id', verifyUser, async (req, res) => {
