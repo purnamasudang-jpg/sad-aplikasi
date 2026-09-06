@@ -45,13 +45,12 @@
 </div>
 
 <script>
-const API_URL = ''; // kosongin kalau 1 domain
-let currentUserId = null;
+const API_URL = ''; 
 
 // CEK APA SUDAH LOGIN
 window.onload = () => {
-    currentUserId = localStorage.getItem('userId');
-    if(currentUserId){
+    const userId = localStorage.getItem('userId');
+    if(userId){
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         loadFolders();
@@ -60,7 +59,7 @@ window.onload = () => {
     }
 }
 
-// 1. FUNGSI LOGIN - SIMPAN userId
+// 1. FUNGSI LOGIN
 async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -73,7 +72,6 @@ async function login() {
     const data = await res.json();
     
     if(data.success){
-        currentUserId = data.user.id;
         localStorage.setItem('userId', data.user.id);
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
@@ -86,14 +84,14 @@ async function login() {
 // 2. LOGOUT
 function logout(){
     localStorage.removeItem('userId');
-    currentUserId = null;
     location.reload();
 }
 
 // 3. LOAD FOLDER
 async function loadFolders() {
+    const userId = localStorage.getItem('userId');
     const res = await fetch(`${API_URL}/api/folders`, {
-        headers: { 'user-id': currentUserId }
+        headers: { 'user-id': userId }
     });
     const data = await res.json();
     if(data.success){
@@ -119,6 +117,7 @@ async function loadFolders() {
 
 // 4. BUAT FOLDER
 async function buatFolder(){
+    const userId = localStorage.getItem('userId');
     const nama = document.getElementById('nama_folder').value;
     if(!nama) return alert('Nama folder wajib diisi');
     
@@ -126,7 +125,7 @@ async function buatFolder(){
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'user-id': currentUserId 
+            'user-id': userId 
         },
         body: JSON.stringify({ nama_folder: nama })
     });
@@ -137,8 +136,14 @@ async function buatFolder(){
     }
 }
 
-// 5. UPLOAD ARSIP (DISESUAIKAN DENGAN MULTER & FORMDATA)
+// 5. UPLOAD ARSIP
 async function uploadArsip(folderId) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        alert('User ID tidak valid. Silakan login ulang.');
+        return logout();
+    }
+
     const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
     const fileInput = document.getElementById(`file_dok_${folderId}`);
 
@@ -146,7 +151,7 @@ async function uploadArsip(folderId) {
 
     const formData = new FormData();
     formData.append('judul_arsip', nama_dokumen);
-    formData.append('user_id', currentUserId);
+    formData.append('user_id', userId);
     if (fileInput && fileInput.files[0]) {
         formData.append('berkas', fileInput.files[0]);
     }
@@ -154,7 +159,7 @@ async function uploadArsip(folderId) {
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
         method: 'POST',
         headers: { 
-            'user-id': currentUserId 
+            'user-id': userId 
         },
         body: formData 
     });
@@ -172,8 +177,9 @@ async function uploadArsip(folderId) {
 
 // 6. LIHAT ARSIP
 async function loadArsip(folderId){
+    const userId = localStorage.getItem('userId');
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
-        headers: { 'user-id': currentUserId }
+        headers: { 'user-id': userId }
     });
     const data = await res.json();
     if(data.success){
