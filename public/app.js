@@ -1,4 +1,3 @@
-const API_URL = '/api/arsip';
 const FOLDER_URL = '/api/folders';
 
 let currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Sistem Autentikasi User
 authToggleLink.addEventListener('click', (e) => {
     e.preventDefault();
-    isRegisterMode = !isRegisterMode;
+    isRegisterMode =!isRegisterMode;
     if (isRegisterMode) {
         authTitle.textContent = 'Daftar Akun Baru SAD';
         btnAuthSubmit.textContent = 'Daftar & Dapatkan 10 Klik Gratis';
@@ -42,7 +41,7 @@ authForm.addEventListener('submit', async (e) => {
     const username = document.getElementById('auth_username').value;
     const password = document.getElementById('auth_password').value;
 
-    const endpoint = isRegisterMode ? '/api/register' : '/api/login';
+    const endpoint = isRegisterMode? '/api/register' : '/api/login';
 
     try {
         const response = await fetch(endpoint, {
@@ -66,6 +65,7 @@ authForm.addEventListener('submit', async (e) => {
         }
     } catch (err) {
         console.error(err);
+        alert('Gagal konek ke server');
     }
 });
 
@@ -79,25 +79,10 @@ function checkAuth() {
     if (currentUser) {
         viewAuth.style.display = 'none';
         viewMain.style.display = 'block';
-        updateUserInfo();
         fetchFolders();
     } else {
         viewAuth.style.display = 'block';
         viewMain.style.display = 'none';
-    }
-}
-
-async function updateUserInfo() {
-    if (!currentUser) return;
-    try {
-        const res = await fetch(`/api/user-info/${currentUser.id}`);
-        const user = await res.json();
-        document.getElementById('lblUsername').textContent = user.username;
-        document.getElementById('lblKuota').textContent = user.kuota_klik;
-        currentUser.kuota_klik = user.kuota_klik;
-        localStorage.setItem('sad_user', JSON.stringify(currentUser));
-    } catch (err) {
-        console.error(err);
     }
 }
 
@@ -156,7 +141,6 @@ document.getElementById('folderForm').addEventListener('submit', async (e) => {
         
         if (response.ok) {
             input.value = '';
-            updateUserInfo();
             fetchFolders();
         } else {
             alert(resData.error);
@@ -180,7 +164,7 @@ async function openFolder(folder) {
 
 document.getElementById('btnToggleUpload').addEventListener('click', () => {
     const box = document.getElementById('uploadBox');
-    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    box.style.display = box.style.display === 'none'? 'block' : 'none';
 });
 
 document.getElementById('btnBack').addEventListener('click', () => {
@@ -192,11 +176,11 @@ document.getElementById('btnBack').addEventListener('click', () => {
 
 async function fetchDocsInFolder() {
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${FOLDER_URL}/${currentFolder.id}/arsip`, {
             headers: { 'user-id': currentUser.id }
         });
         const result = await response.json();
-        allDocsInFolder = result.data.filter(doc => doc.folder_id === currentFolder.id);
+        allDocsInFolder = result.data;
         renderTable(allDocsInFolder);
     } catch (error) {
         console.error(error);
@@ -208,7 +192,7 @@ function renderTable(dataList) {
     dataTable.innerHTML = '';
     
     if (dataList.length === 0) {
-        dataTable.innerHTML = '<tr><td colspan="7" style="text-align:center;">Folder ini masih kosong.</td></tr>';
+        dataTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">Folder ini masih kosong.</td></tr>';
         return;
     }
 
@@ -216,37 +200,44 @@ function renderTable(dataList) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
-            <td>${item.tanggal_dokumen}</td>
-            <td><strong>${item.judul_arsip}</strong></td>
-            <td>${item.instansi_asal || '-'}</td>
-            <td>${item.lokasi_fisik || '-'}</td>
-            <td>${item.file_path ? `<a href="/uploads/${item.file_path}" target="_blank" class="btn-file">📄 Lihat File</a>` : 'Tidak Ada'}</td>
+            <td><strong>${item.nama_dokumen}</strong></td>
+            <td>${item.tipe_file}</td>
+            <td>${item.file_url || '-'}</td>
             <td><button class="btn-delete" onclick="deleteArsip(${item.id})">Hapus</button></td>
         `;
         dataTable.appendChild(row);
     });
 }
 
+// INI BAGIAN YG DIBENERIN
 document.getElementById('arsipForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append('folder_id', document.getElementById('folder_id_hidden').value);
-    formData.append('judul_arsip', document.getElementById('judul_arsip').value);
-    formData.append('nomor_surat', document.getElementById('nomor_surat').value);
-    formData.append('instansi_asal', document.getElementById('instansi_asal').value);
-    formData.append('tanggal_dokumen', document.getElementById('tanggal_dokumen').value);
-    formData.append('lokasi_fisik', document.getElementById('lokasi_fisik').value);
-    formData.append('keterangan', document.getElementById('keterangan').value);
-    
+    const folderId = document.getElementById('folder_id_hidden').value;
+    const nama_dokumen = document.getElementById('judul_arsip').value;
     const fileInput = document.getElementById('berkas');
-    if (fileInput.files[0]) formData.append('berkas', fileInput.files[0]);
+
+    let tipe_file = 'FILE';
+    let file_url = '';
+    if (fileInput.files[0]) {
+        file_url = fileInput.files[0].name; // sementara simpan nama file
+        const ext = fileInput.files[0].name.split('.').pop().toUpperCase();
+        tipe_file = ext;
+    }
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${FOLDER_URL}/${folderId}/arsip`, {
             method: 'POST',
-            headers: { 'user-id': currentUser.id },
-            body: formData
+            headers: { 
+                'Content-Type': 'application/json',
+                'user-id': currentUser.id
+            },
+            body: JSON.stringify({ 
+                nama_dokumen: nama_dokumen,
+                file_url: file_url,
+                tipe_file: tipe_file,
+                user_id: currentUser.id // WAJIB INI
+            })
         });
 
         const resData = await response.json();
@@ -254,7 +245,6 @@ document.getElementById('arsipForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             document.getElementById('arsipForm').reset();
             document.getElementById('uploadBox').style.display = 'none';
-            updateUserInfo();
             fetchDocsInFolder();
             alert('Dokumen berhasil disimpan!');
         } else {
@@ -262,19 +252,26 @@ document.getElementById('arsipForm').addEventListener('submit', async (e) => {
         }
     } catch (error) {
         console.error('Error:', error);
+        alert('Gagal simpan: ' + error.message);
     }
 });
 
 async function deleteFolder(id) {
     if (confirm('Hapus folder ini?')) {
-        await fetch(`${FOLDER_URL}/${id}`, { method: 'DELETE' });
+        await fetch(`${FOLDER_URL}/${id}`, { 
+            method: 'DELETE',
+            headers: { 'user-id': currentUser.id }
+        });
         fetchFolders();
     }
 }
 
 async function deleteArsip(id) {
     if (confirm('Hapus dokumen ini?')) {
-        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        await fetch(`/api/arsip/${id}`, { 
+            method: 'DELETE',
+            headers: { 'user-id': currentUser.id }
+        });
         fetchDocsInFolder();
     }
 }
