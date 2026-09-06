@@ -7,12 +7,16 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Naikkan limit express json & urlencoded agar tidak terkena limit bawaan 100kb
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// UPLOAD KE /tmp
-const upload = multer({ dest: '/tmp/uploads/' });
+// Konfigurasi multer dengan memory storage dan limit 4MB
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 4 * 1024 * 1024 } // 4 MB
+});
 
 let db = null;
 const dbPath = path.join('/tmp', 'database.sqlite');
@@ -43,9 +47,12 @@ function saveDb() {
     fs.writeFileSync(dbPath, Buffer.from(data));
 }
 
+// FUNGSI VERIFIKASI USER YANG FLEKSIBEL UNTUK MULTIPART
 function verifyUser(req, res, next) {
-    const userId = req.headers['user-id'] || req.body.user_id;
-    if (!userId) return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
+    const userId = req.headers['user-id'] || req.headers['User-Id'] || (req.body && req.body.user_id);
+    if (!userId) {
+        return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
+    }
     req.userId = userId;
     next();
 }
@@ -108,18 +115,43 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     res.json({ success: true, data: rows });
 });
 
-// INI YG BUAT UPLOAD
-app.post('/api/folders/:id/arsip', verifyUser, upload.single('berkas'), async (req, res) => {
-    const { judul_arsip } = req.body; 
-    const file = req.file;
-    const database = await getDb();
-    const file_url = file ? file.filename : '';
-    const tipe_file = file ? path.extname(file.originalname) : 'FILE';
-    
-    database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-        [req.params.id, req.userId, judul_arsip, file_url, tipe_file]);
-    saveDb();
-    res.json({ success: true });
+// UPLOAD ARSIP DENGAN PENANGANAN ERROR YANG LEBIH AMAN
+app.post('/api/folders/:id/arsip', (req, res, next) => {
+    upload.single('berkas')(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ success: false, error: 'Ukuran berkas melebihi 4MB!' });
+            }
+            return res.status(400).json({ success: false, error: `Error upload: ${err.message}` });
+        } else if (err) {
+            return res.status(500).json({ success: false, error: err.message });
+        }
+        next();
+    });
+}, verifyUser, async (req, res) => {
+    try {
+        const { judul_arsip } = req.body; 
+        const file = req.file;
+        const database = await getDb();
+        
+        let filename = '';
+        let tipe_file = 'FILE';
+
+        if (file) {
+            const ext = path.extname(file.originalname);
+            filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
+            const targetPath = path.join('/tmp', filename);
+            fs.writeFileSync(targetPath, file.buffer);
+            tipe_file = ext;
+        }
+        
+        database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
+            [req.params.id, req.userId, judul_arsip || (file ? file.originalname : 'Tanpa Judul'), filename, tipe_file]);
+        saveDb();
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
 });
 
 app.delete('/api/arsip/:id', verifyUser, async (req, res) => {
