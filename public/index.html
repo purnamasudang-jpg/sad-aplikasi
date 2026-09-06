@@ -5,38 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Arsip Digital - SAD</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        .folder { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #fff; }
-        .arsip { background: #f9f9f9; padding: 8px; margin: 5px 0; border-left: 3px solid #007bff; font-size: 14px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        button:hover { background: #218838; }
+        .folder { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .arsip { background: #f9f9f9; padding: 10px; margin: 8px 0; border-left: 3px solid #007bff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
         #loginForm, #dashboard { display: none; }
+        .error-msg { color: red; font-size: 14px; margin-top: 5px; }
     </style>
 </head>
 <body>
 <div class="container">
     <h2>Sistem Arsip Digital - SAD</h2>
+    
+    <!-- Form Login -->
     <div id="loginForm">
         <h3>Login</h3>
-        <input type="text" id="username" placeholder="Username (admin)">
-        <input type="password" id="password" placeholder="Password (123)">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Masukkan username (admin)">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Masukkan password (123)">
         <button onclick="login()">Login</button>
-        <p id="loginMsg" style="color:red;"></p>
+        <p id="loginMsg" class="error-msg"></p>
     </div>
+
+    <!-- Dashboard Utama -->
     <div id="dashboard">
-        <button onclick="logout()" style="background:red; float:right; width:auto; padding: 5px 15px;">Logout</button>
+        <button onclick="logout()" style="background:#dc3545; width:auto; padding: 8px 20px; float:right;">Logout</button>
         <h3>Dashboard Utama</h3>
+        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+        
         <h4>Buat Folder Baru</h4>
         <input type="text" id="nama_folder" placeholder="Nama Folder">
         <button onclick="buatFolder()">Buat Folder</button>
-        <hr style="margin: 20px 0;">
-        <h4>Daftar Folder</h4>
-        <div id="listFolder"></div>
+        
+        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+        
+        <h4>Daftar Folder Arsip</h4>
+        <div id="listFolder">Memuat data...</div>
     </div>
 </div>
+
 <script>
 const API_URL = ''; 
+
 window.onload = () => {
     if(localStorage.getItem('isLogin') === 'true') {
         showDashboard();
@@ -44,53 +58,69 @@ window.onload = () => {
         document.getElementById('loginForm').style.display = 'block';
     }
 }
+
 async function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const res = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    if(data.success){
-        localStorage.setItem('isLogin', 'true');
-        showDashboard();
-    } else {
-        document.getElementById('loginMsg').innerText = data.error;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    
+    try {
+        const res = await fetch(`${API_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        
+        if(data.success){
+            localStorage.setItem('isLogin', 'true');
+            showDashboard();
+        } else {
+            document.getElementById('loginMsg').innerText = data.error || 'Username atau password salah!';
+        }
+    } catch (err) {
+        document.getElementById('loginMsg').innerText = 'Terjadi kesalahan koneksi server.';
     }
 }
+
 function showDashboard() {
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     loadFolders();
 }
+
 function logout(){
     localStorage.removeItem('isLogin');
     location.reload();
 }
+
 async function loadFolders() {
-    const res = await fetch(`${API_URL}/api/folders`);
-    const data = await res.json();
-    if(data.success){
-        let html = data.data.length === 0 ? '<p>Belum ada folder arsip.</p>' : '';
-        data.data.forEach(folder => {
-            html += `
-            <div class="folder">
-                <h4>📁 ${folder.nama_folder}</h4>
-                <input type="text" id="nama_dok_${folder.id}" placeholder="Nama Dokumen">
-                <input type="file" id="file_dok_${folder.id}">
-                <button onclick="uploadArsip(${folder.id})">Unggah ke Arsip</button>
-                <button onclick="loadArsip(${folder.id})" style="background:#007bff; margin-top:5px;">Lihat Arsip</button>
-                <div id="arsip_${folder.id}" style="margin-top:10px;"></div>
-            </div>`;
-        });
-        document.getElementById('listFolder').innerHTML = html;
+    try {
+        const res = await fetch(`${API_URL}/api/folders`);
+        const data = await res.json();
+        if(data.success){
+            let html = data.data.length === 0 ? '<p>Belum ada folder arsip.</p>' : '';
+            data.data.forEach(folder => {
+                html += `
+                <div class="folder">
+                    <h4>📁 ${folder.nama_folder}</h4>
+                    <input type="text" id="nama_dok_${folder.id}" placeholder="Nama/Judul Dokumen">
+                    <input type="file" id="file_dok_${folder.id}">
+                    <button onclick="uploadArsip(${folder.id})" style="background:#17a2b8;">Unggah ke Arsip</button>
+                    <button onclick="loadArsip(${folder.id})" style="background:#6c757d; margin-top:5px;">Muat Daftar Arsip</button>
+                    <div id="arsip_${folder.id}" style="margin-top:10px;"></div>
+                </div>`;
+            });
+            document.getElementById('listFolder').innerHTML = html;
+        }
+    } catch (err) {
+        console.error('Gagal memuat folder', err);
     }
 }
+
 async function buatFolder(){
-    const nama = document.getElementById('nama_folder').value;
+    const nama = document.getElementById('nama_folder').value.trim();
     if(!nama) return alert('Nama folder wajib diisi');
+    
     const res = await fetch(`${API_URL}/api/folders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -100,24 +130,30 @@ async function buatFolder(){
     if(data.success) {
         document.getElementById('nama_folder').value = '';
         loadFolders();
+    } else {
+        alert('Gagal membuat folder');
     }
 }
+
 async function uploadArsip(folderId) {
-    const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
+    const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value.trim();
     const fileInput = document.getElementById(`file_dok_${folderId}`);
+    
     if(!nama_dokumen) return alert('Nama dokumen wajib diisi');
+    
     const formData = new FormData();
     formData.append('judul_arsip', nama_dokumen);
     if (fileInput && fileInput.files[0]) {
         formData.append('berkas', fileInput.files[0]);
     }
+    
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
         method: 'POST',
         body: formData 
     });
     const data = await res.json();
     if(data.success){
-        alert('Upload berhasil!');
+        alert('Unggah arsip berhasil!');
         document.getElementById(`nama_dok_${folderId}`).value = '';
         fileInput.value = '';
         loadArsip(folderId);
@@ -125,15 +161,22 @@ async function uploadArsip(folderId) {
         alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
     }
 }
+
 async function loadArsip(folderId){
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`);
     const data = await res.json();
     if(data.success){
         let html = '<h5>Daftar Dokumen:</h5>';
-        if(data.data.length === 0) html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen.</p>';
-        data.data.forEach(a => {
-            html += `<div class="arsip"><b>${a.nama_dokumen}</b></div>`;
-        });
+        if(data.data.length === 0) {
+            html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen di folder ini.</p>';
+        } else {
+            data.data.forEach(a => {
+                html += `<div class="arsip">
+                    <span><b>${a.nama_dokumen}</b></span>
+                    ${a.file_url ? `<a href="/uploads/${a.file_url}" target="_blank" style="color:#007bff; text-decoration:none; font-weight:bold;">Lihat File ↗</a>` : ''}
+                </div>`;
+            });
+        }
         document.getElementById(`arsip_${folderId}`).innerHTML = html;
     }
 }
