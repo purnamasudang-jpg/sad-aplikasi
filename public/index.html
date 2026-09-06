@@ -1,519 +1,142 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Arsip Digital (SAD)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sistem Arsip Digital - SAD</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        .folder { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #fff; }
+        .arsip { background: #f9f9f9; padding: 8px; margin: 5px 0; border-left: 3px solid #007bff; font-size: 14px; }
+        #loginForm, #dashboard { display: none; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
-
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="kembaliKeHome()">
-                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
-                    <i class="fa-solid fa-box-archive text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Sistem Arsip Digital</h1>
-                    <p class="text-xs text-slate-500">Kelola dokumen instansi secara aman & terorganisir</p>
-                </div>
-            </div>
-            <div id="user-nav" class="hidden flex items-center space-x-4">
-                <span id="username-display" class="text-sm font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg"></span>
-                <button onclick="logout()" class="text-sm text-red-600 hover:text-red-700 font-medium px-3 py-1.5 rounded-lg hover:bg-red-50 transition">
-                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
-
-        <!-- AUTH SECTION -->
-        <div id="auth-section" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden my-12">
-            <div class="flex border-b border-slate-100 bg-slate-50/50">
-                <button id="tab-login-btn" onclick="switchTab('login')" class="flex-1 py-4 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 bg-white transition">Masuk Akun</button>
-                <button id="tab-register-btn" onclick="switchTab('register')" class="flex-1 py-4 text-sm font-semibold text-slate-500 hover:text-slate-800 transition">Daftar Baru</button>
-            </div>
-
-            <div class="p-8">
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Username</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" placeholder="Masukkan username">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Password</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" placeholder="Masukkan password">
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-lg shadow-indigo-200 transition duration-200 flex items-center justify-center space-x-2">
-                        <span>Masuk ke Sistem</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                </form>
-
-                <form id="register-form" onsubmit="handleRegister(event)" class="space-y-5 hidden">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Buat Username</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-user-plus"></i></span>
-                            <input type="text" id="reg-username" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" placeholder="Pilih username unik">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Buat Password</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" id="reg-password" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition" placeholder="Minimal 6 karakter">
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-xl shadow-lg shadow-emerald-200 transition duration-200 flex items-center justify-center space-x-2">
-                        <span>Daftarkan Akun</span>
-                        <i class="fa-solid fa-check text-xs"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- DASHBOARD SECTION (Halaman Utama Folder) -->
-        <div id="dashboard-section" class="hidden space-y-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
-                    <i class="fa-solid fa-folder-open text-indigo-600 mr-2"></i> Kelola Folder Arsip
-                </h2>
-                <div class="flex gap-3">
-                    <input type="text" id="nama-folder" placeholder="Nama Folder (Contoh: Surat Masuk 2026)" class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button onclick="buatFolder()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Buat Folder</span>
-                    </button>
-                </div>
-            </div>
-
-            <div id="folder-list-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- List folder dinamis -->
-            </div>
-        </div>
-
-        <!-- DETAIL FOLDER SECTION (Halaman Isi Arsip dalam Folder) -->
-        <div id="folder-detail-section" class="hidden space-y-6">
-            <div class="flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex items-center space-x-3">
-                    <button onclick="kembaliKeHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <div>
-                        <h2 id="current-folder-title" class="text-xl font-bold text-slate-800">Nama Folder</h2>
-                        <p class="text-xs text-slate-400">Daftar dokumen di dalam folder ini</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Form Upload Dokumen -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-up text-indigo-600 mr-2"></i> Upload Dokumen Baru</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input type="text" id="nama-dokumen" placeholder="Nama / Judul Dokumen (Contoh: SK Pembagian Tugas)" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <input type="file" id="file-input" class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600 file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-                </div>
-                <button onclick="uploadArsip()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition flex items-center space-x-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span>Unggah ke Arsip</span>
-                </button>
-            </div>
-
-            <!-- List Arsip / Dokumen -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-4 bg-slate-50 border-b border-slate-200 font-semibold text-sm text-slate-700">Daftar Dokumen</div>
-                <div id="arsip-list-container" class="divide-y divide-slate-100">
-                    <!-- List arsip dinamis -->
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modal Preview Dokumen -->
-    <div id="preview-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
-                <h3 id="preview-title" class="font-bold text-slate-800 text-sm">Preview Dokumen</h3>
-                <button onclick="tutupPreview()" class="text-slate-400 hover:text-slate-700 bg-white p-2 rounded-lg shadow-sm transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <div class="p-6 flex-grow overflow-auto flex items-center justify-center bg-slate-50" id="preview-content-container">
-                <!-- Konten Preview Dinamis -->
-            </div>
-        </div>
+<body>
+<div class="container">
+    <h2>Sistem Arsip Digital - SAD</h2>
+    <div id="loginForm">
+        <h3>Login</h3>
+        <input type="text" id="username" placeholder="Username (admin)">
+        <input type="password" id="password" placeholder="Password (123)">
+        <button onclick="login()">Login</button>
+        <p id="loginMsg" style="color:red;"></p>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
-        &copy; 2026 Sistem Arsip Digital. Hak cipta dilindungi oleh <span class="font-semibold text-slate-600">Asep Sudang Purnawan</span>.
-    </footer>
-
-    <!-- Script Logika -->
-    <script>
-        let activeFolderId = null;
-        let activeFolderName = '';
-
-        function switchTab(tab) {
-            const loginForm = document.getElementById('login-form');
-            const regForm = document.getElementById('register-form');
-            const loginBtn = document.getElementById('tab-login-btn');
-            const regBtn = document.getElementById('tab-register-btn');
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
-                loginBtn.className = "flex-1 py-4 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 bg-white transition";
-                regBtn.className = "flex-1 py-4 text-sm font-semibold text-slate-500 hover:text-slate-800 transition";
-            } else {
-                loginForm.classList.add('hidden');
-                regForm.classList.remove('hidden');
-                regBtn.className = "flex-1 py-4 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 bg-white transition";
-                loginBtn.className = "flex-1 py-4 text-sm font-semibold text-slate-500 hover:text-slate-800 transition";
-            }
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    checkAuth();
-                } else {
-                    alert(data.error || "Gagal masuk");
-                }
-            } catch (err) {
-                alert("Terjadi kesalahan koneksi.");
-            }
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            const username = document.getElementById('reg-username').value;
-            const password = document.getElementById('reg-password').value;
-
-            try {
-                const res = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert("Registrasi berhasil! Silakan masuk.");
-                    switchTab('login');
-                } else {
-                    alert(data.error || "Gagal mendaftar");
-                }
-            } catch (err) {
-                alert("Terjadi kesalahan koneksi.");
-            }
-        }
-
-        function checkAuth() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const authSection = document.getElementById('auth-section');
-            const dashboardSection = document.getElementById('dashboard-section');
-            const detailSection = document.getElementById('folder-detail-section');
-            const userNav = document.getElementById('user-nav');
-            const usernameDisplay = document.getElementById('username-display');
-
-            if (user) {
-                authSection.classList.add('hidden');
-                userNav.classList.remove('hidden');
-                usernameDisplay.innerText = user.username;
-                
-                if (activeFolderId) {
-                    dashboardSection.classList.add('hidden');
-                    detailSection.classList.remove('hidden');
-                    loadArsip(activeFolderId);
-                } else {
-                    dashboardSection.classList.remove('hidden');
-                    detailSection.classList.add('hidden');
-                    loadFolders();
-                }
-            } else {
-                authSection.classList.remove('hidden');
-                dashboardSection.classList.add('hidden');
-                detailSection.classList.add('hidden');
-                userNav.classList.add('hidden');
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('user');
-            activeFolderId = null;
-            checkAuth();
-        }
-
-        function kembaliKeHome() {
-            activeFolderId = null;
-            checkAuth();
-        }
-
-        async function loadFolders() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
-
-            try {
-                const res = await fetch('/api/folders', {
-                    headers: { 'user-id': user.id }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    const container = document.getElementById('folder-list-container');
-                    container.innerHTML = '';
-                    if (data.data.length === 0) {
-                        container.innerHTML = '<p class="text-sm text-slate-400 col-span-3 text-center py-8">Belum ada folder arsip. Buat folder baru di atas.</p>';
-                        return;
-                    }
-                    data.data.forEach(folder => {
-                        container.innerHTML += `
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition flex justify-between items-center group">
-                                <div onclick="bukaFolder(${folder.id}, '${folder.nama_folder}')" class="cursor-pointer flex-grow">
-                                    <h3 class="font-bold text-slate-800 group-hover:text-indigo-600 transition"><i class="fa-solid fa-folder text-amber-500 mr-2"></i>${folder.nama_folder}</h3>
-                                    <p class="text-xs text-slate-400 mt-1">${folder.jumlah_arsip || 0} Dokumen tersimpan</p>
-                                </div>
-                                <button onclick="hapusFolder(event, ${folder.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `;
-                    });
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function buatFolder() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const nama_folder = document.getElementById('nama-folder').value;
-            if (!nama_folder) return alert("Nama folder tidak boleh kosong!");
-
-            try {
-                const res = await fetch('/api/folders', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'user-id': user.id
-                    },
-                    body: JSON.stringify({ nama_folder })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('nama-folder').value = '';
-                    loadFolders();
-                } else {
-                    alert(data.error);
-                }
-            } catch (err) {
-                alert("Gagal membuat folder.");
-            }
-        }
-
-        async function hapusFolder(event, id) {
-            event.stopPropagation();
-            if (!confirm("Hapus folder beserta seluruh isinya?")) return;
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            try {
-                const res = await fetch(`/api/folders/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'user-id': user.id }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    loadFolders();
-                } else {
-                    alert(data.error);
-                }
-            } catch (err) {
-                alert("Gagal menghapus folder.");
-            }
-        }
-
-        function bukaFolder(id, nama) {
-            activeFolderId = id;
-            activeFolderName = nama;
-            document.getElementById('current-folder-title').innerText = nama;
-            checkAuth();
-        }
-
-        async function loadArsip(folderId) {
-            try {
-                const res = await fetch(`/api/folders/${folderId}/arsip`);
-                const data = await res.json();
-                if (data.success) {
-                    const container = document.getElementById('arsip-list-container');
-                    container.innerHTML = '';
-                    if (data.data.length === 0) {
-                        container.innerHTML = '<p class="text-sm text-slate-400 text-center py-6">Belum ada dokumen di dalam folder ini.</p>';
-                        return;
-                    }
-                    data.data.forEach(arsip => {
-                        let badgeColor = 'bg-slate-100 text-slate-700';
-                        const t = (arsip.tipe_file || 'FILE').toUpperCase();
-                        if (t.includes('PDF')) badgeColor = 'bg-red-50 text-red-600 border border-red-200';
-                        else if (t.includes('IMAGE') || t.includes('JPG') || t.includes('PNG')) badgeColor = 'bg-emerald-50 text-emerald-600 border border-emerald-200';
-                        else if (t.includes('WORD') || t.includes('DOC')) badgeColor = 'bg-blue-50 text-blue-600 border border-blue-200';
-                        else if (t.includes('EXCEL') || t.includes('SHEET') || t.includes('XLS')) badgeColor = 'bg-green-50 text-green-700 border border-green-200';
-
-                        // Menyimpan data URL dengan aman menggunakan escape kutip
-                        const safeUrl = arsip.file_url.replace(/'/g, "\\'");
-                        const safeTitle = arsip.nama_dokumen.replace(/'/g, "\\'");
-
-                        container.innerHTML += `
-                            <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl">
-                                        <i class="fa-solid fa-file-lines text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center space-x-2">
-                                            <h4 class="font-semibold text-sm text-slate-800">${arsip.nama_dokumen}</h4>
-                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${badgeColor}">${arsip.tipe_file || 'FILE'}</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3 mt-1 text-xs">
-                                            <button onclick="bukaPreview('${safeTitle}', '${safeUrl}', '${t}')" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center transition">
-                                                <i class="fa-solid fa-eye mr-1"></i> Lihat
-                                            </button>
-                                            <span class="text-slate-300">|</span>
-                                            <a href="${arsip.file_url}" download="${arsip.nama_dokumen}" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center transition">
-                                                <i class="fa-solid fa-download mr-1"></i> Unduh
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button onclick="hapusArsip(${arsip.id})" class="text-slate-400 hover:text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `;
-                    });
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        function bukaPreview(title, url, type) {
-            const modal = document.getElementById('preview-modal');
-            const titleEl = document.getElementById('preview-title');
-            const container = document.getElementById('preview-content-container');
-
-            titleEl.innerText = `Preview: ${title}`;
-            container.innerHTML = '';
-
-            if (type.includes('IMAGE') || type.includes('JPG') || type.includes('PNG')) {
-                container.innerHTML = `<img src="${url}" class="max-h-[70vh] rounded-xl shadow-md object-contain">`;
-            } else if (type.includes('PDF')) {
-                container.innerHTML = `<iframe src="${url}" class="w-full h-[70vh] rounded-xl border border-slate-200"></iframe>`;
-            } else {
-                container.innerHTML = `
-                    <div class="text-center py-12 space-y-3">
-                        <i class="fa-solid fa-file-circle-exclamation text-4xl text-amber-500"></i>
-                        <p class="text-sm text-slate-600 font-medium">Format file ini tidak mendukung preview langsung.</p>
-                        <a href="${url}" download="${title}" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-medium shadow-sm hover:bg-indigo-700 transition">
-                            <i class="fa-solid fa-download mr-1"></i> Unduh untuk Membuka File
-                        </a>
-                    </div>
-                `;
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function tutupPreview() {
-            const modal = document.getElementById('preview-modal');
-            modal.classList.add('hidden');
-            document.getElementById('preview-content-container').innerHTML = '';
-        }
-
-        async function uploadArsip() {
-            const nama_dokumen = document.getElementById('nama-dokumen').value;
-            const fileInput = document.getElementById('file-input');
-            
-            if (!nama_dokumen) return alert("Nama dokumen wajib diisi!");
-            if (fileInput.files.length === 0) return alert("Pilih file yang akan diunggah!");
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = async function(event) {
-                const file_url = event.target.result;
-                
-                let tipe_file = "FILE";
-                const mime = file.type;
-                const name = file.name.toLowerCase();
-
-                if (mime.includes('pdf') || name.endsWith('.pdf')) tipe_file = "PDF";
-                else if (mime.includes('image/jpeg') || name.endsWith('.jpg') || name.endsWith('.jpeg')) tipe_file = "JPG";
-                else if (mime.includes('image/png') || name.endsWith('.png')) tipe_file = "PNG";
-                else if (mime.includes('word') || name.endsWith('.doc') || name.endsWith('.docx')) tipe_file = "WORD";
-                else if (mime.includes('excel') || mime.includes('spreadsheet') || name.endsWith('.xls') || name.endsWith('.xlsx')) tipe_file = "EXCEL";
-                else {
-                    const ext = name.split('.').pop();
-                    if (ext) tipe_file = ext.toUpperCase();
-                }
-
-                try {
-                    const res = await fetch(`/api/folders/${activeFolderId}/arsip`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ nama_dokumen, file_url, tipe_file })
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                        document.getElementById('nama-dokumen').value = '';
-                        fileInput.value = '';
-                        loadArsip(activeFolderId);
-                    } else {
-                        alert(data.error);
-                    }
-                } catch (err) {
-                    alert("Gagal mengunggah dokumen.");
-                }
-            };
-
-            reader.readAsDataURL(file);
-        }
-
-        async function hapusArsip(id) {
-            if (!confirm("Hapus dokumen ini dari arsip?")) return;
-            try {
-                const res = await fetch(`/api/arsip/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    loadArsip(activeFolderId);
-                } else {
-                    alert(data.error);
-                }
-            } catch (err) {
-                alert("Gagal menghapus dokumen.");
-            }
-        }
-
-        checkAuth();
-    </script>
+    <div id="dashboard">
+        <button onclick="logout()" style="background:red; float:right; width:auto; padding: 5px 15px;">Logout</button>
+        <h3>Dashboard Utama</h3>
+        <h4>Buat Folder Baru</h4>
+        <input type="text" id="nama_folder" placeholder="Nama Folder">
+        <button onclick="buatFolder()">Buat Folder</button>
+        <hr style="margin: 20px 0;">
+        <h4>Daftar Folder</h4>
+        <div id="listFolder"></div>
+    </div>
+</div>
+<script>
+const API_URL = ''; 
+window.onload = () => {
+    if(localStorage.getItem('isLogin') === 'true') {
+        showDashboard();
+    } else {
+        document.getElementById('loginForm').style.display = 'block';
+    }
+}
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const res = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if(data.success){
+        localStorage.setItem('isLogin', 'true');
+        showDashboard();
+    } else {
+        document.getElementById('loginMsg').innerText = data.error;
+    }
+}
+function showDashboard() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadFolders();
+}
+function logout(){
+    localStorage.removeItem('isLogin');
+    location.reload();
+}
+async function loadFolders() {
+    const res = await fetch(`${API_URL}/api/folders`);
+    const data = await res.json();
+    if(data.success){
+        let html = data.data.length === 0 ? '<p>Belum ada folder arsip.</p>' : '';
+        data.data.forEach(folder => {
+            html += `
+            <div class="folder">
+                <h4>📁 ${folder.nama_folder}</h4>
+                <input type="text" id="nama_dok_${folder.id}" placeholder="Nama Dokumen">
+                <input type="file" id="file_dok_${folder.id}">
+                <button onclick="uploadArsip(${folder.id})">Unggah ke Arsip</button>
+                <button onclick="loadArsip(${folder.id})" style="background:#007bff; margin-top:5px;">Lihat Arsip</button>
+                <div id="arsip_${folder.id}" style="margin-top:10px;"></div>
+            </div>`;
+        });
+        document.getElementById('listFolder').innerHTML = html;
+    }
+}
+async function buatFolder(){
+    const nama = document.getElementById('nama_folder').value;
+    if(!nama) return alert('Nama folder wajib diisi');
+    const res = await fetch(`${API_URL}/api/folders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nama_folder: nama })
+    });
+    const data = await res.json();
+    if(data.success) {
+        document.getElementById('nama_folder').value = '';
+        loadFolders();
+    }
+}
+async function uploadArsip(folderId) {
+    const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
+    const fileInput = document.getElementById(`file_dok_${folderId}`);
+    if(!nama_dokumen) return alert('Nama dokumen wajib diisi');
+    const formData = new FormData();
+    formData.append('judul_arsip', nama_dokumen);
+    if (fileInput && fileInput.files[0]) {
+        formData.append('berkas', fileInput.files[0]);
+    }
+    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
+        method: 'POST',
+        body: formData 
+    });
+    const data = await res.json();
+    if(data.success){
+        alert('Upload berhasil!');
+        document.getElementById(`nama_dok_${folderId}`).value = '';
+        fileInput.value = '';
+        loadArsip(folderId);
+    } else {
+        alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+    }
+}
+async function loadArsip(folderId){
+    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`);
+    const data = await res.json();
+    if(data.success){
+        let html = '<h5>Daftar Dokumen:</h5>';
+        if(data.data.length === 0) html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen.</p>';
+        data.data.forEach(a => {
+            html += `<div class="arsip"><b>${a.nama_dokumen}</b></div>`;
+        });
+        document.getElementById(`arsip_${folderId}`).innerHTML = html;
+    }
+}
+</script>
 </body>
 </html>
