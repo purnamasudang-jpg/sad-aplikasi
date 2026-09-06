@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Batasi ukuran file maksimal 4MB agar aman di Vercel (limit 4.5MB)
+// Konfigurasi multer dengan memory storage dan limit 4MB
 const upload = multer({ 
     storage: multer.memoryStorage(),
     limits: { fileSize: 4 * 1024 * 1024 } // 4 MB
@@ -46,7 +46,7 @@ function saveDb() {
     fs.writeFileSync(dbPath, Buffer.from(data));
 }
 
-// FUNGSI VERIFIKASI USER
+// FUNGSI VERIFIKASI USER YANG FLEKSIBEL UNTUK MULTIPART
 function verifyUser(req, res, next) {
     const userId = req.headers['user-id'] || req.headers['User-Id'] || (req.body && req.body.user_id);
     if (!userId) {
@@ -114,11 +114,14 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     res.json({ success: true, data: rows });
 });
 
-// UPLOAD ARSIP DENGAN PENANGANAN ERROR LIMIT
+// UPLOAD ARSIP DENGAN PENANGANAN ERROR YANG LEBIH AMAN
 app.post('/api/folders/:id/arsip', (req, res, next) => {
     upload.single('berkas')(req, res, function (err) {
-        if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ success: false, error: 'Ukuran file terlalu besar! Maksimal 4 MB.' });
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ success: false, error: 'Ukuran berkas melebihi 4MB!' });
+            }
+            return res.status(400).json({ success: false, error: `Error upload: ${err.message}` });
         } else if (err) {
             return res.status(500).json({ success: false, error: err.message });
         }
@@ -142,7 +145,7 @@ app.post('/api/folders/:id/arsip', (req, res, next) => {
         }
         
         database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-            [req.params.id, req.userId, judul_arsip, filename, tipe_file]);
+            [req.params.id, req.userId, judul_arsip || (file ? file.originalname : 'Tanpa Judul'), filename, tipe_file]);
         saveDb();
         res.json({ success: true });
     } catch (e) {
