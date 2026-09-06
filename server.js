@@ -32,7 +32,11 @@ function saveDb() { /* simpan state jika diperlukan */ }
 
 // Middleware Verifikasi User
 function verifyUser(req, res, next) {
-    const userId = req.headers['user-id'] || req.body.user_id || req.query.userId;
+    const userId = req.headers['user-id'] || req.query.userId || req.body.user_id || req.query.user_id;
+    
+    // Debugging di console server Vercel
+    console.log("Menerima request ke:", req.path, "| Ditemukan userId:", userId);
+
     if (!userId) {
         return res.status(401).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
     }
