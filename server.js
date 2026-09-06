@@ -11,8 +11,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Gunakan memoryStorage agar file bisa dibaca sebagai buffer di Vercel
-const upload = multer({ storage: multer.memoryStorage() });
+// Batasi ukuran file maksimal 4MB agar aman di Vercel (limit 4.5MB)
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 4 * 1024 * 1024 } // 4 MB
+});
 
 let db = null;
 const dbPath = path.join('/tmp', 'database.sqlite');
@@ -111,8 +114,17 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     res.json({ success: true, data: rows });
 });
 
-// UPLOAD ARSIP DENGAN MEMORY STORAGE & PENYIMPANAN KE /tmp
-app.post('/api/folders/:id/arsip', upload.single('berkas'), verifyUser, async (req, res) => {
+// UPLOAD ARSIP DENGAN PENANGANAN ERROR LIMIT
+app.post('/api/folders/:id/arsip', (req, res, next) => {
+    upload.single('berkas')(req, res, function (err) {
+        if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ success: false, error: 'Ukuran file terlalu besar! Maksimal 4 MB.' });
+        } else if (err) {
+            return res.status(500).json({ success: false, error: err.message });
+        }
+        next();
+    });
+}, verifyUser, async (req, res) => {
     try {
         const { judul_arsip } = req.body; 
         const file = req.file;
