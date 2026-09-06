@@ -58,7 +58,7 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group.full { grid-column: span 2; }
         label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #2d3748; }
-        input[type="text"], input[type="date"], input[type="file"], select, textarea { padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; width: 100%; box-sizing: border-box; background: #fff; }
+        input[type="text"], input[type="password"], input[type="date"], input[type="file"], select, textarea { padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; width: 100%; box-sizing: border-box; background: #fff; }
         
         .btn-primary { background: #1a202c; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 15px; transition: background 0.2s; }
         .btn-primary:hover { background: #2d3748; }
@@ -84,14 +84,18 @@
         .footer-col ul li a:hover { color: white; }
         .footer-bottom { border-top: 1px solid #2d3748; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 
-        /* Login Section */
-        .login-card { max-width: 480px; margin: 60px auto; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .login-card h3 { text-align: center; color: #2b6cb0; margin-top: 0; margin-bottom: 25px; font-size: 22px; }
-        .btn-masuk { background: #2b6cb0; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; }
-        .btn-masuk:hover { background: #2c5282; }
+        /* Auth Section (Login & Register Cards) */
+        .auth-container { max-width: 480px; margin: 40px auto; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 35px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .auth-container h3 { text-align: center; color: #2b6cb0; margin-top: 0; margin-bottom: 20px; font-size: 22px; }
+        .btn-masuk, .btn-daftar { background: #2b6cb0; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; }
+        .btn-masuk:hover, .btn-daftar:hover { background: #2c5282; }
+        .auth-switch { text-align: center; margin-top: 15px; font-size: 13px; color: #718096; }
+        .auth-switch a { color: #3182ce; text-decoration: none; font-weight: bold; cursor: pointer; }
+        .auth-switch a:hover { text-decoration: underline; }
         
-        #loginSection, #halamanDua, #halamanTiga { display: none; }
-        .error-msg { color: red; font-size: 13px; margin-top: 10px; text-align: center; }
+        #loginSection, #registerSection, #halamanDua, #halamanTiga { display: none; }
+        .error-msg { color: #e53e3e; font-size: 13px; margin-top: 10px; text-align: center; }
+        .success-msg { color: #38a169; font-size: 13px; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -99,23 +103,53 @@
     
     <!-- Halaman Login -->
     <div id="loginSection">
-        <div style="text-align: center; margin-bottom: 25px;">
+        <div style="text-align: center; margin-bottom: 20px;">
             <h1 style="margin: 0; color: #1a365d; font-size: 28px;">SAD (Sistem Arsip Digital)</h1>
-            <p style="margin: 6px 0 0 0; color: #718096; font-size: 14px;">Manajemen Arsip Digital Berbasis Folder</p>
+            <p style="margin: 6px 0 0 0; color: #718096; font-size: 14px;">Manajemen Arsip Digital Berbasis Folder Pribadi</p>
         </div>
 
-        <div class="login-card">
+        <div class="auth-container">
             <h3>Login Akun SAD</h3>
             <div class="form-group" style="margin-bottom: 15px;">
-                <label>Username / Email</label>
-                <input type="text" id="username" placeholder="Masukkan username">
+                <label>Username</label>
+                <input type="text" id="login_username" placeholder="Masukkan username">
             </div>
             <div class="form-group" style="margin-bottom: 20px;">
                 <label>Password</label>
-                <input type="password" id="password" placeholder="Masukkan password">
+                <input type="password" id="login_password" placeholder="Masukkan password">
             </div>
             <button class="btn-masuk" onclick="login()">Masuk</button>
             <p id="loginMsg" class="error-msg"></p>
+            
+            <div class="auth-switch">
+                Belum punya akun? <a onclick="tampilRegister()">Daftar di sini</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Halaman Register (Daftar Akun Baru) -->
+    <div id="registerSection">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="margin: 0; color: #1a365d; font-size: 28px;">SAD (Sistem Arsip Digital)</h1>
+            <p style="margin: 6px 0 0 0; color: #718096; font-size: 14px;">Buat Akun Arsip Pribadi Baru</p>
+        </div>
+
+        <div class="auth-container">
+            <h3>Daftar Akun Baru</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Username Baru</label>
+                <input type="text" id="reg_username" placeholder="Pilih username unik">
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Password</label>
+                <input type="password" id="reg_password" placeholder="Buat password aman">
+            </div>
+            <button class="btn-daftar" onclick="register()">Daftar Akun</button>
+            <p id="regMsg" class="error-msg"></p>
+            
+            <div class="auth-switch">
+                Sudah punya akun? <a onclick="tampilLogin()">Login di sini</a>
+            </div>
         </div>
     </div>
 
@@ -273,7 +307,7 @@ window.onload = () => {
     if(localStorage.getItem('isLogin') === 'true') {
         showDashboard();
     } else {
-        document.getElementById('loginSection').style.display = 'block';
+        tampilLogin();
     }
     document.getElementById('dok_tanggal').valueAsDate = new Date();
     
@@ -285,9 +319,52 @@ window.onload = () => {
     }
 }
 
+function tampilLogin() {
+    document.getElementById('registerSection').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('loginMsg').innerText = '';
+}
+
+function tampilRegister() {
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+    document.getElementById('registerSection').style.display = 'block';
+    document.getElementById('regMsg').innerText = '';
+}
+
+async function register() {
+    const username = document.getElementById('reg_username').value.trim();
+    const password = document.getElementById('reg_password').value.trim();
+    const msgEl = document.getElementById('regMsg');
+
+    if(!username || !password) {
+        msgEl.innerText = 'Username dan password wajib diisi!';
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if(data.success){
+            alert('Pendaftaran akun berhasil! Silakan login.');
+            tampilLogin();
+        } else {
+            msgEl.innerText = data.error || 'Pendaftaran gagal';
+        }
+    } catch(err) {
+        msgEl.innerText = 'Koneksi server gagal';
+    }
+}
+
 async function login() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const username = document.getElementById('login_username').value.trim();
+    const password = document.getElementById('login_password').value.trim();
+    const msgEl = document.getElementById('loginMsg');
     
     try {
         const res = await fetch('/api/login', {
@@ -301,15 +378,16 @@ async function login() {
             localStorage.setItem('username', data.user.username);
             showDashboard();
         } else {
-            document.getElementById('loginMsg').innerText = data.error || 'Login gagal';
+            msgEl.innerText = data.error || 'Login gagal';
         }
     } catch(err) {
-        document.getElementById('loginMsg').innerText = 'Koneksi server gagal';
+        msgEl.innerText = 'Koneksi server gagal';
     }
 }
 
 function showDashboard() {
     document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('registerSection').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'block';
     
     const uname = localStorage.getItem('username') || 'admin';
@@ -320,7 +398,8 @@ function showDashboard() {
 
 function logout(){
     localStorage.removeItem('isLogin');
-    location.reload();
+    localStorage.removeItem('username');
+    tampilLogin();
 }
 
 function gantiFotoProfil(event) {
@@ -338,7 +417,8 @@ function gantiFotoProfil(event) {
 
 async function loadData() {
     try {
-        const res = await fetch('/api/data');
+        const username = localStorage.getItem('username') || '';
+        const res = await fetch(`/api/data?username=${encodeURIComponent(username)}`);
         const data = await res.json();
         if(data.success) {
             globalData = data;
@@ -454,6 +534,7 @@ function renderHalamanTiga(folderId) {
 async function buatFolder() {
     const nama_folder = document.getElementById('nama_folder_input').value.trim();
     const tanggal = new Date().toISOString().split('T')[0];
+    const username = localStorage.getItem('username') || '';
 
     if(!nama_folder) {
         alert('Nama folder wajib diisi!');
@@ -463,7 +544,7 @@ async function buatFolder() {
     const res = await fetch('/api/folders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nama_folder, tanggal })
+        body: JSON.stringify({ nama_folder, tanggal, username })
     });
     const data = await res.json();
     if(data.success) {
@@ -476,7 +557,8 @@ async function buatFolder() {
 
 async function hapusFolder(id) {
     if(!confirm('Menghapus folder ini juga akan menghapus seluruh isi dokumen di dalamnya. Lanjutkan?')) return;
-    const res = await fetch(`/api/folders/${id}`, { method: 'DELETE' });
+    const username = localStorage.getItem('username') || '';
+    const res = await fetch(`/api/folders/${id}?username=${encodeURIComponent(username)}`, { method: 'DELETE' });
     const data = await res.json();
     if(data.success) {
         loadData();
@@ -494,6 +576,7 @@ async function simpanDokumen() {
     const pengirim = document.getElementById('pengirim').value.trim();
     const lokasi_fisik = document.getElementById('lokasi_fisik').value.trim();
     const fileInput = document.getElementById('berkas');
+    const username = localStorage.getItem('username') || '';
 
     if(!judul_dokumen) {
         alert('Nama dokumen wajib diisi!');
@@ -507,6 +590,7 @@ async function simpanDokumen() {
     formData.append('keterangan', nomor_surat); 
     formData.append('pengirim', pengirim);
     formData.append('lokasi_fisik', lokasi_fisik);
+    formData.append('username', username);
     
     for (let i = 0; i < fileInput.files.length; i++) {
         formData.append('berkas', fileInput.files[i]);
@@ -533,7 +617,8 @@ async function simpanDokumen() {
 
 async function hapusArsip(id) {
     if(!confirm('Yakin ingin menghapus arsip ini?')) return;
-    const res = await fetch(`/api/arsip/${id}`, { method: 'DELETE' });
+    const username = localStorage.getItem('username') || '';
+    const res = await fetch(`/api/arsip/${id}?username=${encodeURIComponent(username)}`, { method: 'DELETE' });
     const data = await res.json();
     if(data.success) {
         loadData();
