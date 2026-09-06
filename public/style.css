@@ -1,0 +1,157 @@
+/* style.css - Tampilan Halaman Login Sistem Arsip Digital */
+
+/* Reset dasar untuk memastikan padding dan margin konsisten */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling body utama */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font yang bersih dan modern */
+    background-color: #EDF2F7; /* Warna latar belakang abu-abu muda */
+    color: #4A5568; /* Warna teks default */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Memenuhi tinggi layar */
+    margin: 0;
+}
+
+/* Container utama konten */
+.container {
+    background-color: #FFFFFF; /* Warna kartu putih */
+    border-radius: 12px; /* Sudut kartu melengkung */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Bayangan kartu yang lembut */
+    width: 100%;
+    max-width: 650px; /* Lebar maksimum container */
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px; /* Jarak ke footer */
+}
+
+/* Judul Besar (SAD) */
+.login-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1A365D; /* Warna biru tua */
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+/* Subjudul */
+.login-header p {
+    font-size: 1.1rem;
+    color: #718096; /* Warna abu-abu sedang */
+    margin-bottom: 35px;
+    text-align: center;
+    font-weight: 400;
+}
+
+/* Kotak Login Internal */
+.login-box {
+    background-color: #F7FAFC; /* Latar belakang kotak login lebih muda */
+    border: 1px solid #E2E8F0; /* Border tipis */
+    border-radius: 10px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 480px; /* Sedikit lebih kecil dari container utama */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Judul Kotak Login */
+.login-box h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2B6CB0; /* Warna biru sedikit lebih terang */
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Group input (label + input) */
+.input-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4A5568;
+    margin-bottom: 6px;
+}
+
+/* Styling Input Field */
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 1px solid #CBD5E0;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Efek fokus pada input field */
+.input-group input:focus {
+    outline: none;
+    border-color: #63B3ED; /* Warna border biru muda saat fokus */
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+/* Tombol Masuk */
+.login-button {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: #2B6CB0; /* Biru tombol */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-button:hover {
+    background-color: #2C5282; /* Warna tombol saat dihover */
+}
+
+/* Teks Daftar Akun Baru */
+.signup-link {
+    font-size: 0.9rem;
+    color: #718096;
+    text-align: center;
+}
+
+.signup-link a {
+    color: #2B6CB0;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Styling Footer */
+.footer {
+    font-size: 0.85rem;
+    color: #A0AEC0; /* Warna teks footer abu-abu muda */
+    text-align: center;
+    padding: 0 20px;
+}
+
+.footer strong {
+    color: #718096; /* Sedikit lebih gelap untuk nama developer */
+    font-weight: 600;
+}
