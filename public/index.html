@@ -9,6 +9,7 @@
         .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
+        .section-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full { grid-column: span 2; }
@@ -18,6 +19,12 @@
         
         .btn-primary { background: #2c5282; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; font-size: 15px; }
         .btn-primary:hover { background: #1a365d; }
+        
+        /* List Folder Card Style */
+        .folder-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .folder-card { background: #fff; border: 1px solid #cbd5e0; padding: 10px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
+        .folder-card:hover { border-color: #3182ce; background: #ebf8ff; }
+        .folder-card.active { border-color: #2b6cb0; background: #bee3f8; font-weight: bold; }
         
         .table-container { margin-top: 30px; overflow-x: auto; }
         .search-box { float: right; width: 280px; margin-bottom: 15px; }
@@ -61,47 +68,63 @@
             <button onclick="logout()" class="btn-danger" style="width: auto; padding: 8px 16px;">Logout</button>
         </div>
 
-        <!-- Form Input Arsip -->
-        <div style="background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
-            <h3 style="margin-top:0; margin-bottom: 15px; color: #2c5282;">Form Tambah Dokumen Arsip</h3>
+        <!-- 1. Manajemen Folder di Bagian Atas -->
+        <div class="section-box">
+            <h3 style="margin-top:0; color: #2c5282;">Manajemen Folder Arsip</h3>
+            <div class="form-grid" style="align-items: flex-end;">
+                <div class="form-group">
+                    <label>Nama Folder Baru</label>
+                    <input type="text" id="nama_folder_input" placeholder="Contoh: Arsip Keuangan 2026">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Pembuatan Folder</label>
+                    <input type="date" id="folder_tanggal">
+                </div>
+            </div>
+            <button type="button" onclick="buatFolder()" style="background: #3182ce; color:white; border:none; padding: 10px; border-radius:4px; font-weight:bold; cursor:pointer; width: 100%;">+ Simpan Folder Baru</button>
+            
+            <div style="margin-top: 15px;">
+                <label style="margin-bottom: 8px; display: block;">Daftar Folder (Klik folder untuk memilih tujuan upload):</label>
+                <div id="folderContainer" class="folder-list">
+                    <!-- List Folder akan dimuat di sini -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Form Tambah Dokumen ke Folder yang Dipilih -->
+        <div class="section-box" id="formDokumenBox" style="display: none;">
+            <h3 style="margin-top:0; color: #2c5282;">Tambah Dokumen ke Folder: <span id="activeFolderName" style="color: #d69e2e;">-</span></h3>
             
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Tanggal Arsip</label>
-                    <input type="date" id="tanggal">
+                    <label>Tanggal Dokumen (dd/mm/tttt)</label>
+                    <input type="date" id="dok_tanggal">
                 </div>
                 <div class="form-group">
-                    <label>Pilih Folder Arsip</label>
-                    <div style="display: flex; gap: 5px;">
-                        <select id="folder_id" style="flex: 1;"></select>
-                        <button type="button" onclick="tambahFolderPrompt()" style="width: auto; background: #3182ce; color:white; border:none; border-radius:4px; padding:0 12px; cursor:pointer;" title="Buat Folder Baru">+</button>
-                    </div>
+                    <label>Lokasi Fisik</label>
+                    <input type="text" id="lokasi_fisik" placeholder="Contoh: Rak B - Map Merah">
                 </div>
                 <div class="form-group full">
                     <label>Judul Dokumen & No. Surat</label>
-                    <input type="text" id="judul_dokumen" placeholder="Contoh: ARSIP IJAZAH SMA TAHUN 2026 / Surat Keputusan No...">
+                    <input type="text" id="judul_dokumen" placeholder="Contoh: Surat Keputusan Pengangkatan...">
                 </div>
                 <div class="form-group">
                     <label>Pengirim / Instansi</label>
                     <input type="text" id="pengirim" placeholder="Contoh: Dinas Pendidikan / -">
                 </div>
                 <div class="form-group">
-                    <label>Lokasi Fisik (Penyimpanan)</label>
-                    <input type="text" id="lokasi_fisik" placeholder="Contoh: Rak B - Map Merah">
-                </div>
-                <div class="form-group full">
                     <label>Keterangan Tambahan</label>
-                    <textarea id="keterangan" placeholder="Catatan ringkas dokumen..."></textarea>
+                    <input type="text" id="keterangan" placeholder="Catatan ringkas...">
                 </div>
                 <div class="form-group full">
                     <label>Unggah Berkas Lampiran (File PDF / Foto / Doc)</label>
                     <input type="file" id="berkas">
                 </div>
             </div>
-            <button class="btn-primary" onclick="simpanDokumen()">Simpan Dokumen</button>
+            <button class="btn-primary" onclick="simpanDokumen()">Simpan Dokumen ke Folder Ini</button>
         </div>
 
-        <!-- Tabel Daftar Seluruh Dokumen -->
+        <!-- 3. Tabel Daftar Seluruh Dokumen -->
         <div class="table-container">
             <h3 style="display: inline-block; margin:0;">Daftar Seluruh Dokumen</h3>
             <input type="text" id="searchKeyword" class="search-box" placeholder="Cari dokumen..." onkeyup="renderTabel()">
@@ -129,6 +152,7 @@
 
 <script>
 let globalData = { folders: [], arsip: [] };
+let selectedFolderId = null;
 
 window.onload = () => {
     if(localStorage.getItem('isLogin') === 'true') {
@@ -136,7 +160,8 @@ window.onload = () => {
     } else {
         document.getElementById('loginForm').style.display = 'block';
     }
-    document.getElementById('tanggal').valueAsDate = new Date();
+    document.getElementById('folder_tanggal').valueAsDate = new Date();
+    document.getElementById('dok_tanggal').valueAsDate = new Date();
 }
 
 async function login() {
@@ -178,45 +203,95 @@ async function loadData() {
         const data = await res.json();
         if(data.success) {
             globalData = data;
-            updateFolderDropdown();
+            renderFolders();
             renderTabel();
+            
+            // Auto pilih folder pertama jika belum ada yang terpilih
+            if(globalData.folders.length > 0 && !selectedFolderId) {
+                selectFolder(globalData.folders[0].id);
+            }
         }
     } catch(err) {
         console.error('Gagal memuat data', err);
     }
 }
 
-function updateFolderDropdown() {
-    const select = document.getElementById('folder_id');
-    select.innerHTML = '';
+function renderFolders() {
+    const container = document.getElementById('folderContainer');
+    if(globalData.folders.length === 0) {
+        container.innerHTML = '<span style="color:#718096; font-size:13px;">Belum ada folder. Buat folder baru di atas.</span>';
+        document.getElementById('formDokumenBox').style.display = 'none';
+        return;
+    }
+
+    let html = '';
     globalData.folders.forEach(f => {
-        const opt = document.createElement('option');
-        opt.value = f.id;
-        opt.textContent = f.nama_folder;
-        select.appendChild(opt);
+        const isActive = f.id === selectedFolderId ? 'active' : '';
+        html += `
+        <div class="folder-card ${isActive}" onclick="selectFolder(${f.id})">
+            📁 <span>${f.nama_folder}</span>
+            <small style="color: #666; font-size:11px;">(${f.tanggal})</small>
+            <span onclick="event.stopPropagation(); hapusFolder(${f.id})" style="color:red; font-weight:bold; margin-left:8px;" title="Hapus Folder">×</span>
+        </div>`;
     });
+    container.innerHTML = html;
 }
 
-async function tambahFolderPrompt() {
-    const nama = prompt('Masukkan Nama Folder Baru:');
-    if(!nama) return;
-    
+function selectFolder(folderId) {
+    selectedFolderId = folderId;
+    const folderObj = globalData.folders.find(f => f.id === folderId);
+    if(folderObj) {
+        document.getElementById('activeFolderName').textContent = folderObj.nama_folder;
+        document.getElementById('formDokumenBox').style.display = 'block';
+    }
+    renderFolders();
+}
+
+async function buatFolder() {
+    const nama_folder = document.getElementById('nama_folder_input').value.trim();
+    const tanggal = document.getElementById('folder_tanggal').value;
+
+    if(!nama_folder) {
+        alert('Nama folder wajib diisi!');
+        return;
+    }
+
     const res = await fetch('/api/folders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nama_folder: nama })
+        body: JSON.stringify({ nama_folder, tanggal })
     });
     const data = await res.json();
     if(data.success) {
+        document.getElementById('nama_folder_input').value = '';
+        document.getElementById('folder_tanggal').valueAsDate = new Date();
         loadData();
+        // Pilih folder yang baru dibuat
+        selectFolder(data.data.id);
     } else {
         alert('Gagal membuat folder');
     }
 }
 
+async function hapusFolder(id) {
+    if(!confirm('Menghapus folder ini juga akan menghapus seluruh isi dokumen di dalamnya. Lanjutkan?')) return;
+    const res = await fetch(`/api/folders/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if(data.success) {
+        selectedFolderId = null;
+        loadData();
+    } else {
+        alert('Gagal menghapus folder');
+    }
+}
+
 async function simpanDokumen() {
-    const tanggal = document.getElementById('tanggal').value;
-    const folder_id = document.getElementById('folder_id').value;
+    if(!selectedFolderId) {
+        alert('Silakan pilih folder terlebih dahulu di atas!');
+        return;
+    }
+
+    const tanggal = document.getElementById('dok_tanggal').value;
     const judul_dokumen = document.getElementById('judul_dokumen').value.trim();
     const pengirim = document.getElementById('pengirim').value.trim();
     const lokasi_fisik = document.getElementById('lokasi_fisik').value.trim();
@@ -230,7 +305,7 @@ async function simpanDokumen() {
 
     const formData = new FormData();
     formData.append('tanggal', tanggal);
-    formData.append('folder_id', folder_id);
+    formData.append('folder_id', selectedFolderId);
     formData.append('judul_dokumen', judul_dokumen);
     formData.append('pengirim', pengirim);
     formData.append('lokasi_fisik', lokasi_fisik);
@@ -246,14 +321,14 @@ async function simpanDokumen() {
     const data = await res.json();
     
     if(data.success) {
-        // Reset form
         document.getElementById('judul_dokumen').value = '';
         document.getElementById('pengirim').value = '';
         document.getElementById('lokasi_fisik').value = '';
         document.getElementById('keterangan').value = '';
         document.getElementById('berkas').value = '';
-        document.getElementById('tanggal').valueAsDate = new Date();
+        document.getElementById('dok_tanggal').valueAsDate = new Date();
         loadData();
+        alert('Dokumen berhasil disimpan ke folder!');
     } else {
         alert('Gagal menyimpan dokumen');
     }
@@ -284,7 +359,6 @@ function renderTabel() {
         
         let berkasHtml = '<span style="color: #a0aec0; font-style: italic; font-size: 13px;">Tidak Ada</span>';
         if(a.file_data) {
-            // Ubah base64 kembali ke blob untuk tombol lihat file
             const byteCharacters = atob(a.file_data);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {

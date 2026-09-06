@@ -13,7 +13,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 let dbData = {
     users: [{ id: 1, username: 'admin', password: '123' }],
     folders: [
-        { id: 1, nama_folder: 'ARSIPIJAZAH SMA TAHUN 2026' }
+        { id: 1, nama_folder: 'ARSIPIJAZAH SMA TAHUN 2026', tanggal: '2026-09-04' }
     ],
     arsip: []
 };
@@ -29,22 +29,34 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-// Route Ambil Folder & Arsip
+// Route Ambil Data
 app.get('/api/data', (req, res) => {
     res.json({ success: true, folders: dbData.folders, arsip: dbData.arsip });
 });
 
-// Route Tambah Folder Baru
+// Route Tambah Folder Baru (Disertai tanggal pembuatan folder)
 app.post('/api/folders', (req, res) => {
-    const { nama_folder } = req.body;
+    const { nama_folder, tanggal } = req.body;
     if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
     
-    const newFolder = { id: Date.now(), nama_folder };
+    const newFolder = { 
+        id: Date.now(), 
+        nama_folder, 
+        tanggal: tanggal || new Date().toISOString().split('T')[0] 
+    };
     dbData.folders.push(newFolder);
     res.json({ success: true, data: newFolder });
 });
 
-// Route Tambah Arsip / Dokumen Baru
+// Route Hapus Folder
+app.delete('/api/folders/:id', (req, res) => {
+    const folderId = parseInt(req.params.id);
+    dbData.folders = dbData.folders.filter(f => f.id !== folderId);
+    dbData.arsip = dbData.arsip.filter(a => a.folder_id !== folderId); // Hapus arsip di dalam folder tersebut
+    res.json({ success: true });
+});
+
+// Route Tambah Arsip / Dokumen ke Folder
 app.post('/api/arsip', upload.single('berkas'), (req, res) => {
     const { tanggal, folder_id, judul_dokumen, pengirim, lokasi_fisik, keterangan } = req.body;
 
@@ -57,7 +69,7 @@ app.post('/api/arsip', upload.single('berkas'), (req, res) => {
     let fileType = null;
 
     if (req.file) {
-        fileBufferData = req.file.buffer.toString('base64'); // Simpan sementara sebagai base64 di memori
+        fileBufferData = req.file.buffer.toString('base64');
         fileName = req.file.originalname;
         fileType = path.extname(fileName).replace('.', '').toUpperCase();
     }
@@ -75,7 +87,7 @@ app.post('/api/arsip', upload.single('berkas'), (req, res) => {
         file_data: fileBufferData
     };
 
-    dbData.arsip.unshift.push ? dbData.arsip.unshift(newArsip) : dbData.arsip.push(newArsip);
+    dbData.arsip.unshift(newArsip);
     res.json({ success: true, data: newArsip });
 });
 
