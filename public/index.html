@@ -5,52 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Arsip Digital - SAD</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        button:hover { opacity: 0.9; }
-        .folder { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .arsip-item { background: #f9f9f9; padding: 8px 12px; margin: 6px 0; border-left: 4px solid #007bff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; border-radius: 3px; }
-        .badge { background: #17a2b8; color: white; padding: 2px 6px; font-size: 11px; border-radius: 3px; font-weight: bold; text-transform: uppercase; }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; color: #333; margin: 0; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full { grid-column: span 2; }
+        label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #444; }
+        input, select, textarea { padding: 9px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        textarea { resize: vertical; height: 60px; }
+        
+        .btn-primary { background: #2c5282; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; font-size: 15px; }
+        .btn-primary:hover { background: #1a365d; }
+        
+        .table-container { margin-top: 30px; overflow-x: auto; }
+        .search-box { float: right; width: 280px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; vertical-align: middle; }
+        th { background: #343a40; color: white; font-weight: 600; }
+        tr:nth-child(even) { background: #f8fafc; }
+        
+        .badge-folder { background: #e2e8f0; color: #2d3748; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-file { background: #38a169; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .btn-file:hover { background: #2f855a; }
+        .btn-danger { background: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold; }
+        .btn-danger:hover { background: #c53030; }
+        
         #loginForm, #dashboard { display: none; }
-        .error-msg { color: red; font-size: 14px; margin-top: 5px; }
+        .error-msg { color: red; font-size: 13px; margin-top: 5px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>Sistem Arsip Digital - SAD</h2>
     
     <!-- Form Login -->
-    <div id="loginForm">
-        <h3>Login</h3>
-        <label>Username</label>
-        <input type="text" id="username" placeholder="admin">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="123">
-        <button onclick="login()">Login</button>
+    <div id="loginForm" style="max-width: 400px; margin: 40px auto;">
+        <h3>Login Sistem Arsip Digital</h3>
+        <div class="form-group" style="margin-bottom: 10px;">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="admin">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="123">
+        </div>
+        <button class="btn-primary" onclick="login()">Login</button>
         <p id="loginMsg" class="error-msg"></p>
     </div>
 
     <!-- Dashboard Utama -->
     <div id="dashboard">
-        <button onclick="logout()" style="background:#dc3545; width:auto; padding: 6px 15px; float:right;">Logout</button>
-        <h3>Dashboard Arsip</h3>
-        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-        
-        <h4>Buat Folder Baru</h4>
-        <input type="text" id="nama_folder" placeholder="Nama Folder Baru...">
-        <button onclick="buatFolder()">Buat Folder</button>
-        
-        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-        
-        <h4>Daftar Folder & Arsip</h4>
-        <div id="listFolder">Memuat data...</div>
+        <div class="header-top">
+            <h2 style="margin:0; color: #2d3748;">Sistem Arsip Digital - SAD</h2>
+            <button onclick="logout()" class="btn-danger" style="width: auto; padding: 8px 16px;">Logout</button>
+        </div>
+
+        <!-- Form Input Arsip -->
+        <div style="background: #fdfdfd; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 25px;">
+            <h3 style="margin-top:0; margin-bottom: 15px; color: #2c5282;">Form Tambah Dokumen Arsip</h3>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tanggal Arsip</label>
+                    <input type="date" id="tanggal">
+                </div>
+                <div class="form-group">
+                    <label>Pilih Folder Arsip</label>
+                    <div style="display: flex; gap: 5px;">
+                        <select id="folder_id" style="flex: 1;"></select>
+                        <button type="button" onclick="tambahFolderPrompt()" style="width: auto; background: #3182ce; color:white; border:none; border-radius:4px; padding:0 12px; cursor:pointer;" title="Buat Folder Baru">+</button>
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label>Judul Dokumen & No. Surat</label>
+                    <input type="text" id="judul_dokumen" placeholder="Contoh: ARSIP IJAZAH SMA TAHUN 2026 / Surat Keputusan No...">
+                </div>
+                <div class="form-group">
+                    <label>Pengirim / Instansi</label>
+                    <input type="text" id="pengirim" placeholder="Contoh: Dinas Pendidikan / -">
+                </div>
+                <div class="form-group">
+                    <label>Lokasi Fisik (Penyimpanan)</label>
+                    <input type="text" id="lokasi_fisik" placeholder="Contoh: Rak B - Map Merah">
+                </div>
+                <div class="form-group full">
+                    <label>Keterangan Tambahan</label>
+                    <textarea id="keterangan" placeholder="Catatan ringkas dokumen..."></textarea>
+                </div>
+                <div class="form-group full">
+                    <label>Unggah Berkas Lampiran (File PDF / Foto / Doc)</label>
+                    <input type="file" id="berkas">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="simpanDokumen()">Simpan Dokumen</button>
+        </div>
+
+        <!-- Tabel Daftar Seluruh Dokumen -->
+        <div class="table-container">
+            <h3 style="display: inline-block; margin:0;">Daftar Seluruh Dokumen</h3>
+            <input type="text" id="searchKeyword" class="search-box" placeholder="Cari dokumen..." onkeyup="renderTabel()">
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">No</th>
+                        <th style="width: 100px;">Tanggal</th>
+                        <th style="width: 180px;">Folder</th>
+                        <th>Judul Dokumen & No. Surat</th>
+                        <th style="width: 120px;">Pengirim</th>
+                        <th style="width: 110px;">Lokasi Fisik</th>
+                        <th style="width: 110px;">Berkas</th>
+                        <th style="width: 80px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelArsipBody">
+                    <tr><td colspan="8" style="text-align: center; color: #718096;">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-const API_URL = ''; 
+let globalData = { folders: [], arsip: [] };
 
 window.onload = () => {
     if(localStorage.getItem('isLogin') === 'true') {
@@ -58,6 +136,7 @@ window.onload = () => {
     } else {
         document.getElementById('loginForm').style.display = 'block';
     }
+    document.getElementById('tanggal').valueAsDate = new Date();
 }
 
 async function login() {
@@ -65,21 +144,20 @@ async function login() {
     const password = document.getElementById('password').value.trim();
     
     try {
-        const res = await fetch(`${API_URL}/api/login`, {
+        const res = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
         const data = await res.json();
-        
         if(data.success){
             localStorage.setItem('isLogin', 'true');
             showDashboard();
         } else {
-            document.getElementById('loginMsg').innerText = data.error || 'Username atau password salah!';
+            document.getElementById('loginMsg').innerText = data.error || 'Login gagal';
         }
-    } catch (err) {
-        document.getElementById('loginMsg').innerText = 'Terjadi kesalahan koneksi server.';
+    } catch(err) {
+        document.getElementById('loginMsg').innerText = 'Koneksi server gagal';
     }
 }
 
@@ -96,87 +174,160 @@ function logout(){
 
 async function loadData() {
     try {
-        const res = await fetch(`${API_URL}/api/folders`);
+        const res = await fetch('/api/data');
         const data = await res.json();
-        if(data.success){
-            let html = data.data.length === 0 ? '<p>Belum ada folder arsip.</p>' : '';
-            
-            data.data.forEach(folder => {
-                let arsipHtml = '';
-                if(folder.arsip && folder.arsip.length > 0) {
-                    folder.arsip.forEach(a => {
-                        arsipHtml += `
-                        <div class="arsip-item">
-                            <div>
-                                📄 <b>${a.nama_dokumen}</b> 
-                                <span style="color:#666; font-size:12px;">(${a.file_nama || 'Tanpa file'})</span>
-                            </div>
-                            <span class="badge">${a.tipe_file}</span>
-                        </div>`;
-                    });
-                } else {
-                    arsipHtml = '<p style="font-size: 13px; color: #888; margin: 5px 0;">Belum ada dokumen di folder ini.</p>';
-                }
-
-                html += `
-                <div class="folder">
-                    <h4 style="margin: 0 0 10px 0; color: #007bff;">📁 ${folder.nama_folder}</h4>
-                    <input type="text" id="nama_dok_${folder.id}" placeholder="Nama/Judul Dokumen...">
-                    <input type="file" id="file_dok_${folder.id}">
-                    <button onclick="uploadArsip(${folder.id})" style="background:#17a2b8; margin-top:5px;">Unggah File ke Folder Ini</button>
-                    
-                    <div style="margin-top: 12px; border-top: 1px dashed #ddd; padding-top: 8px;">
-                        <strong style="font-size: 13px; color: #555;">Daftar Dokumen:</strong>
-                        ${arsipHtml}
-                    </div>
-                </div>`;
-            });
-            document.getElementById('listFolder').innerHTML = html;
+        if(data.success) {
+            globalData = data;
+            updateFolderDropdown();
+            renderTabel();
         }
-    } catch (err) {
+    } catch(err) {
         console.error('Gagal memuat data', err);
     }
 }
 
-async function buatFolder(){
-    const nama = document.getElementById('nama_folder').value.trim();
-    if(!nama) return alert('Nama folder wajib diisi');
+function updateFolderDropdown() {
+    const select = document.getElementById('folder_id');
+    select.innerHTML = '';
+    globalData.folders.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = f.nama_folder;
+        select.appendChild(opt);
+    });
+}
+
+async function tambahFolderPrompt() {
+    const nama = prompt('Masukkan Nama Folder Baru:');
+    if(!nama) return;
     
-    const res = await fetch(`${API_URL}/api/folders`, {
+    const res = await fetch('/api/folders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nama_folder: nama })
     });
     const data = await res.json();
     if(data.success) {
-        document.getElementById('nama_folder').value = '';
         loadData();
     } else {
         alert('Gagal membuat folder');
     }
 }
 
-async function uploadArsip(folderId) {
-    const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value.trim();
-    const fileInput = document.getElementById(`file_dok_${folderId}`);
-    
-    if(!nama_dokumen) return alert('Nama dokumen wajib diisi');
-    
+async function simpanDokumen() {
+    const tanggal = document.getElementById('tanggal').value;
+    const folder_id = document.getElementById('folder_id').value;
+    const judul_dokumen = document.getElementById('judul_dokumen').value.trim();
+    const pengirim = document.getElementById('pengirim').value.trim();
+    const lokasi_fisik = document.getElementById('lokasi_fisik').value.trim();
+    const keterangan = document.getElementById('keterangan').value.trim();
+    const fileInput = document.getElementById('berkas');
+
+    if(!judul_dokumen) {
+        alert('Judul dokumen wajib diisi!');
+        return;
+    }
+
     const formData = new FormData();
-    formData.append('judul_arsip', nama_dokumen);
-    if (fileInput && fileInput.files[0]) {
+    formData.append('tanggal', tanggal);
+    formData.append('folder_id', folder_id);
+    formData.append('judul_dokumen', judul_dokumen);
+    formData.append('pengirim', pengirim);
+    formData.append('lokasi_fisik', lokasi_fisik);
+    formData.append('keterangan', keterangan);
+    if(fileInput.files[0]) {
         formData.append('berkas', fileInput.files[0]);
     }
-    
-    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
+
+    const res = await fetch('/api/arsip', {
         method: 'POST',
-        body: formData 
+        body: formData
     });
     const data = await res.json();
-    if(data.success){
-        loadData(); // Otomatis refresh tampilan agar dokumen langsung muncul di bawah
+    
+    if(data.success) {
+        // Reset form
+        document.getElementById('judul_dokumen').value = '';
+        document.getElementById('pengirim').value = '';
+        document.getElementById('lokasi_fisik').value = '';
+        document.getElementById('keterangan').value = '';
+        document.getElementById('berkas').value = '';
+        document.getElementById('tanggal').valueAsDate = new Date();
+        loadData();
     } else {
-        alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+        alert('Gagal menyimpan dokumen');
+    }
+}
+
+function renderTabel() {
+    const keyword = document.getElementById('searchKeyword').value.toLowerCase();
+    const tbody = document.getElementById('tabelArsipBody');
+    
+    const filtered = globalData.arsip.filter(a => {
+        const folderObj = globalData.folders.find(f => f.id === a.folder_id);
+        const folderName = folderObj ? folderObj.nama_folder.toLowerCase() : '';
+        return a.judul_dokumen.toLowerCase().includes(keyword) ||
+               a.pengirim.toLowerCase().includes(keyword) ||
+               folderName.includes(keyword) ||
+               a.tanggal.includes(keyword);
+    });
+
+    if(filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #718096; padding: 20px;">Belum ada data dokumen arsip.</td></tr>`;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach((a, index) => {
+        const folderObj = globalData.folders.find(f => f.id === a.folder_id);
+        const folderName = folderObj ? folderObj.nama_folder : 'Tanpa Folder';
+        
+        let berkasHtml = '<span style="color: #a0aec0; font-style: italic; font-size: 13px;">Tidak Ada</span>';
+        if(a.file_data) {
+            // Ubah base64 kembali ke blob untuk tombol lihat file
+            const byteCharacters = atob(a.file_data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            let mime = 'application/octet-stream';
+            if(a.file_tipe === 'PDF') mime = 'application/pdf';
+            else if(['JPG', 'JPEG', 'PNG'].includes(a.file_tipe)) mime = 'image/' + a.file_tipe.toLowerCase();
+            
+            const blob = new Blob([byteArray], { type: mime });
+            const blobUrl = URL.createObjectURL(blob);
+            berkasHtml = `<a href="${blobUrl}" target="_blank" class="btn-file">📄 Lihat File</a>`;
+        }
+
+        html += `
+        <tr>
+            <td style="text-align: center;">${index + 1}</td>
+            <td>${a.tanggal}</td>
+            <td><span class="badge-folder">📁 ${folderName}</span></td>
+            <td>
+                <b>${a.judul_dokumen}</b>
+                ${a.keterangan ? `<div style="font-size: 12px; color: #666; margin-top:3px;">${a.keterangan}</div>` : ''}
+            </td>
+            <td>${a.pengirim}</td>
+            <td>${a.lokasi_fisik}</td>
+            <td style="text-align: center;">${berkasHtml}</td>
+            <td style="text-align: center;">
+                <button class="btn-danger" onclick="hapusArsip(${a.id})">Hapus</button>
+            </td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+async function hapusArsip(id) {
+    if(!confirm('Yakin ingin menghapus arsip ini?')) return;
+    const res = await fetch(`/api/arsip/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if(data.success) {
+        loadData();
+    } else {
+        alert('Gagal menghapus arsip');
     }
 }
 </script>

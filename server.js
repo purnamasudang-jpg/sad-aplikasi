@@ -13,7 +13,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 let dbData = {
     users: [{ id: 1, username: 'admin', password: '123' }],
     folders: [
-        { id: 1, nama_folder: 'Dokumen Umum' }
+        { id: 1, nama_folder: 'ARSIPIJAZAH SMA TAHUN 2026' }
     ],
     arsip: []
 };
@@ -29,16 +29,12 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-// Route Ambil Daftar Folder & Arsip Sekaligus
-app.get('/api/folders', (req, res) => {
-    const foldersWithArsip = dbData.folders.map(folder => ({
-        ...folder,
-        arsip: dbData.arsip.filter(a => a.folder_id === folder.id)
-    }));
-    res.json({ success: true, data: foldersWithArsip });
+// Route Ambil Folder & Arsip
+app.get('/api/data', (req, res) => {
+    res.json({ success: true, folders: dbData.folders, arsip: dbData.arsip });
 });
 
-// Route Buat Folder Baru
+// Route Tambah Folder Baru
 app.post('/api/folders', (req, res) => {
     const { nama_folder } = req.body;
     if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
@@ -48,32 +44,46 @@ app.post('/api/folders', (req, res) => {
     res.json({ success: true, data: newFolder });
 });
 
-// Route Upload Arsip
-app.post('/api/folders/:id/arsip', upload.single('berkas'), (req, res) => {
-    const folderId = parseInt(req.params.id);
-    const { judul_arsip } = req.body;
+// Route Tambah Arsip / Dokumen Baru
+app.post('/api/arsip', upload.single('berkas'), (req, res) => {
+    const { tanggal, folder_id, judul_dokumen, pengirim, lokasi_fisik, keterangan } = req.body;
 
-    if (!judul_arsip) return res.status(400).json({ success: false, error: 'Judul arsip wajib diisi' });
+    if (!judul_dokumen || !folder_id) {
+        return res.status(400).json({ success: false, error: 'Judul dokumen dan folder wajib diisi!' });
+    }
 
-    let fileExtension = 'FILE';
-    let originalName = null;
+    let fileBufferData = null;
+    let fileName = null;
+    let fileType = null;
 
     if (req.file) {
-        originalName = req.file.originalname;
-        const ext = path.extname(originalName).replace('.', '').toUpperCase();
-        if (ext) fileExtension = ext;
+        fileBufferData = req.file.buffer.toString('base64'); // Simpan sementara sebagai base64 di memori
+        fileName = req.file.originalname;
+        fileType = path.extname(fileName).replace('.', '').toUpperCase();
     }
 
     const newArsip = {
         id: Date.now(),
-        folder_id: folderId,
-        nama_dokumen: judul_arsip,
-        file_nama: originalName,
-        tipe_file: fileExtension
+        tanggal: tanggal || new Date().toISOString().split('T')[0],
+        folder_id: parseInt(folder_id),
+        judul_dokumen,
+        pengirim: pengirim || '-',
+        lokasi_fisik: lokasi_fisik || '-',
+        keterangan: keterangan || '',
+        file_nama: fileName,
+        file_tipe: fileType,
+        file_data: fileBufferData
     };
 
-    dbData.arsip.push(newArsip);
+    dbData.arsip.unshift.push ? dbData.arsip.unshift(newArsip) : dbData.arsip.push(newArsip);
     res.json({ success: true, data: newArsip });
+});
+
+// Route Hapus Arsip
+app.delete('/api/arsip/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    dbData.arsip = dbData.arsip.filter(a => a.id !== id);
+    res.json({ success: true });
 });
 
 const PORT = process.env.PORT || 3000;
