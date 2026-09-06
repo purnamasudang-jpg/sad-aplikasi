@@ -29,12 +29,16 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-// Route Ambil Data
+// Route Ambil Data & Hitung Jumlah Dokumen per Folder
 app.get('/api/data', (req, res) => {
-    res.json({ success: true, folders: dbData.folders, arsip: dbData.arsip });
+    const foldersWithCount = dbData.folders.map(f => {
+        const count = dbData.arsip.filter(a => a.folder_id === f.id).length;
+        return { ...f, jumlah_dokumen: count };
+    });
+    res.json({ success: true, folders: foldersWithCount, arsip: dbData.arsip });
 });
 
-// Route Tambah Folder Baru (Disertai tanggal pembuatan folder)
+// Route Tambah Folder Baru
 app.post('/api/folders', (req, res) => {
     const { nama_folder, tanggal } = req.body;
     if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
@@ -52,7 +56,7 @@ app.post('/api/folders', (req, res) => {
 app.delete('/api/folders/:id', (req, res) => {
     const folderId = parseInt(req.params.id);
     dbData.folders = dbData.folders.filter(f => f.id !== folderId);
-    dbData.arsip = dbData.arsip.filter(a => a.folder_id !== folderId); // Hapus arsip di dalam folder tersebut
+    dbData.arsip = dbData.arsip.filter(a => a.folder_id !== folderId);
     res.json({ success: true });
 });
 

@@ -20,11 +20,14 @@
         .btn-primary { background: #2c5282; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; font-size: 15px; }
         .btn-primary:hover { background: #1a365d; }
         
-        /* List Folder Card Style */
-        .folder-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-        .folder-card { background: #fff; border: 1px solid #cbd5e0; padding: 10px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
-        .folder-card:hover { border-color: #3182ce; background: #ebf8ff; }
-        .folder-card.active { border-color: #2b6cb0; background: #bee3f8; font-weight: bold; }
+        /* Folder Grid Style */
+        .folder-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-top: 10px; }
+        .folder-box { background: #fff; border: 1px solid #cbd5e0; border-left: 5px solid #3182ce; padding: 15px; border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .folder-box:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-color: #3182ce; }
+        .folder-box.active { border-color: #2b6cb0; background: #ebf8ff; border-left-width: 8px; }
+        .folder-title { font-weight: bold; font-size: 15px; color: #2d3748; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+        .folder-info { font-size: 12px; color: #718096; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .badge-count { background: #3182ce; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         
         .table-container { margin-top: 30px; overflow-x: auto; }
         .search-box { float: right; width: 280px; margin-bottom: 15px; }
@@ -68,31 +71,36 @@
             <button onclick="logout()" class="btn-danger" style="width: auto; padding: 8px 16px;">Logout</button>
         </div>
 
-        <!-- 1. Manajemen Folder di Bagian Atas -->
+        <!-- 1. Daftar Kotak Folder di Halaman Utama -->
         <div class="section-box">
-            <h3 style="margin-top:0; color: #2c5282;">Manajemen Folder Arsip</h3>
-            <div class="form-grid" style="align-items: flex-end;">
-                <div class="form-group">
-                    <label>Nama Folder Baru</label>
-                    <input type="text" id="nama_folder_input" placeholder="Contoh: Arsip Keuangan 2026">
-                </div>
-                <div class="form-group">
-                    <label>Tanggal Pembuatan Folder</label>
-                    <input type="date" id="folder_tanggal">
-                </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin:0; color: #2c5282;">Deretan Folder Arsip</h3>
+                <button onclick="toggleBuatFolderForm()" style="background: #3182ce; color:white; border:none; padding: 6px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size: 13px;">+ Buat Folder Baru</button>
             </div>
-            <button type="button" onclick="buatFolder()" style="background: #3182ce; color:white; border:none; padding: 10px; border-radius:4px; font-weight:bold; cursor:pointer; width: 100%;">+ Simpan Folder Baru</button>
-            
-            <div style="margin-top: 15px;">
-                <label style="margin-bottom: 8px; display: block;">Daftar Folder (Klik folder untuk memilih tujuan upload):</label>
-                <div id="folderContainer" class="folder-list">
-                    <!-- List Folder akan dimuat di sini -->
+
+            <!-- Form Buat Folder (Hidden by default, bisa dibuka tutup) -->
+            <div id="buatFolderFormContainer" style="display: none; background: #edf2f7; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <div class="form-grid" style="align-items: flex-end; margin-bottom: 10px;">
+                    <div class="form-group">
+                        <label>Nama Folder Baru</label>
+                        <input type="text" id="nama_folder_input" placeholder="Contoh: Arsip Keuangan 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Pembuatan Folder</label>
+                        <input type="date" id="folder_tanggal">
+                    </div>
                 </div>
+                <button type="button" onclick="buatFolder()" style="background: #2b6cb0; color:white; border:none; padding: 8px; border-radius:4px; font-weight:bold; cursor:pointer; width: 100%;">Simpan Folder</button>
+            </div>
+
+            <!-- Grid Kotak Folder -->
+            <div id="folderGridContainer" class="folder-grid-container">
+                <!-- List Folder akan dimuat di sini -->
             </div>
         </div>
 
         <!-- 2. Form Tambah Dokumen ke Folder yang Dipilih -->
-        <div class="section-box" id="formDokumenBox" style="display: none;">
+        <div class="section-box" id="formDokumenBox" style="display: none; border-left: 5px solid #d69e2e;">
             <h3 style="margin-top:0; color: #2c5282;">Tambah Dokumen ke Folder: <span id="activeFolderName" style="color: #d69e2e;">-</span></h3>
             
             <div class="form-grid">
@@ -206,7 +214,7 @@ async function loadData() {
             renderFolders();
             renderTabel();
             
-            // Auto pilih folder pertama jika belum ada yang terpilih
+            // Auto pilih folder pertama jika ada dan belum terpilih
             if(globalData.folders.length > 0 && !selectedFolderId) {
                 selectFolder(globalData.folders[0].id);
             }
@@ -216,10 +224,15 @@ async function loadData() {
     }
 }
 
+function toggleBuatFolderForm() {
+    const formBox = document.getElementById('buatFolderFormContainer');
+    formBox.style.display = formBox.style.display === 'none' ? 'block' : 'none';
+}
+
 function renderFolders() {
-    const container = document.getElementById('folderContainer');
+    const container = document.getElementById('folderGridContainer');
     if(globalData.folders.length === 0) {
-        container.innerHTML = '<span style="color:#718096; font-size:13px;">Belum ada folder. Buat folder baru di atas.</span>';
+        container.innerHTML = '<span style="color:#718096; font-size:13px; grid-column: span 2;">Belum ada folder. Silakan klik tombol "+ Buat Folder Baru".</span>';
         document.getElementById('formDokumenBox').style.display = 'none';
         return;
     }
@@ -228,10 +241,15 @@ function renderFolders() {
     globalData.folders.forEach(f => {
         const isActive = f.id === selectedFolderId ? 'active' : '';
         html += `
-        <div class="folder-card ${isActive}" onclick="selectFolder(${f.id})">
-            📁 <span>${f.nama_folder}</span>
-            <small style="color: #666; font-size:11px;">(${f.tanggal})</small>
-            <span onclick="event.stopPropagation(); hapusFolder(${f.id})" style="color:red; font-weight:bold; margin-left:8px;" title="Hapus Folder">×</span>
+        <div class="folder-box ${isActive}" onclick="selectFolder(${f.id})">
+            <div class="folder-title">
+                📁 <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.nama_folder}</span>
+            </div>
+            <div class="folder-info">
+                <span>📅 ${f.tanggal}</span>
+                <span class="badge-count">${f.jumlah_dokumen} File</span>
+            </div>
+            <span onclick="event.stopPropagation(); hapusFolder(${f.id})" style="position: absolute; top: 8px; right: 10px; color: #e53e3e; font-weight: bold; font-size: 16px;" title="Hapus Folder">×</span>
         </div>`;
     });
     container.innerHTML = html;
@@ -265,8 +283,8 @@ async function buatFolder() {
     if(data.success) {
         document.getElementById('nama_folder_input').value = '';
         document.getElementById('folder_tanggal').valueAsDate = new Date();
+        document.getElementById('buatFolderFormContainer').style.display = 'none';
         loadData();
-        // Pilih folder yang baru dibuat
         selectFolder(data.data.id);
     } else {
         alert('Gagal membuat folder');
@@ -287,7 +305,7 @@ async function hapusFolder(id) {
 
 async function simpanDokumen() {
     if(!selectedFolderId) {
-        alert('Silakan pilih folder terlebih dahulu di atas!');
+        alert('Silakan klik dan pilih folder tujuan terlebih dahulu di atas!');
         return;
     }
 
