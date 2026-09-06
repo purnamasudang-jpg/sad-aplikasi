@@ -137,10 +137,11 @@ async function buatFolder(){
 }
 
 // 5. UPLOAD ARSIP
-// 5. UPLOAD ARSIP
 async function uploadArsip(folderId) {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
+    console.log("Nilai userId saat ini:", userId); // Cek di F12 Console browser
+
+    if (!userId || userId === "undefined" || userId === "null") {
         alert('User ID tidak valid. Silakan login ulang.');
         return logout();
     }
@@ -156,7 +157,6 @@ async function uploadArsip(folderId) {
         formData.append('berkas', fileInput.files[0]);
     }
 
-    // Mengirim userId via URL parameter agar aman dari masalah header multipart
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip?userId=${userId}`, {
         method: 'POST',
         body: formData 
@@ -172,7 +172,6 @@ async function uploadArsip(folderId) {
         alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
     }
 }
-
 // 6. LIHAT ARSIP
 async function loadArsip(folderId){
     const userId = localStorage.getItem('userId');
