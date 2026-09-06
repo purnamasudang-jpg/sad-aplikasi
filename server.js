@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
@@ -10,39 +9,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const upload = multer({ storage: multer.memoryStorage() });
-const DB_FILE = path.join(__dirname, 'database.json');
 
-// Inisialisasi Database JSON jika belum ada
+// Database sementara di memori (RAM) untuk Vercel Serverless agar tidak error 500
+let memDB = {
+    users: [
+        { username: 'admin', password: '123' }
+    ],
+    folders: [],
+    arsip: []
+};
+
 function getDB() {
-    if (!fs.existsSync(DB_FILE)) {
-        const initialData = {
-            users: [
-                { username: 'admin', password: '123' }
-            ],
-            folders: [],
-            arsip: []
-        ];
-        try {
-            fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-        } catch (e) {
-            // Untuk lingkungan read-only (seperti serverless vercel), gunakan memori sementara jika gagal tulis
-            return initialData;
-        }
-    }
-    try {
-        const data = fs.readFileSync(DB_FILE, 'utf8');
-        return JSON.parse(data);
-    } catch (e) {
-        return { users: [{ username: 'admin', password: '123' }], folders: [], arsip: [] };
-    }
+    return memDB;
 }
 
 function saveDB(data) {
-    try {
-        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-    } catch (e) {
-        // Abaikan error write di serverless jika file system read-only
-    }
+    memDB = data;
 }
 
 // Endpoint Login
