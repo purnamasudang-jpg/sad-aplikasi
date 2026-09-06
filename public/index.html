@@ -172,7 +172,7 @@
                     
                     <div class="form-grid">
                         <div class="form-group full">
-                            <label>Judul Arsip</label>
+                            <label>Nama Dokumen</label>
                             <input type="text" id="judul_dokumen" placeholder="Contoh: ARSIP IJAZAH SMA TAHUN 2026">
                         </div>
                         <div class="form-group">
@@ -199,7 +199,7 @@
                     <button class="btn-primary" onclick="simpanDokumen()">Simpan Arsip</button>
                 </div>
 
-                <!-- Tombol Kembali Tambahan di Atas Tabel (Opsional/Mempermudah Navigasi) -->
+                <!-- Tombol Kembali Tambahan di Atas Tabel -->
                 <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
                     <button class="btn-menu-utama" onclick="bukaHalamanDua()">❮ Kembali ke Daftar Folder</button>
                 </div>
@@ -209,7 +209,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Judul Arsip</th>
+                                <th>Nama Dokumen</th>
                                 <th style="width: 130px;">No. Surat</th>
                                 <th style="width: 150px;">Instansi</th>
                                 <th style="width: 110px;">Tanggal</th>
@@ -488,7 +488,7 @@ async function simpanDokumen() {
     const fileInput = document.getElementById('berkas');
 
     if(!judul_dokumen) {
-        alert('Judul arsip wajib diisi!');
+        alert('Nama dokumen wajib diisi!');
         return;
     }
 
