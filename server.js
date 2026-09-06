@@ -158,17 +158,18 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     }
 });
 
+// INI BAGIAN YG DIBENERIN
 app.post('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     const folderId = req.params.id;
-    const { nama_dokumen, file_url, tipe_file, user_id } = req.body; // <-- TAMBAH user_id dari body
+    const { nama_dokumen, file_url, tipe_file } = req.body; 
+    const user_id = req.userId; // AMBIL DARI HEADER, DIJAMIN ADA
+
     if (!nama_dokumen) return res.status(400).json({ success: false, error: 'Nama dokumen wajib diisi.' });
-    if (!user_id) return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
 
     try {
         const database = await getDb();
-        // YG DIBENERIN: dari 4 tanda tanya jadi 5 tanda tanya
         database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-            [folderId, user_id, nama_dokumen, file_url || '', tipe_file || 'FILE']); // <-- Pake user_id dari body
+            [folderId, user_id, nama_dokumen, file_url || '', tipe_file || 'FILE']);
         saveDb();
         res.json({ success: true });
     } catch (e) {
