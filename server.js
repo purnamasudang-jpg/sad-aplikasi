@@ -1,126 +1,82 @@
 const express = require('express');
-const initSqlJs = require('sql.js');
+const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Naikkan limit express json & urlencoded agar tidak terkena limit bawaan 100kb
+// Konfigurasi body parser dengan limit besar untuk mengantisipasi data
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Konfigurasi folder public untuk frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Konfigurasi multer dengan memory storage dan limit 4MB
+// Menggunakan memoryStorage untuk Vercel (serverless environment)
 const upload = multer({ 
     storage: multer.memoryStorage(),
-    limits: { fileSize: 4 * 1024 * 1024 } // 4 MB
+    limits: { fileSize: 4 * 1024 * 1024 } // Batas 4MB sesuai ketentuan
 });
 
-let db = null;
-const dbPath = path.join('/tmp', 'database.sqlite');
+// SIMULASI DATABASE SEDERHANA (atau sesuaikan dengan file database.js Anda)
+// Jika menggunakan database.js terpisah, pastikan fungsi getDb/saveDb diimpor dengan benar.
+let dbData = {
+    users: [{ id: 1, username: 'admin', password: '123' }],
+    folders: [],
+    arsip: []
+};
 
-async function getDb() {
-    if (db) return db;
-    const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist');
-    const SQL = await initSqlJs({ locateFile: file => path.join(wasmPath, file) });
+// Fungsi helper database (atau hubungkan ke file database.js Anda)
+async function getDb() { return dbData; }
+function saveDb() { /* simpan state jika diperlukan */ }
 
-    if (fs.existsSync(dbPath)) {
-        const filebuffer = fs.readFileSync(dbPath);
-        db = new SQL.Database(filebuffer);
-    } else {
-        db = new SQL.Database();
-        db.run(`
-            CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT);
-            CREATE TABLE IF NOT EXISTS folders (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, nama_folder TEXT);
-            CREATE TABLE IF NOT EXISTS arsip (id INTEGER PRIMARY KEY AUTOINCREMENT, folder_id INTEGER, user_id INTEGER, nama_dokumen TEXT, file_url TEXT, tipe_file TEXT);
-        `);
-        saveDb();
-    }
-    return db;
-}
-
-function saveDb() {
-    if (!db) return;
-    const data = db.export();
-    fs.writeFileSync(dbPath, Buffer.from(data));
-}
-
-// FUNGSI VERIFIKASI USER YANG FLEKSIBEL UNTUK MULTIPART
+// Middleware Verifikasi User
 function verifyUser(req, res, next) {
-    const userId = req.headers['user-id'] || req.headers['User-Id'] || (req.body && req.body.user_id);
+    const userId = req.headers['user-id'] || req.body.user_id;
     if (!userId) {
-        return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
+        return res.status(401).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
     }
     req.userId = userId;
     next();
 }
 
-app.post('/api/register', async (req, res) => {
+// ROUTE LOGIN
+app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-    try {
-        const database = await getDb();
-        database.run(`INSERT INTO users (username, password) VALUES (?,?)`, [username, password]);
-        saveDb();
-        res.json({ success: true, message: 'Registrasi berhasil!' });
-    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
-});
-
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const database = await getDb();
-        const stmt = database.prepare(`SELECT * FROM users WHERE username =? AND password =?`);
-        stmt.bind([username, password]);
-        if (stmt.step()) {
-            const row = stmt.getAsObject();
-            stmt.free();
-            return res.json({ success: true, user: { id: row.id, username: row.username } });
-        }
-        stmt.free();
+    const user = dbData.users.find(u => u.username === username && u.password === password);
+    if (user) {
+        res.json({ success: true, user: { id: user.id, username: user.username } });
+    } else {
         res.status(401).json({ success: false, error: 'Username atau password salah!' });
-    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+    }
 });
 
-app.get('/api/folders', verifyUser, async (req, res) => {
-    const database = await getDb();
-    const stmt = database.prepare(`SELECT * FROM folders WHERE user_id =?`);
-    stmt.bind([req.userId]);
-    let rows = []; while (stmt.step()) { rows.push(stmt.getAsObject()); } stmt.free();
-    res.json({ success: true, data: rows });
+// ROUTE GET FOLDERS
+app.get('/api/folders', verifyUser, (req, res) => {
+    const userFolders = dbData.folders.filter(f => f.user_id == req.userId);
+    res.json({ success: true, data: userFolders });
 });
 
-app.post('/api/folders', verifyUser, async (req, res) => {
+// ROUTE POST FOLDER
+app.post('/api/folders', verifyUser, (req, res) => {
     const { nama_folder } = req.body;
-    const database = await getDb();
-    database.run(`INSERT INTO folders (user_id, nama_folder) VALUES (?,?)`, [req.userId, nama_folder]);
-    saveDb();
-    res.json({ success: true });
+    const newFolder = { id: Date.now(), user_id: req.userId, nama_folder };
+    dbData.folders.push(newFolder);
+    res.json({ success: true, data: newFolder });
 });
 
-app.delete('/api/folders/:id', verifyUser, async (req, res) => {
-    const database = await getDb();
-    database.run(`DELETE FROM arsip WHERE folder_id =? AND user_id =?`, [req.params.id, req.userId]);
-    database.run(`DELETE FROM folders WHERE id =? AND user_id =?`, [req.params.id, req.userId]);
-    saveDb();
-    res.json({ success: true });
+// ROUTE GET ARSIP DALAM FOLDER
+app.get('/api/folders/:id/arsip', verifyUser, (req, res) => {
+    const folderArsip = dbData.arsip.filter(a => a.folder_id == req.params.id);
+    res.json({ success: true, data: folderArsip });
 });
 
-app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
-    const database = await getDb();
-    const stmt = database.prepare(`SELECT * FROM arsip WHERE folder_id =? AND user_id =?`);
-    stmt.bind([req.params.id, req.userId]);
-    let rows = []; while (stmt.step()) { rows.push(stmt.getAsObject()); } stmt.free();
-    res.json({ success: true, data: rows });
-});
-
-// UPLOAD ARSIP DENGAN PENANGANAN ERROR YANG LEBIH AMAN
-app.post('/api/folders/:id/arsip', (req, res, next) => {
+// ROUTE UPLOAD ARSIP (Middleware verifyUser ditaruh di depan agar req.headers terbaca multer)
+app.post('/api/folders/:id/arsip', verifyUser, (req, res, next) => {
     upload.single('berkas')(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ success: false, error: 'Ukuran berkas melebihi 4MB!' });
+                return res.status(400).json({ success: false, error: 'Ukuran berkas melebihi batas maksimal 4MB!' });
             }
             return res.status(400).json({ success: false, error: `Error upload: ${err.message}` });
         } else if (err) {
@@ -128,11 +84,10 @@ app.post('/api/folders/:id/arsip', (req, res, next) => {
         }
         next();
     });
-}, verifyUser, async (req, res) => {
+}, async (req, res) => {
     try {
         const { judul_arsip } = req.body; 
         const file = req.file;
-        const database = await getDb();
         
         let filename = '';
         let tipe_file = 'FILE';
@@ -140,26 +95,29 @@ app.post('/api/folders/:id/arsip', (req, res, next) => {
         if (file) {
             const ext = path.extname(file.originalname);
             filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
+            // Di Vercel, simpan file sementara ke direktori /tmp
             const targetPath = path.join('/tmp', filename);
             fs.writeFileSync(targetPath, file.buffer);
             tipe_file = ext;
         }
         
-        database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?,?,?,?,?)`,
-            [req.params.id, req.userId, judul_arsip || (file ? file.originalname : 'Tanpa Judul'), filename, tipe_file]);
-        saveDb();
-        res.json({ success: true });
+        const newArsip = {
+            id: Date.now(),
+            folder_id: req.params.id,
+            user_id: req.userId,
+            nama_dokumen: judul_arsip || (file ? file.originalname : 'Tanpa Judul'),
+            file_url: filename,
+            tipe_file: tipe_file
+        };
+
+        dbData.arsip.push(newArsip);
+        res.json({ success: true, data: newArsip });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
     }
 });
 
-app.delete('/api/arsip/:id', verifyUser, async (req, res) => {
-    const database = await getDb();
-    database.run(`DELETE FROM arsip WHERE id =? AND user_id =?`, [req.params.id, req.userId]);
-    saveDb();
-    res.json({ success: true });
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));
 
-app.listen(PORT, () => console.log(`Server jalan di ${PORT}`));
 module.exports = app;
