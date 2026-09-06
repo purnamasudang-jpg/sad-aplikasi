@@ -32,7 +32,7 @@ function saveDb() { /* simpan state jika diperlukan */ }
 
 // Middleware Verifikasi User
 function verifyUser(req, res, next) {
-    const userId = req.headers['user-id'] || req.body.user_id;
+    const userId = req.headers['user-id'] || req.body.user_id || req.query.userId;
     if (!userId) {
         return res.status(401).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
     }

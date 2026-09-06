@@ -137,6 +137,7 @@ async function buatFolder(){
 }
 
 // 5. UPLOAD ARSIP
+// 5. UPLOAD ARSIP
 async function uploadArsip(folderId) {
     const userId = localStorage.getItem('userId');
     if (!userId) {
@@ -151,16 +152,13 @@ async function uploadArsip(folderId) {
 
     const formData = new FormData();
     formData.append('judul_arsip', nama_dokumen);
-    formData.append('user_id', userId);
     if (fileInput && fileInput.files[0]) {
         formData.append('berkas', fileInput.files[0]);
     }
 
-    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
+    // Mengirim userId via URL parameter agar aman dari masalah header multipart
+    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip?userId=${userId}`, {
         method: 'POST',
-        headers: { 
-            'user-id': userId 
-        },
         body: formData 
     });
     
