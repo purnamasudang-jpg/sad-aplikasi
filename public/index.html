@@ -6,9 +6,25 @@
     <title>Sistem Arsip Digital - SAD</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; color: #333; margin: 0; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 35px 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 80vh; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         
+        .app-title-area { text-align: center; margin-bottom: 30px; }
+        .app-title-area h1 { margin: 0; color: #1a365d; font-size: 28px; font-weight: bold; }
+        .app-title-area p { margin: 6px 0 0 0; color: #718096; font-size: 14px; }
+
+        /* Login Card Style sesuai gambar */
+        .login-card { max-width: 520px; margin: 20px auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 35px 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .login-card h3 { text-align: center; color: #2b6cb0; margin-top: 0; margin-bottom: 25px; font-size: 22px; }
+        .login-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .login-full { grid-column: span 2; }
+        
+        .btn-masuk { background: #2b6cb0; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; font-size: 15px; }
+        .btn-masuk:hover { background: #2c5282; }
+
+        .footer-text { text-align: center; color: #718096; font-size: 13px; border-top: 1px solid #edf2f7; padding-top: 20px; margin-top: 30px; }
+
         .section-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
         .form-inline { display: flex; gap: 10px; align-items: center; }
         .form-inline input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
@@ -47,31 +63,44 @@
         .btn-danger { background: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold; }
         .btn-danger:hover { background: #c53030; }
         
-        #loginForm, #dashboard { display: none; }
-        .error-msg { color: red; font-size: 13px; margin-top: 5px; }
+        #loginSection, #dashboard { display: none; }
+        .error-msg { color: red; font-size: 13px; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
 <div class="container">
     
-    <!-- Form Login -->
-    <div id="loginForm" style="max-width: 400px; margin: 40px auto;">
-        <h3>Login Sistem Arsip Digital</h3>
-        <div class="form-group" style="margin-bottom: 10px;">
-            <label>Username</label>
-            <input type="text" id="username" placeholder="admin">
+    <!-- Bagian Login Persis Gambar Referensi -->
+    <div id="loginSection">
+        <div class="app-title-area">
+            <h1>SAD (Sistem Arsip Digital)</h1>
+            <p>Manajemen Arsip Digital Berbasis Folder</p>
         </div>
-        <div class="form-group" style="margin-bottom: 15px;">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="123">
+
+        <div class="login-card">
+            <h3>Login Akun SAD</h3>
+            <div class="login-grid">
+                <div class="form-group">
+                    <label>Username / Email</label>
+                    <input type="text" id="username" placeholder="Masukkan username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password">
+                </div>
+                <div class="login-full" style="margin-top: 5px;">
+                    <button class="btn-masuk" onclick="login()">Masuk</button>
+                </div>
+            </div>
+            <div style="text-align: center; font-size: 13px; color: #4a5568;">
+                Belum punya akun? <a href="#" onclick="alert('Silakan hubungi administrator.'); return false;" style="color: #2b6cb0; text-decoration: none; font-weight: bold;">Daftar Akun Baru</a>
+            </div>
+            <p id="loginMsg" class="error-msg"></p>
         </div>
-        <button class="btn-primary" onclick="login()">Login</button>
-        <p id="loginMsg" class="error-msg"></p>
     </div>
 
     <!-- Dashboard Utama -->
     <div id="dashboard">
-        <!-- Header Judul Persis Gambar -->
         <div class="header-top" style="flex-direction: column; text-align: center; border-bottom: none; margin-bottom: 15px; padding-bottom: 0;">
             <div style="width: 100%; display: flex; justify-content: flex-end; margin-bottom: -20px;">
                 <button onclick="logout()" class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 12px;">Logout</button>
@@ -80,8 +109,8 @@
             <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Penyimpanan Dokumen Berbasis Folder</p>
         </div>
 
-        <!-- Box Buat Folder Baru (Sesuai Gambar Referensi) -->
-        <div class="section-box">
+        <!-- Box Buat Folder Baru -->
+        <div class="section-box" style="margin-top: 20px;">
             <div style="font-weight: bold; margin-bottom: 10px; color: #2d3748; display: flex; align-items: center; gap: 6px;">
                 📁 Buat Folder Baru
             </div>
@@ -157,6 +186,11 @@
             </table>
         </div>
     </div>
+
+    <!-- Footer Persis Gambar -->
+    <div class="footer-text">
+        &copy; 2026 SAD (Sistem Arsip Digital) &bull; Created & Developed by <b>Asep Sudang Purnawan</b>. All Rights Reserved.
+    </div>
 </div>
 
 <script>
@@ -167,7 +201,7 @@ window.onload = () => {
     if(localStorage.getItem('isLogin') === 'true') {
         showDashboard();
     } else {
-        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'block';
     }
     document.getElementById('folder_tanggal').valueAsDate = new Date();
     document.getElementById('dok_tanggal').valueAsDate = new Date();
@@ -196,7 +230,7 @@ async function login() {
 }
 
 function showDashboard() {
-    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('loginSection').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     loadData();
 }
