@@ -1,223 +1,156 @@
 const express = require('express');
-const initSqlJs = require('sql.js');
-const bcrypt = require('bcryptjs');
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
-// Perbesar limit JSON agar bisa menerima file ukuran sedang (misal 10MB)
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-let db = null;
-const dbPath = path.join('/tmp', 'database.sqlite');
-
-async function getDb() {
-    if (db) return db;
-    
-    const wasmPath = path.join(__dirname, 'node_modules', 'sql.js', 'dist');
-    const SQL = await initSqlJs({
-        locateFile: file => path.join(wasmPath, file)
-    });
-    
-    if (fs.existsSync(dbPath)) {
-        const filebuffer = fs.readFileSync(dbPath);
-        db = new SQL.Database(filebuffer);
-    } else {
-        db = new SQL.Database();
-        db.run(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE,
-                password TEXT
-            );
-            CREATE TABLE IF NOT EXISTS folders (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
-                nama_folder TEXT
-            );
-            CREATE TABLE IF NOT EXISTS arsip (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                folder_id INTEGER,
-                nama_dokumen TEXT,
-                file_url TEXT,
-                tipe_file TEXT
-            );
-        `);
-        saveDb();
-    }
-    return db;
-}
-
-function saveDb() {
-    if (!db) return;
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(dbPath, buffer);
-}
-
-// ==================== AUTH ====================
-app.post('/api/register', async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const database = await getDb();
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        const check = database.exec(`SELECT * FROM users WHERE username = '${username.replace(/'/g, "''")}'`);
-        if (check.length > 0 && check[0].values.length > 0) {
-            return res.json({ success: false, error: "Username sudah dipakai!" });
-        }
-
-        database.run(`INSERT INTO users (username, password) VALUES (?, ?)`, [username, hashedPassword]);
-        saveDb();
-        res.json({ success: true, message: "Registrasi berhasil!" });
-    } catch (e) {
-        res.json({ success: false, error: "Terjadi kesalahan server: " + e.message });
-    }
-});
-
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const database = await getDb();
-        const safeUser = username.replace(/'/g, "''");
-        const resQuery = database.exec(`SELECT * FROM users WHERE username = '${safeUser}'`);
-        
-        if (resQuery.length > 0 && resQuery[0].values.length > 0) {
-            const columns = resQuery[0].columns;
-            const values = resQuery[0].values[0];
-            const user = {};
-            columns.forEach((col, index) => { user[col] = values[index]; });
-
-            const isValid = await bcrypt.compare(password, user.password);
-            if (!isValid) return res.json({ success: false, error: "Password salah!" });
-            return res.json({ success: true, user: { id: user.id, username: user.username } });
-        }
-        res.json({ success: false, error: "Akun tidak ditemukan!" });
-    } catch (e) {
-        res.json({ success: false, error: "Terjadi kesalahan server: " + e.message });
-    }
-});
-
-// ==================== FOLDERS ====================
-app.get('/api/folders', async (req, res) => {
-    const userId = req.headers['user-id'];
-    try {
-        const database = await getDb();
-        const resQuery = database.exec(`
-            SELECT f.id, f.nama_folder, COUNT(a.id) as jumlah_arsip 
-            FROM folders f 
-            LEFT JOIN arsip a ON f.id = a.folder_id 
-            WHERE f.user_id = ${userId} 
-            GROUP BY f.id
-        `);
-
-        let folders = [];
-        if (resQuery.length > 0) {
-            const cols = resQuery[0].columns;
-            folders = resQuery[0].values.map(row => {
-                let obj = {};
-                cols.forEach((c, i) => obj[c] = row[i]);
-                return obj;
-            });
-        }
-        res.json({ success: true, data: folders });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-app.post('/api/folders', async (req, res) => {
-    const userId = req.headers['user-id'];
-    const { nama_folder } = req.body;
-    try {
-        const database = await getDb();
-        database.run(`INSERT INTO folders (user_id, nama_folder) VALUES (?, ?)`, [userId, nama_folder]);
-        saveDb();
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-app.delete('/api/folders/:id', async (req, res) => {
-    const folderId = req.params.id;
-    try {
-        const database = await getDb();
-        database.run(`DELETE FROM arsip WHERE folder_id = ?`, [folderId]);
-        database.run(`DELETE FROM folders WHERE id = ?`, [folderId]);
-        saveDb();
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-// ==================== ARsip / DOKUMEN ====================
-app.get('/api/folders/:id/arsip', async (req, res) => {
-    const folderId = req.params.id;
-    const userId = req.headers['user-id'];
-    try {
-        const database = await getDb();
-        const folderCheck = database.exec(`SELECT id FROM folders WHERE id = ${folderId} AND user_id = ${userId}`);
-        if (folderCheck.length === 0 || folderCheck[0].values.length === 0) {
-            return res.json({ success: false, error: "Folder tidak ditemukan atau akses ditolak." });
-        }
-
-        const resQuery = database.exec(`SELECT * FROM arsip WHERE folder_id = ${folderId}`);
-        let arsipList = [];
-        if (resQuery.length > 0) {
-            const cols = resQuery[0].columns;
-            arsipList = resQuery[0].values.map(row => {
-                let obj = {};
-                cols.forEach((c, i) => obj[c] = row[i]);
-                return obj;
-            });
-        }
-        res.json({ success: true, data: arsipList });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-app.post('/api/folders/:id/arsip', async (req, res) => {
-    const folderId = req.params.id;
-    const userId = req.headers['user-id'];
-    const { nama_dokumen, file_url, tipe_file } = req.body;
-    try {
-        const database = await getDb();
-        
-        const folderCheck = database.exec(`SELECT id FROM folders WHERE id = ${folderId} AND user_id = ${userId}`);
-        if (folderCheck.length === 0 || folderCheck[0].values.length === 0) {
-            return res.json({ success: false, error: "Akses ditolak ke folder ini." });
-        }
-
-        database.run(`INSERT INTO arsip (folder_id, nama_dokumen, file_url, tipe_file) VALUES (?, ?, ?, ?)`, [folderId, nama_dokumen, file_url, tipe_file || 'FILE']);
-        saveDb();
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-app.delete('/api/arsip/:id', async (req, res) => {
-    const arsipId = req.params.id;
-    try {
-        const database = await getDb();
-        database.run(`DELETE FROM arsip WHERE id = ?`, [arsipId]);
-        saveDb();
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));
 
-module.exports = app;
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Inisialisasi Database SQLite
+const dbFile = path.join(__dirname, 'arsip.db');
+const db = new sqlite3.Database(dbFile, (err) => {
+    if (err) console.error('Gagal koneksi database:', err.message);
+    else console.log('Terhubung ke database SQLite.');
+});
+
+// Buat Tabel jika belum ada
+db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        password TEXT
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS folders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        nama_folder TEXT
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS arsip (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        folder_id INTEGER,
+        user_id INTEGER,
+        nama_dokumen TEXT,
+        file_url TEXT,
+        tipe_file TEXT
+    )`);
+});
+
+// Middleware untuk validasi user-id dari header
+function verifyUser(req, res, next) {
+    const userId = req.headers['user-id'];
+    if (!userId || userId === 'undefined' || userId === 'null') {
+        return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
+    }
+    req.userId = userId;
+    next();
+}
+
+// Route: Register
+app.post('/api/register', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ success: false, error: 'Username dan password wajib diisi!' });
+    }
+
+    const query = `INSERT INTO users (username, password) VALUES (?, ?)`;
+    db.run(query, [username, password], function(err) {
+        if (err) {
+            return res.status(400).json({ success: false, error: 'Username sudah digunakan!' });
+        }
+        res.json({ success: true, message: 'Registrasi berhasil! Silakan masuk.' });
+    });
+});
+
+// Route: Login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
+    
+    db.get(query, [username, password], (err, row) => {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        if (!row) return res.status(401).json({ success: false, error: 'Username atau password salah!' });
+
+        res.json({ success: true, user: { id: row.id, username: row.username } });
+    });
+});
+
+// Route: Ambil Daftar Folder
+app.get('/api/folders', verifyUser, (req, res) => {
+    const query = `SELECT * FROM folders WHERE user_id = ?`;
+    db.all(query, [req.userId], (err, rows) => {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true, data: rows });
+    });
+});
+
+// Route: Buat Folder Baru
+app.post('/api/folders', verifyUser, (req, res) => {
+    const { nama_folder } = req.body;
+    if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder harus diisi.' });
+
+    const query = `INSERT INTO folders (user_id, nama_folder) VALUES (?, ?)`;
+    db.run(query, [req.userId, nama_folder], function(err) {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true, id: this.lastID });
+    });
+});
+
+// Route: Hapus Folder
+app.delete('/api/folders/:id', verifyUser, (req, res) => {
+    const folderId = req.params.id;
+    
+    db.serialize(() => {
+        db.run(`DELETE FROM arsip WHERE folder_id = ? AND user_id = ?`, [folderId, req.userId]);
+        db.run(`DELETE FROM folders WHERE id = ? AND user_id = ?`, [folderId, req.userId], function(err) {
+            if (err) return res.status(500).json({ success: false, error: err.message });
+            res.json({ success: true });
+        });
+    });
+});
+
+// Route: Ambil Arsip dalam Folder Tertentu
+app.get('/api/folders/:id/arsip', verifyUser, (req, res) => {
+    const folderId = req.params.id;
+    const query = `SELECT * FROM arsip WHERE folder_id = ? AND user_id = ?`;
+    
+    db.all(query, [folderId, req.userId], (err, rows) => {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true, data: rows });
+    });
+});
+
+// Route: Tambah Arsip ke Folder
+app.post('/api/folders/:id/arsip', verifyUser, (req, res) => {
+    const folderId = req.params.id;
+    const { nama_dokumen, file_url, tipe_file } = req.body;
+
+    if (!nama_dokumen) return res.status(400).json({ success: false, error: 'Nama dokumen wajib diisi.' });
+
+    const query = `INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?, ?, ?, ?, ?)`;
+    db.run(query, [folderId, req.userId, nama_dokumen, file_url || '', tipe_file || 'FILE'], function(err) {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true, id: this.lastID });
+    });
+});
+
+// Route: Hapus Arsip
+app.delete('/api/arsip/:id', verifyUser, (req, res) => {
+    const arsipId = req.params.id;
+    const query = `DELETE FROM arsip WHERE id = ? AND user_id = ?`;
+
+    db.run(query, [arsipId, req.userId], function(err) {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true });
+    });
+});
+
+// Jalankan Server
+app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+});
