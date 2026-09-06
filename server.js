@@ -65,13 +65,22 @@ function verifyUser(req, res, next) {
 
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ success: false, error: 'Username dan password wajib diisi!' });
+    }
     try {
         const database = await getDb();
-        const safeUser = username.replace(/'/g, "''");
-        const check = database.exec(`SELECT * FROM users WHERE username = '${safeUser}'`);
-        if (check.length > 0 && check[0].values.length > 0) {
+        
+        // Cek username menggunakan prepared statement aman
+        const stmtCheck = database.prepare(`SELECT * FROM users WHERE username = ?`);
+        stmtCheck.bind([username]);
+        const exists = stmtCheck.step();
+        stmtCheck.free();
+
+        if (exists) {
             return res.status(400).json({ success: false, error: 'Username sudah digunakan!' });
         }
+
         database.run(`INSERT INTO users (username, password) VALUES (?, ?)`, [username, password]);
         saveDb();
         res.json({ success: true, message: 'Registrasi berhasil!' });
@@ -84,16 +93,15 @@ app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const database = await getDb();
-        const safeUser = username.replace(/'/g, "''");
-        const resQuery = database.exec(`SELECT * FROM users WHERE username = '${safeUser}' AND password = '${password}'`);
+        const stmt = database.prepare(`SELECT * FROM users WHERE username = ? AND password = ?`);
+        stmt.bind([username, password]);
         
-        if (resQuery.length > 0 && resQuery[0].values.length > 0) {
-            const columns = resQuery[0].columns;
-            const values = resQuery[0].values[0];
-            const user = {};
-            columns.forEach((col, index) => { user[col] = values[index]; });
-            return res.json({ success: true, user: { id: user.id, username: user.username } });
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            stmt.free();
+            return res.json({ success: true, user: { id: row.id, username: row.username } });
         }
+        stmt.free();
         res.status(401).json({ success: false, error: 'Username atau password salah!' });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
@@ -103,16 +111,15 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/folders', verifyUser, async (req, res) => {
     try {
         const database = await getDb();
-        const resQuery = database.exec(`SELECT * FROM folders WHERE user_id = ${req.userId}`);
+        const stmt = database.prepare(`SELECT * FROM folders WHERE user_id = ?`);
+        stmt.bind([req.userId]);
+        
         let rows = [];
-        if (resQuery.length > 0) {
-            const cols = resQuery[0].columns;
-            rows = resQuery[0].values.map(row => {
-                let obj = {};
-                cols.forEach((c, i) => obj[c] = row[i]);
-                return obj;
-            });
+        while (stmt.step()) {
+            rows.push(stmt.getAsObject());
         }
+        stmt.free();
+        
         res.json({ success: true, data: rows });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
@@ -121,6 +128,8 @@ app.get('/api/folders', verifyUser, async (req, res) => {
 
 app.post('/api/folders', verifyUser, async (req, res) => {
     const { nama_folder } = req.body;
+    if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder harus diisi.' });
+    
     try {
         const database = await getDb();
         database.run(`INSERT INTO folders (user_id, nama_folder) VALUES (?, ?)`, [req.userId, nama_folder]);
@@ -148,16 +157,15 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     const folderId = req.params.id;
     try {
         const database = await getDb();
-        const resQuery = database.exec(`SELECT * FROM arsip WHERE folder_id = ${folderId} AND user_id = ${req.userId}`);
+        const stmt = database.prepare(`SELECT * FROM arsip WHERE folder_id = ? AND user_id = ?`);
+        stmt.bind([folderId, req.userId]);
+        
         let rows = [];
-        if (resQuery.length > 0) {
-            const cols = resQuery[0].columns;
-            rows = resQuery[0].values.map(row => {
-                let obj = {};
-                cols.forEach((c, i) => obj[c] = row[i]);
-                return obj;
-            });
+        while (stmt.step()) {
+            rows.push(stmt.getAsObject());
         }
+        stmt.free();
+
         res.json({ success: true, data: rows });
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });
@@ -167,6 +175,8 @@ app.get('/api/folders/:id/arsip', verifyUser, async (req, res) => {
 app.post('/api/folders/:id/arsip', verifyUser, async (req, res) => {
     const folderId = req.params.id;
     const { nama_dokumen, file_url, tipe_file } = req.body;
+    if (!nama_dokumen) return res.status(400).json({ success: false, error: 'Nama dokumen wajib diisi.' });
+
     try {
         const database = await getDb();
         database.run(`INSERT INTO arsip (folder_id, user_id, nama_dokumen, file_url, tipe_file) VALUES (?, ?, ?, ?, ?)`, 
