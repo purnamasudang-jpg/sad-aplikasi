@@ -12,49 +12,50 @@ authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('auth_username').value;
     const password = document.getElementById('auth_password').value;
-    const endpoint = '/api/login'; // sementara pake login aja biar cepet
-
-    try {
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const resData = await response.json();
-        if (response.ok) {
-            currentUser = resData.user;
-            localStorage.setItem('sad_user', JSON.stringify(currentUser));
-            checkAuth();
-        } else { alert(resData.error); }
-    } catch (err) { alert('Gagal konek ke server'); }
+    const response = await fetch('/api/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+    const resData = await response.json();
+    if (response.ok) {
+        currentUser = resData.user;
+        localStorage.setItem('sad_user', JSON.stringify(currentUser));
+        checkAuth();
+    } else { alert(resData.error); }
 });
 
 document.getElementById('btnLogout').addEventListener('click', () => {
-    localStorage.removeItem('sad_user');
-    currentUser = null;
-    checkAuth();
+    localStorage.removeItem('sad_user'); currentUser = null; checkAuth();
 });
 
 function checkAuth() {
-    if (currentUser && currentUser.id) { // WAJIB ADA .id
-        viewAuth.style.display = 'none';
-        viewMain.style.display = 'block';
-        fetchFolders();
+    if (currentUser && currentUser.id) {
+        viewAuth.style.display = 'none'; viewMain.style.display = 'block'; fetchFolders();
     } else {
-        localStorage.removeItem('sad_user'); // hapus data rusak
-        currentUser = null;
-        viewAuth.style.display = 'block';
-        viewMain.style.display = 'none';
+        localStorage.removeItem('sad_user'); currentUser = null;
+        viewAuth.style.display = 'block'; viewMain.style.display = 'none';
     }
 }
 
 async function fetchFolders() {
-    const response = await fetch(FOLDER_URL, { headers: { 'user-id': currentUser.id } });
-    const result = await response.json();
-    renderFolderGrid(result.data);
+    const res = await fetch(FOLDER_URL, { headers: { 'user-id': currentUser.id } });
+    const result = await res.json();
+    document.getElementById('folderGrid').innerHTML = result.data.map(f => `
+        <div onclick="openFolder(${JSON.stringify(f).replace(/"/g, '&quot;')})" style="background:#f7fafc;border:2px solid #cbd5e0;border-radius:8px;padding:15px;cursor:pointer;text-align:center;">
+            <div style="font-size:40px;">📁</div><strong>${f.nama_folder}</strong>
+        </div>
+    `).join('');
 }
 
-function renderFolderGrid(folders) { /* ... sama seperti punya ibu ... */ }
+document.getElementById('folderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nama = document.getElementById('nama_folder_input').value;
+    await fetch(FOLDER_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'user-id': currentUser.id },
+        body: JSON.stringify({ nama_folder: nama })
+    });
+    document.getElementById('nama_folder_input').value = ''; fetchFolders();
+});
 
 async function openFolder(folder) {
     currentFolder = folder;
@@ -65,33 +66,29 @@ async function openFolder(folder) {
     fetchDocsInFolder();
 }
 
+document.getElementById('btnBack').addEventListener('click', () => {
+    document.getElementById('viewInsideFolder').style.display = 'none';
+    document.getElementById('viewFolders').style.display = 'block'; fetchFolders();
+});
+
 async function fetchDocsInFolder() {
-    const response = await fetch(`${FOLDER_URL}/${currentFolder.id}/arsip`, { headers: { 'user-id': currentUser.id } });
-    const result = await response.json();
-    renderTable(result.data);
+    const res = await fetch(`${FOLDER_URL}/${currentFolder.id}/arsip`, { headers: { 'user-id': currentUser.id } });
+    const result = await res.json();
+    document.getElementById('dataTable').innerHTML = result.data.map((item, i) => `
+        <tr><td>${i+1}</td><td>${item.nama_dokumen}</td><td>${item.tipe_file}</td><td>${item.file_url}</td></tr>
+    `).join('');
 }
 
-function renderTable(dataList) { /* ... sama seperti punya ibu ... */ }
-
-// INI YG PENTING: KIRIM DENGAN FORMDATA BIAR BISA UPLOAD FILE
+// INI YG BUAT UPLOAD
 document.getElementById('arsipForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const folderId = document.getElementById('folder_id_hidden').value;
-    const formData = new FormData(document.getElementById('arsipForm')); // ambil semua form
-    formData.append('user_id', currentUser.id); // paksa kirim user_id
-
-    try {
-        const response = await fetch(`${FOLDER_URL}/${folderId}/arsip`, {
-            method: 'POST',
-            headers: { 'user-id': currentUser.id }, // jangan set Content-Type kalau pake FormData
-            body: formData
-        });
-        const resData = await response.json();
-        if (response.ok) {
-            document.getElementById('arsipForm').reset();
-            document.getElementById('uploadBox').style.display = 'none';
-            fetchDocsInFolder();
-            alert('Dokumen berhasil disimpan!');
-        } else { alert(resData.error); }
-    } catch (error) { alert('Gagal simpan: ' + error.message); }
+    const formData = new FormData(document.getElementById('arsipForm'));
+    formData.append('user_id', currentUser.id);
+    const response = await fetch(`${FOLDER_URL}/${currentFolder.id}/arsip`, {
+        method: 'POST', headers: { 'user-id': currentUser.id }, body: formData
+    });
+    const resData = await response.json();
+    if (response.ok) {
+        alert('Berhasil!'); document.getElementById('arsipForm').reset(); fetchDocsInFolder();
+    } else { alert(resData.error); }
 });
