@@ -10,7 +10,7 @@
         input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
         button { background: #28a745; color: white; border: none; cursor: pointer; }
         button:hover { background: #218838; }
-        .folder { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .folder { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #fff; }
         .arsip { background: #f9f9f9; padding: 8px; margin: 5px 0; border-left: 3px solid #007bff; }
         #loginForm, #dashboard { display: none; }
     </style>
@@ -30,11 +30,11 @@
 
     <!-- DASHBOARD -->
     <div id="dashboard">
-        <button onclick="logout()" style="background:red; float:right;">Logout</button>
+        <button onclick="logout()" style="background:red; float:right; width:auto; padding: 5px 15px;">Logout</button>
         <h3>Dashboard</h3>
         
         <h4>Buat Folder Baru</h4>
-        <input type="text" id="nama_folder" placeholder="Nama Folder">
+        <input type="text" id="nama_folder" placeholder="Nama Folder (Contoh: Surat Masuk 2026)">
         <button onclick="buatFolder()">Buat Folder</button>
 
         <hr>
@@ -74,7 +74,7 @@ async function login() {
     
     if(data.success){
         currentUserId = data.user.id;
-        localStorage.setItem('userId', data.user.id); // SIMPAN ID
+        localStorage.setItem('userId', data.user.id);
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         loadFolders();
@@ -90,23 +90,26 @@ function logout(){
     location.reload();
 }
 
-// 3. LOAD FOLDER - KIRIM user-id DI HEADER
+// 3. LOAD FOLDER
 async function loadFolders() {
     const res = await fetch(`${API_URL}/api/folders`, {
-        headers: { 'user-id': currentUserId } // KIRIM ID
+        headers: { 'user-id': currentUserId }
     });
     const data = await res.json();
     if(data.success){
         let html = '';
+        if(data.data.length === 0) {
+            html = '<p>Belum ada folder arsip. Buat folder baru di atas.</p>';
+        }
         data.data.forEach(folder => {
             html += `
             <div class="folder">
-                <h4>${folder.nama_folder}</h4>
+                <h4>📁 ${folder.nama_folder}</h4>
                 <input type="text" id="nama_dok_${folder.id}" placeholder="Nama Dokumen">
-                <input type="text" id="url_dok_${folder.id}" placeholder="Link File / URL">
+                <input type="file" id="file_dok_${folder.id}">
                 <button onclick="uploadArsip(${folder.id})">Unggah ke Arsip</button>
-                <button onclick="loadArsip(${folder.id})">Lihat Arsip</button>
-                <div id="arsip_${folder.id}"></div>
+                <button onclick="loadArsip(${folder.id})" style="background:#007bff;">Lihat Arsip</button>
+                <div id="arsip_${folder.id}" style="margin-top:10px;"></div>
             </div>
             `;
         });
@@ -114,46 +117,56 @@ async function loadFolders() {
     }
 }
 
-// 4. BUAT FOLDER - KIRIM user-id DI HEADER
+// 4. BUAT FOLDER
 async function buatFolder(){
     const nama = document.getElementById('nama_folder').value;
+    if(!nama) return alert('Nama folder wajib diisi');
+    
     const res = await fetch(`${API_URL}/api/folders`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'user-id': currentUserId // KIRIM ID
+            'user-id': currentUserId 
         },
         body: JSON.stringify({ nama_folder: nama })
     });
     const data = await res.json();
-    if(data.success) loadFolders();
+    if(data.success) {
+        document.getElementById('nama_folder').value = '';
+        loadFolders();
+    }
 }
 
-// 5. UPLOAD ARsip - SUDAH DIPERBAIKI DENGAN HEADER LENGKAP
+// 5. UPLOAD ARSIP (DISESUAIKAN DENGAN MULTER & FORMDATA)
 async function uploadArsip(folderId) {
     const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
-    const file_url = document.getElementById(`url_dok_${folderId}`).value;
+    const fileInput = document.getElementById(`file_dok_${folderId}`);
 
     if(!nama_dokumen) return alert('Nama dokumen wajib diisi');
+
+    const formData = new FormData();
+    formData.append('judul_arsip', nama_dokumen);
+    formData.append('user_id', currentUserId);
+    if (fileInput && fileInput.files[0]) {
+        formData.append('berkas', fileInput.files[0]);
+    }
 
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
         method: 'POST',
         headers: { 
-            'Content-Type': 'application/json',
-            'user-id': currentUserId // KUNCI UTAMA AGAR TIDAK MINTA LOGIN ULANG
+            'user-id': currentUserId 
         },
-        body: JSON.stringify({ 
-            nama_dokumen: nama_dokumen,
-            file_url: file_url,
-            user_id: currentUserId // Cadangan pengiriman parameter
-        })
+        body: formData 
     });
+    
     const data = await res.json();
     if(data.success){
         alert('Upload berhasil!');
+        document.getElementById(`nama_dok_${folderId}`).value = '';
+        fileInput.value = '';
         loadArsip(folderId);
     } else {
-        alert('Gagal: ' + data.error);
+        alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
     }
 }
 
@@ -164,9 +177,12 @@ async function loadArsip(folderId){
     });
     const data = await res.json();
     if(data.success){
-        let html = '<h5>Isi Arsip:</h5>';
+        let html = '<h5>Daftar Dokumen:</h5>';
+        if(data.data.length === 0) {
+            html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen di folder ini.</p>';
+        }
         data.data.forEach(a => {
-            html += `<div class="arsip">${a.nama_dokumen} - ${a.file_url}</div>`;
+            html += `<div class="arsip"><b>${a.nama_dokumen}</b> ${a.file_url ? `- <a href="/uploads/${a.file_url}" target="_blank">Lihat File</a>` : ''}</div>`;
         });
         document.getElementById(`arsip_${folderId}`).innerHTML = html;
     }
