@@ -1,110 +1,201 @@
 const express = require('express');
-const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 const upload = multer({ storage: multer.memoryStorage() });
+const DB_FILE = path.join(__dirname, 'database.json');
 
-let dbData = {
-    users: [{ id: 1, username: 'admin', password: '123' }],
-    folders: [
-        { id: 1, nama_folder: 'ARSIPIJAZAH SMA TAHUN 2026', tanggal: '2026-09-04' }
-    ],
-    arsip: []
-};
+// Inisialisasi Database JSON jika belum ada
+function getDB() {
+    if (!fs.existsSync(DB_FILE)) {
+        const initialData = {
+            users: [
+                { username: 'admin', password: '123' }
+            ],
+            folders: [],
+            arsip: []
+        };
+        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+    }
+    const data = fs.readFileSync(DB_FILE, 'utf8');
+    return JSON.parse(data);
+}
 
-// Route Login
+function saveDB(data) {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+}
+
+// Endpoint Login
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-    const user = dbData.users.find(u => u.username === username && u.password === password);
+    const db = getDB();
+    
+    const user = db.users.find(u => u.username === username && u.password === password);
     if (user) {
-        res.json({ success: true, user: { id: user.id, username: user.username } });
+        res.json({ success: true, user: { username: user.username } });
     } else {
         res.status(401).json({ success: false, error: 'Username atau password salah!' });
     }
 });
 
-// Route Ambil Data & Hitung Jumlah Dokumen per Folder
+// Endpoint Register (Daftar Akun Baru)
+app.post('/api/register', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ success: false, error: 'Username dan password wajib diisi!' });
+    }
+
+    const db = getDB();
+    const existingUser = db.users.find(u => u.username === username);
+    if (existingUser) {
+        return res.status(400).json({ success: false, error: 'Username sudah terdaftar, silakan gunakan yang lain.' });
+    }
+
+    db.users.push({ username, password });
+    saveDB(db);
+    res.json({ success: true, message: 'Registrasi berhasil' });
+});
+
+// Endpoint Ambil Data Berdasarkan User yang Login
 app.get('/api/data', (req, res) => {
-    const foldersWithCount = dbData.folders.map(f => {
-        const count = dbData.arsip.filter(a => a.folder_id === f.id).length;
+    const username = req.query.username || '';
+    const db = getDB();
+    
+    // Filter folder dan arsip khusus milik user tersebut
+    const userFolders = db.folders.filter(f => f.username === username);
+    const folderIds = userFolders.map(f => f.id);
+    const userArsip = db.arsip.filter(a => folderIds.includes(a.folder_id));
+
+    // Hitung jumlah dokumen per folder
+    const foldersWithCount = userFolders.map(f => {
+        const count = userArsip.filter(a => a.folder_id === f.id).length;
         return { ...f, jumlah_dokumen: count };
     });
-    res.json({ success: true, folders: foldersWithCount, arsip: dbData.arsip });
+
+    res.json({
+        success: true,
+        folders: foldersWithCount,
+        arsip: userArsip
+    });
 });
 
-// Route Tambah Folder Baru
+// Endpoint Tambah Folder
 app.post('/api/folders', (req, res) => {
-    const { nama_folder, tanggal } = req.body;
-    if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
-    
-    const newFolder = { 
-        id: Date.now(), 
-        nama_folder, 
-        tanggal: tanggal || new Date().toISOString().split('T')[0] 
+    const { nama_folder, tanggal, username } = req.body;
+    if (!nama_folder || !username) {
+        return res.status(400).json({ success: false, error: 'Data tidak lengkap' });
+    }
+
+    const db = getDB();
+    const newFolder = {
+        id: Date.now(),
+        username,
+        nama_folder,
+        tanggal: tanggal || new Date().toISOString().split('T')[0]
     };
-    dbData.folders.push(newFolder);
-    res.json({ success: true, data: newFolder });
+
+    db.folders.push(newFolder);
+    saveDB(db);
+    res.json({ success: true, folder: newFolder });
 });
 
-// Route Hapus Folder
+// Endpoint Hapus Folder
 app.delete('/api/folders/:id', (req, res) => {
     const folderId = parseInt(req.params.id);
-    dbData.folders = dbData.folders.filter(f => f.id !== folderId);
-    dbData.arsip = dbData.arsip.filter(a => a.folder_id !== folderId);
+    const username = req.query.username || '';
+    const db = getDB();
+
+    // Validasi kepemilikan folder
+    const folderIndex = db.folders.findIndex(f => f.id === folderId && f.username === username);
+    if (folderIndex === -1) {
+        return res.status(403).json({ success: false, error: 'Akses ditolak atau folder tidak ditemukan' });
+    }
+
+    db.folders.splice(folderIndex, 1);
+    db.arsip = db.arsip.filter(a => a.folder_id !== folderId);
+    saveDB(db);
+
     res.json({ success: true });
 });
 
-// Route Tambah Arsip / Dokumen ke Folder
-app.post('/api/arsip', upload.single('berkas'), (req, res) => {
-    const { tanggal, folder_id, judul_dokumen, pengirim, lokasi_fisik, keterangan } = req.body;
+// Endpoint Tambah Arsip Dokumen
+app.post('/api/arsip', upload.array('berkas'), (req, res) => {
+    const { folder_id, judul_dokumen, keterangan, pengirim, tanggal, lokasi_fisik, username } = req.body;
+    const db = getDB();
 
-    if (!judul_dokumen || !folder_id) {
-        return res.status(400).json({ success: false, error: 'Judul dokumen dan folder wajib diisi!' });
+    const folderIdNum = parseInt(folder_id);
+    const folder = db.folders.find(f => f.id === folderIdNum && f.username === username);
+    if (!folder) {
+        return res.status(403).json({ success: false, error: 'Folder tidak valid atau bukan milik Anda' });
     }
 
-    let fileBufferData = null;
-    let fileName = null;
-    let fileType = null;
-
-    if (req.file) {
-        fileBufferData = req.file.buffer.toString('base64');
-        fileName = req.file.originalname;
-        fileType = path.extname(fileName).replace('.', '').toUpperCase();
+    let files = req.files || [];
+    if (files.length === 0) {
+        const newArsip = {
+            id: Date.now(),
+            folder_id: folderIdNum,
+            judul_dokumen,
+            keterangan,
+            pengirim,
+            tanggal,
+            lokasi_fisik,
+            file_tipe: null,
+            file_data: null
+        };
+        db.arsip.push(newArsip);
+    } else {
+        files.forEach((file, index) => {
+            const ext = path.extname(file.originalname).substring(1).toUpperCase();
+            const base64Data = file.buffer.toString('base64');
+            const newArsip = {
+                id: Date.now() + index,
+                folder_id: folderIdNum,
+                judul_dokumen: files.length > 1 ? `${judul_dokumen} (${index + 1})` : judul_dokumen,
+                keterangan,
+                pengirim,
+                tanggal,
+                lokasi_fisik,
+                file_tipe: ext || 'FILE',
+                file_data: base64Data
+            };
+            db.arsip.push(newArsip);
+        });
     }
 
-    const newArsip = {
-        id: Date.now(),
-        tanggal: tanggal || new Date().toISOString().split('T')[0],
-        folder_id: parseInt(folder_id),
-        judul_dokumen,
-        pengirim: pengirim || '-',
-        lokasi_fisik: lokasi_fisik || '-',
-        keterangan: keterangan || '',
-        file_nama: fileName,
-        file_tipe: fileType,
-        file_data: fileBufferData
-    };
-
-    dbData.arsip.unshift(newArsip);
-    res.json({ success: true, data: newArsip });
+    saveDB(db);
+    res.json({ success: true });
 });
 
-// Route Hapus Arsip
+// Endpoint Hapus Arsip
 app.delete('/api/arsip/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    dbData.arsip = dbData.arsip.filter(a => a.id !== id);
+    const arsipId = parseInt(req.params.id);
+    const username = req.query.username || '';
+    const db = getDB();
+
+    const arsip = db.arsip.find(a => a.id === arsipId);
+    if (!arsip) {
+        return res.status(404).json({ success: false, error: 'Arsip tidak ditemukan' });
+    }
+
+    const folder = db.folders.find(f => f.id === arsip.folder_id && f.username === username);
+    if (!folder) {
+        return res.status(403).json({ success: false, error: 'Akses ditolak' });
+    }
+
+    db.arsip = db.arsip.filter(a => a.id !== arsipId);
+    saveDB(db);
+
     res.json({ success: true });
 });
 
-const PORT = process.env.PORT || 3000;
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => console.log(`Server lokal berjalan di port ${PORT}`));
-}
-
-module.exports = app;
+app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+});
