@@ -54,8 +54,9 @@ function saveDb() {
     fs.writeFileSync(dbPath, Buffer.from(data));
 }
 
+// Middleware diperkuat untuk mendeteksi user-id dari header, body, ataupun query
 function verifyUser(req, res, next) {
-    const userId = req.headers['user-id'];
+    const userId = req.headers['user-id'] || req.body.user_id || req.query.user_id;
     if (!userId || userId === 'undefined' || userId === 'null') {
         return res.status(400).json({ success: false, error: 'User ID tidak valid. Silakan login ulang.' });
     }
@@ -71,7 +72,6 @@ app.post('/api/register', async (req, res) => {
     try {
         const database = await getDb();
         
-        // Cek username menggunakan prepared statement aman
         const stmtCheck = database.prepare(`SELECT * FROM users WHERE username = ?`);
         stmtCheck.bind([username]);
         const exists = stmtCheck.step();
