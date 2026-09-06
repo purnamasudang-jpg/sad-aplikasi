@@ -6,11 +6,13 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+
+// Memastikan folder public terbaca dengan benar di Vercel & Lokal
+app.use(express.static(path.join(__dirname, 'public')));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Database sementara di memori (RAM) untuk Vercel Serverless agar tidak error 500
+// Database sementara di memori (RAM) untuk Vercel Serverless agar aman
 let memDB = {
     users: [
         { username: 'admin', password: '123' }
@@ -185,6 +187,11 @@ app.delete('/api/arsip/:id', (req, res) => {
     saveDB(db);
 
     res.json({ success: true });
+});
+
+// Fallback untuk route selain API agar mengarah ke index.html di public
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Jalankan server lokal jika bukan di mode production (Vercel)
