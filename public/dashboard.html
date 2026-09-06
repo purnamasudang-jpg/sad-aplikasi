@@ -128,7 +128,7 @@
             <label>File Berkas / Keterangan</label>
             <input type="file" id="berkas-file">
           </div>
-          <button type="submit">Simpan & Upload Arsip</button>
+          <button type="submit" id="btn-submit-arsip">Simpan & Upload Arsip</button>
         </form>
       </div>
 
@@ -177,7 +177,7 @@
   }
 
   async function loginUser() {
-    const username = document.getElementById('login-username').value;
+    const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
     if (!username || !password) return alert('Username dan password harus diisi!');
 
@@ -197,7 +197,7 @@
   }
 
   async function registerUser() {
-    const username = document.getElementById('reg-username').value;
+    const username = document.getElementById('reg-username').value.trim();
     const password = document.getElementById('reg-password').value;
     if (!username || !password) return alert('Isi username dan password terlebih dahulu!');
 
@@ -237,7 +237,7 @@
         const card = document.createElement('div');
         card.className = 'folder-card';
         card.innerHTML = `
-          <div class="folder-info" onclick="openFolder(${folder.id}, '${folder.nama_folder}')">
+          <div class="folder-info" onclick="openFolder(${folder.id}, '${folder.nama_folder.replace(/'/g, "\\'")}')">
             📁 <span>${folder.nama_folder}</span>
           </div>
           <button class="btn-del-folder" onclick="deleteFolder(${folder.id})" title="Hapus Folder">🗑️</button>
@@ -308,7 +308,7 @@
       filtered.forEach(item => {
         tbody.innerHTML += `<tr>
           <td><strong>${item.nama_dokumen}</strong></td>
-          <td>${item.file_url ? `<a href="#" style="color:#2563eb; text-decoration:none; font-weight:600;">${item.file_url}</a>` : 'Tidak ada'}</td>
+          <td>${item.file_url ? `<span style="color:#2563eb; font-weight:600;">${item.file_url}</span>` : 'Tidak ada'}</td>
           <td><button class="btn-del-arsip" onclick="deleteArsip(${item.id})">Hapus</button></td>
         </tr>`;
       });
@@ -318,7 +318,6 @@
   async function uploadArsip(e) {
     e.preventDefault();
     
-    // Ambil ulang data user langsung dari localStorage agar aman dari nilai kosong/null
     const activeUser = JSON.parse(localStorage.getItem('sad_user'));
     if (!activeUser || !activeUser.id) {
       alert('Sesi login telah habis. Silakan login ulang.');
@@ -328,11 +327,17 @@
     }
 
     const folderId = document.getElementById('selected-folder-id').value;
-    const nama_dokumen = document.getElementById('judul-arsip').value;
+    const nama_dokumen = document.getElementById('judul-arsip').value.trim();
+    if (!nama_dokumen) return alert('Nama dokumen wajib diisi!');
+
     const fileInput = document.getElementById('berkas-file');
     const file_url = fileInput.files[0] ? fileInput.files[0].name : 'Dokumen Arsip';
+    const submitBtn = document.getElementById('btn-submit-arsip');
 
     try {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Mengupload...';
+
       const res = await fetch(`/api/folders/${folderId}/arsip`, {
         method: 'POST',
         headers: { 
@@ -350,6 +355,9 @@
       }
     } catch (e) { 
       alert('Terjadi kesalahan koneksi saat upload.'); 
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Simpan & Upload Arsip';
     }
   }
 
