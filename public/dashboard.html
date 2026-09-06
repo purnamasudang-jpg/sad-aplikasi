@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Arsip Digital (SAD)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background: #f1f5f9; color: #334155; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    
+    .auth-wrapper { width: 100%; max-width: 420px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+    .auth-wrapper h2 { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 8px; text-align: center; }
+    .auth-wrapper p.subtitle { font-size: 14px; color: #64748b; text-align: center; margin-bottom: 24px; }
+    
+    .dashboard-wrapper { width: 100%; max-width: 1000px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); display: none; }
+    
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { border-color: #2563eb; }
+    
+    button { width: 100%; padding: 11px; background: #2563eb; color: white; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #1d4ed8; }
+    
+    .switch-auth { text-align: center; margin-top: 16px; font-size: 13px; color: #64748b; }
+    .switch-auth a { color: #2563eb; text-decoration: none; font-weight: 600; }
+
+    .app-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+    .app-header h3 { font-size: 20px; font-weight: 700; color: #0f172a; }
+    .user-meta { display: flex; align-items: center; gap: 15px; }
+    .btn-logout { background: #ef4444; padding: 6px 14px; font-size: 13px; width: auto; }
+    .btn-logout:hover { background: #dc2626; }
+
+    .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; margin-bottom: 25px; }
+    .folder-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .folder-card:hover { background: #eff6ff; border-color: #93c5fd; transform: translateY(-2px); }
+    .folder-info { cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; flex-grow: 1; overflow: hidden; }
+    .btn-del-folder { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px; padding: 4px; width: auto; }
+    .btn-del-folder:hover { color: #dc2626; background: #fee2e2; border-radius: 4px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th, td { border-bottom: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+    th { background-color: #f8fafc; font-weight: 600; color: #475569; }
+    
+    .section-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .btn-del-arsip { background: #fee2e2; color: #991b1b; padding: 6px 10px; font-size: 12px; border-radius: 6px; width: auto; font-weight: 600; }
+    .btn-del-arsip:hover { background: #f87171; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- Bagian Login -->
+  <div id="login-container" class="auth-wrapper">
+    <h2>Masuk Sistem</h2>
+    <p class="subtitle">Kelola arsip dokumen dengan cepat & terstruktur</p>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="Masukkan username Anda">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••">
+    </div>
+    <button id="btn-login">Masuk</button>
+    <div class="switch-auth">
+      Belum punya akun? <a href="#" onclick="toggleAuth('register')">Daftar sekarang</a>
+    </div>
+  </div>
+
+  <!-- Bagian Pendaftaran -->
+  <div id="register-container" class="auth-wrapper" style="display: none;">
+    <h2>Buat Akun Baru</h2>
+    <p class="subtitle">Dapatkan akses arsip aman & terisolasi</p>
+    <div class="form-group">
+      <label>Username Baru</label>
+      <input type="text" id="reg-username" placeholder="Pilih username unik">
+    </div>
+    <div class="form-group">
+      <label>Password Baru</label>
+      <input type="password" id="reg-password" placeholder="••••••••">
+    </div>
+    <button id="btn-register" style="background: #0f172a;">Daftar Akun</button>
+    <div class="switch-auth">
+      Sudah punya akun? <a href="#" onclick="toggleAuth('login')">Masuk di sini</a>
+    </div>
+  </div>
+
+  <!-- Dashboard Utama -->
+  <div id="dashboard-section" class="dashboard-wrapper">
+    <div class="app-header">
+      <div>
+        <h3 id="user-welcome">Selamat Datang</h3>
+        <p style="font-size: 13px; color: #64748b;">Sistem Arsip Digital (SAD)</p>
+      </div>
+      <div class="user-meta">
+        <button id="btn-logout" class="btn-logout">Keluar</button>
+      </div>
+    </div>
+
+    <!-- Buat Folder -->
+    <div class="section-box" id="folder-create-section">
+      <h4 style="font-size: 15px; margin-bottom: 12px; color: #1e293b;">📁 Kelola Folder Arsip</h4>
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="folder-input" placeholder="Nama Folder (Contoh: Surat Masuk 2026)">
+        <button id="btn-create-folder" style="width: 180px;">Buat Folder</button>
+      </div>
+      <div id="folder-container" class="folder-grid" style="margin-top: 15px;"></div>
+    </div>
+
+    <!-- Area Arsip dalam Folder -->
+    <div id="archive-section" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h4 id="active-folder-title" style="color: #1e293b;"></h4>
+        <button id="btn-back-folders" style="width: auto; background: #64748b; padding: 8px 14px; font-size: 13px;">Kembali ke Daftar Folder</button>
+      </div>
+
+      <!-- Upload Dokumen -->
+      <div class="section-box" style="background: #fff;">
+        <h5 style="font-size: 14px; margin-bottom: 12px; color: #1e293b;">📤 Upload Dokumen ke Folder Ini</h5>
+        <form id="archive-form">
+          <input type="hidden" id="selected-folder-id">
+          <div class="form-group">
+            <label>Judul / Nama Dokumen</label>
+            <input type="text" id="judul-arsip" required placeholder="Contoh: SK Pengangkatan">
+          </div>
+          <div class="form-group">
+            <label>File Berkas / Keterangan</label>
+            <input type="file" id="berkas-file">
+          </div>
+          <button type="submit">Simpan & Upload Arsip</button>
+        </form>
+      </div>
+
+      <!-- Tabel Arsip -->
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Dokumen</th>
+              <th>Berkas</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="archive-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+
+  function toggleAuth(mode) {
+    if (mode === 'register') {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('register-container').style.display = 'block';
+    } else {
+      document.getElementById('register-container').style.display = 'none';
+      document.getElementById('login-container').style.display = 'block';
+    }
+  }
+
+  function checkAuth() {
+    if (currentUser) {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('register-container').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'block';
+      document.getElementById('user-welcome').innerText = `Halo, ${currentUser.username}`;
+      loadFolders();
+    } else {
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('register-container').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'none';
+    }
+  }
+
+  async function loginUser() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    if (!username || !password) return alert('Username dan password harus diisi!');
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        currentUser = data.user;
+        localStorage.setItem('sad_user', JSON.stringify(currentUser));
+        checkAuth();
+      } else { alert(data.error || 'Login gagal'); }
+    } catch (err) { alert('Terjadi kesalahan koneksi ke server.'); }
+  }
+
+  async function registerUser() {
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    if (!username || !password) return alert('Isi username dan password terlebih dahulu!');
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+      if (data.success) toggleAuth('login');
+    } catch (err) { alert('Terjadi kesalahan koneksi.'); }
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('sad_user');
+    currentUser = null;
+    checkAuth();
+  }
+
+  async function loadFolders() {
+    try {
+      const res = await fetch('/api/folders', { headers: { 'user-id': currentUser.id } });
+      const json = await res.json();
+      const container = document.getElementById('folder-container');
+      container.innerHTML = '';
+
+      if (!json.data || json.data.length === 0) {
+        container.innerHTML = '<p style="color: #64748b; font-size: 13px; font-style: italic;">Belum ada folder arsip.</p>';
+        return;
+      }
+
+      json.data.forEach(folder => {
+        const card = document.createElement('div');
+        card.className = 'folder-card';
+        card.innerHTML = `
+          <div class="folder-info" onclick="openFolder(${folder.id}, '${folder.nama_folder}')">
+            📁 <span>${folder.nama_folder}</span>
+          </div>
+          <button class="btn-del-folder" onclick="deleteFolder(${folder.id})" title="Hapus Folder">🗑️</button>
+        `;
+        container.appendChild(card);
+      });
+    } catch (e) { console.error(e); }
+  }
+
+  async function createFolder() {
+    const nama_folder = document.getElementById('folder-input').value.trim();
+    if (!nama_folder) return alert('Nama folder tidak boleh kosong!');
+
+    try {
+      const res = await fetch('/api/folders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'user-id': currentUser.id },
+        body: JSON.stringify({ nama_folder })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        document.getElementById('folder-input').value = '';
+        loadFolders();
+      } else { alert(data.error); }
+    } catch (e) { alert('Gagal membuat folder.'); }
+  }
+
+  async function deleteFolder(folderId) {
+    if (!confirm('Yakin ingin menghapus folder ini beserta seluruh arsip didalamnya?')) return;
+    try {
+      const res = await fetch(`/api/folders/${folderId}`, {
+        method: 'DELETE',
+        headers: { 'user-id': currentUser.id }
+      });
+      if (res.ok) {
+        loadFolders();
+      } else { alert('Gagal menghapus folder'); }
+    } catch (e) { alert('Terjadi kesalahan koneksi.'); }
+  }
+
+  function openFolder(folderId, folderName) {
+    document.getElementById('folder-create-section').style.display = 'none';
+    document.getElementById('archive-section').style.display = 'block';
+    document.getElementById('active-folder-title').innerText = `📂 Folder: ${folderName}`;
+    document.getElementById('selected-folder-id').value = folderId;
+    loadArsip(folderId);
+  }
+
+  async function loadArsip(folderId) {
+    try {
+      const res = await fetch(`/api/folders/${folderId}/arsip`, { headers: { 'user-id': currentUser.id } });
+      const json = await res.json();
+      const tbody = document.getElementById('archive-table-body');
+      tbody.innerHTML = '';
+
+      const filtered = (json.data || []);
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #64748b;">Belum ada arsip dalam folder ini.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        tbody.innerHTML += `<tr>
+          <td><strong>${item.nama_dokumen}</strong></td>
+          <td>${item.file_url ? `<a href="#" style="color:#2563eb; text-decoration:none; font-weight:600;">${item.file_url}</a>` : 'Tidak ada'}</td>
+          <td><button class="btn-del-arsip" onclick="deleteArsip(${item.id})">Hapus</button></td>
+        </tr>`;
+      });
+    } catch (e) { console.error(e); }
+  }
+
+  async function uploadArsip(e) {
+    e.preventDefault();
+    const folderId = document.getElementById('selected-folder-id').value;
+    const nama_dokumen = document.getElementById('judul-arsip').value;
+    const fileInput = document.getElementById('berkas-file');
+    const file_url = fileInput.files[0] ? fileInput.files[0].name : 'Dokumen Arsip';
+
+    try {
+      const res = await fetch(`/api/folders/${folderId}/arsip`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'user-id': currentUser.id },
+        body: JSON.stringify({ nama_dokumen, file_url, tipe_file: 'FILE' })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        document.getElementById('archive-form').reset();
+        loadArsip(folderId);
+      } else { alert(data.error || 'Gagal mengupload arsip.'); }
+    } catch (e) { alert('Gagal mengupload arsip.'); }
+  }
+
+  async function deleteArsip(arsipId) {
+    if (!confirm('Yakin ingin menghapus dokumen arsip ini?')) return;
+    try {
+      const res = await fetch(`/api/arsip/${arsipId}`, {
+        method: 'DELETE',
+        headers: { 'user-id': currentUser.id }
+      });
+      if (res.ok) {
+        loadArsip(document.getElementById('selected-folder-id').value);
+      } else { alert('Gagal menghapus arsip'); }
+    } catch (e) { alert('Terjadi kesalahan koneksi.'); }
+  }
+
+  function backToFolders() {
+    document.getElementById('archive-section').style.display = 'none';
+    document.getElementById('folder-create-section').style.display = 'block';
+    loadFolders();
+  }
+
+  document.getElementById('btn-login').addEventListener('click', loginUser);
+  document.getElementById('btn-register').addEventListener('click', registerUser);
+  document.getElementById('btn-logout').addEventListener('click', logoutUser);
+  document.getElementById('btn-create-folder').addEventListener('click', createFolder);
+  document.getElementById('btn-back-folders').addEventListener('click', backToFolders);
+  document.getElementById('archive-form').addEventListener('submit', uploadArsip);
+
+  checkAuth();
+</script>
+</body>
+</html>
