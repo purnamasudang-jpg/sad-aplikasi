@@ -4,7 +4,6 @@ const path = require('path');
 const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,15 +21,28 @@ function getDB() {
             ],
             folders: [],
             arsip: []
-        };
-        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+        ];
+        try {
+            fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+        } catch (e) {
+            // Untuk lingkungan read-only (seperti serverless vercel), gunakan memori sementara jika gagal tulis
+            return initialData;
+        }
     }
-    const data = fs.readFileSync(DB_FILE, 'utf8');
-    return JSON.parse(data);
+    try {
+        const data = fs.readFileSync(DB_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (e) {
+        return { users: [{ username: 'admin', password: '123' }], folders: [], arsip: [] };
+    }
 }
 
 function saveDB(data) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+    } catch (e) {
+        // Abaikan error write di serverless jika file system read-only
+    }
 }
 
 // Endpoint Login
@@ -69,12 +81,10 @@ app.get('/api/data', (req, res) => {
     const username = req.query.username || '';
     const db = getDB();
     
-    // Filter folder dan arsip khusus milik user tersebut
     const userFolders = db.folders.filter(f => f.username === username);
     const folderIds = userFolders.map(f => f.id);
     const userArsip = db.arsip.filter(a => folderIds.includes(a.folder_id));
 
-    // Hitung jumlah dokumen per folder
     const foldersWithCount = userFolders.map(f => {
         const count = userArsip.filter(a => a.folder_id === f.id).length;
         return { ...f, jumlah_dokumen: count };
@@ -113,7 +123,6 @@ app.delete('/api/folders/:id', (req, res) => {
     const username = req.query.username || '';
     const db = getDB();
 
-    // Validasi kepemilikan folder
     const folderIndex = db.folders.findIndex(f => f.id === folderId && f.username === username);
     if (folderIndex === -1) {
         return res.status(403).json({ success: false, error: 'Akses ditolak atau folder tidak ditemukan' });
@@ -196,6 +205,13 @@ app.delete('/api/arsip/:id', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+// Jalankan server lokal jika bukan di mode production (Vercel)
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server berjalan di http://localhost:${PORT}`);
+    });
+}
+
+// Ekspor app agar kompatibel dengan Vercel Serverless
+module.exports = app;
