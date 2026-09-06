@@ -30,7 +30,8 @@
         .section-box { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .section-title-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .section-title { font-weight: bold; font-size: 16px; color: #2d3748; display: flex; align-items: center; gap: 6px; margin: 0; }
-        .btn-menu-utama { background: #3182ce; color: white; border: none; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-menu-utama { background: #3182ce; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-menu-utama:hover { background: #2b6cb0; }
         
         .form-inline { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
         .form-inline input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
@@ -120,7 +121,7 @@
     <!-- Container Utama Dashboard -->
     <div id="dashboardContainer" style="display: none;">
         <div class="main-card">
-            <!-- Header Profil Pengguna (Tampil di semua halaman setelah login) -->
+            <!-- Header Profil Pengguna -->
             <div class="user-header">
                 <div class="user-profile-area">
                     <div class="profile-pic-container" onclick="document.getElementById('inputFotoProfil').click()" title="Klik untuk ubah foto profil">
@@ -129,7 +130,7 @@
                         <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
                     </div>
                     <div class="user-info">
-                        <h4 id="userDisplayName">Halo, purnamasudang@gmail.com</h4>
+                        <h4 id="userDisplayName">Halo, admin</h4>
                         <p>Sistem Arsip Digital (SAD)</p>
                     </div>
                 </div>
@@ -196,6 +197,11 @@
                         </div>
                     </div>
                     <button class="btn-primary" onclick="simpanDokumen()">Simpan Arsip</button>
+                </div>
+
+                <!-- Tombol Kembali Tambahan di Atas Tabel (Opsional/Mempermudah Navigasi) -->
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <button class="btn-menu-utama" onclick="bukaHalamanDua()">❮ Kembali ke Daftar Folder</button>
                 </div>
 
                 <!-- Tabel Dokumen dalam Folder Ini -->
@@ -304,7 +310,7 @@ function showDashboard() {
     document.getElementById('loginSection').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'block';
     
-    const uname = localStorage.getItem('username') || 'purnamasudang@gmail.com';
+    const uname = localStorage.getItem('username') || 'admin';
     document.getElementById('userDisplayName').innerText = 'Halo, ' + uname;
     
     loadData();
@@ -392,9 +398,8 @@ function renderHalamanTiga(folderId) {
     }
 
     document.getElementById('judulHeaderFolder').textContent = 'Arsip Folder: ' + folderObj.nama_folder.toUpperCase();
-    document.getElementById('lokasi_fisik').value = folderObj.nama_folder; // Auto-isi lokasi fisik sesuai nama folder
+    document.getElementById('lokasi_fisik').value = folderObj.nama_folder; 
 
-    // Filter arsip khusus folder ini
     const arsipFolder = globalData.arsip.filter(a => a.folder_id === folderId);
     const tbody = document.getElementById('tabelArsipBody');
 
@@ -491,11 +496,10 @@ async function simpanDokumen() {
     formData.append('tanggal', tanggal);
     formData.append('folder_id', activeFolderId);
     formData.append('judul_dokumen', judul_dokumen);
-    formData.append('keterangan', nomor_surat); // Menyimpan nomor surat ke field keterangan
+    formData.append('keterangan', nomor_surat); 
     formData.append('pengirim', pengirim);
     formData.append('lokasi_fisik', lokasi_fisik);
     
-    // Mendukung upload banyak file sekaligus
     for (let i = 0; i < fileInput.files.length; i++) {
         formData.append('berkas', fileInput.files[i]);
     }
