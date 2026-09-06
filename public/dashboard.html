@@ -129,7 +129,7 @@ async function buatFolder(){
     if(data.success) loadFolders();
 }
 
-// 5. UPLOAD ARSIP - INI YG TADI ERROR. UDAH DIBENERIN
+// 5. UPLOAD ARsip - SUDAH DIPERBAIKI DENGAN HEADER LENGKAP
 async function uploadArsip(folderId) {
     const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
     const file_url = document.getElementById(`url_dok_${folderId}`).value;
@@ -140,12 +140,12 @@ async function uploadArsip(folderId) {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'user-id': currentUserId // INI KUNCINYA BIAR GAK "LOGIN ULANG"
+            'user-id': currentUserId // KUNCI UTAMA AGAR TIDAK MINTA LOGIN ULANG
         },
         body: JSON.stringify({ 
             nama_dokumen: nama_dokumen,
             file_url: file_url,
-            user_id: currentUserId // dikirim 2x buat jaga2
+            user_id: currentUserId // Cadangan pengiriman parameter
         })
     });
     const data = await res.json();
