@@ -162,6 +162,7 @@
   }
 
   function checkAuth() {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
     if (currentUser) {
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('register-container').style.display = 'none';
@@ -219,6 +220,8 @@
   }
 
   async function loadFolders() {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+    if (!currentUser) return;
     try {
       const res = await fetch('/api/folders', { headers: { 'user-id': currentUser.id } });
       const json = await res.json();
@@ -245,6 +248,8 @@
   }
 
   async function createFolder() {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+    if (!currentUser) return;
     const nama_folder = document.getElementById('folder-input').value.trim();
     if (!nama_folder) return alert('Nama folder tidak boleh kosong!');
 
@@ -263,6 +268,8 @@
   }
 
   async function deleteFolder(folderId) {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+    if (!currentUser) return;
     if (!confirm('Yakin ingin menghapus folder ini beserta seluruh arsip didalamnya?')) return;
     try {
       const res = await fetch(`/api/folders/${folderId}`, {
@@ -284,6 +291,8 @@
   }
 
   async function loadArsip(folderId) {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+    if (!currentUser) return;
     try {
       const res = await fetch(`/api/folders/${folderId}/arsip`, { headers: { 'user-id': currentUser.id } });
       const json = await res.json();
@@ -308,6 +317,16 @@
 
   async function uploadArsip(e) {
     e.preventDefault();
+    
+    // Ambil ulang data user langsung dari localStorage agar aman dari nilai kosong/null
+    const activeUser = JSON.parse(localStorage.getItem('sad_user'));
+    if (!activeUser || !activeUser.id) {
+      alert('Sesi login telah habis. Silakan login ulang.');
+      localStorage.removeItem('sad_user');
+      checkAuth();
+      return;
+    }
+
     const folderId = document.getElementById('selected-folder-id').value;
     const nama_dokumen = document.getElementById('judul-arsip').value;
     const fileInput = document.getElementById('berkas-file');
@@ -316,18 +335,27 @@
     try {
       const res = await fetch(`/api/folders/${folderId}/arsip`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'user-id': currentUser.id },
+        headers: { 
+          'Content-Type': 'application/json', 
+          'user-id': activeUser.id 
+        },
         body: JSON.stringify({ nama_dokumen, file_url, tipe_file: 'FILE' })
       });
       const data = await res.json();
       if (res.ok && data.success) {
         document.getElementById('archive-form').reset();
         loadArsip(folderId);
-      } else { alert(data.error || 'Gagal mengupload arsip.'); }
-    } catch (e) { alert('Gagal mengupload arsip.'); }
+      } else { 
+        alert(data.error || 'Gagal mengupload arsip.'); 
+      }
+    } catch (e) { 
+      alert('Terjadi kesalahan koneksi saat upload.'); 
+    }
   }
 
   async function deleteArsip(arsipId) {
+    currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
+    if (!currentUser) return;
     if (!confirm('Yakin ingin menghapus dokumen arsip ini?')) return;
     try {
       const res = await fetch(`/api/arsip/${arsipId}`, {
