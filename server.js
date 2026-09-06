@@ -53,7 +53,7 @@ app.get('/api/folders/:id/arsip', (req, res) => {
     res.json({ success: true, data: arsipList });
 });
 
-// Route Upload Arsip (Simpan info dokumen tanpa menulis file fisik ke disk)
+// Route Upload Arsip (Simpan info dokumen ke memori)
 app.post('/api/folders/:id/arsip', upload.single('berkas'), (req, res) => {
     const folderId = parseInt(req.params.id);
     const { judul_arsip } = req.body;

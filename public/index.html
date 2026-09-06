@@ -9,7 +9,7 @@
         .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
         button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        button:hover { background: #218838; }
+        button:hover { opacity: 0.9; }
         .folder { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .arsip { background: #f9f9f9; padding: 10px; margin: 8px 0; border-left: 3px solid #007bff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
         #loginForm, #dashboard { display: none; }
@@ -156,7 +156,7 @@ async function uploadArsip(folderId) {
         alert('Unggah arsip berhasil!');
         document.getElementById(`nama_dok_${folderId}`).value = '';
         fileInput.value = '';
-        loadArsip(folderId);
+        loadArsip(folderId); // Otomatis muat ulang daftar arsip setelah upload
     } else {
         alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
     }
@@ -166,14 +166,14 @@ async function loadArsip(folderId){
     const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`);
     const data = await res.json();
     if(data.success){
-        let html = '<h5>Daftar Dokumen:</h5>';
+        let html = '<h5 style="margin: 10px 0 5px 0; color: #555;">Daftar Dokumen:</h5>';
         if(data.data.length === 0) {
             html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen di folder ini.</p>';
         } else {
             data.data.forEach(a => {
                 html += `<div class="arsip">
-                    <span><b>${a.nama_dokumen}</b></span>
-                    ${a.file_url ? `<a href="/uploads/${a.file_url}" target="_blank" style="color:#007bff; text-decoration:none; font-weight:bold;">Lihat File ↗</a>` : ''}
+                    <span>📄 <b>${a.nama_dokumen}</b> ${a.file_nama ? `(${a.file_nama})` : ''}</span>
+                    <span style="color: #28a745; font-size: 12px; font-weight: bold;">[Tersimpan]</span>
                 </div>`;
             });
         }
