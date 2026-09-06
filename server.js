@@ -96,7 +96,7 @@ app.post('/api/folders', verifyUser, async (req, res) => {
 });
 
 app.delete('/api/folders/:id', verifyUser, async (req, res) => {
-    const database =აზე getDb();
+    const database = await getDb();
     database.run(`DELETE FROM arsip WHERE folder_id =? AND user_id =?`, [req.params.id, req.userId]);
     database.run(`DELETE FROM folders WHERE id =? AND user_id =?`, [req.params.id, req.userId]);
     saveDb();
