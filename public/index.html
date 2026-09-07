@@ -38,28 +38,6 @@
             gap: 20px;
             font-size: 14px;
         }
-        .user-panel-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        .user-panel-header:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .user-panel-header img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #fff;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.6);
-        }
 
         #sidebar {
             width: 230px;
@@ -169,7 +147,7 @@
         .auth-box h3 { text-align: center; margin-bottom: 25px; font-size: 22px; font-weight: bold; color: #2d3748; }
         .form-group-custom { margin-bottom: 18px; }
         .form-group-custom label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #4a5568; }
-        .form-group-custom input, .form-group-custom select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
+        .form-group-custom input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
         .form-group-custom input:focus { border-color: #3c8dbc; outline: none; box-shadow: 0 0 0 3px rgba(60,141,188,0.15); }
         .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
         .btn-block-custom:hover { background: #357ca5; }
@@ -198,7 +176,7 @@
                 <img id="sidebarUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover; border: 1px solid rgba(255,255,255,0.6);">
             </div>
             <div class="info text-truncate" style="max-width: 120px;">
-                <span class="d-block text-white text-decoration-none small text-truncate" title="purnamasudang@gmail.com" style="font-size: 12px; font-weight: 600;">purnamasudang@gmail.com</span>
+                <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" title="purnamasudang@gmail.com" style="font-size: 12px; font-weight: 600;">purnamasudang@gmail.com</span>
                 <span class="status text-success" style="font-size: 10px;"><i class="fa fa-circle text-success me-1"></i> Online</span>
             </div>
             <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
@@ -220,14 +198,30 @@
         </ul>
     </div>
 
-    <!-- AUTHENTICATION -->
+    <!-- LOGIN SECTION -->
     <div id="loginSection" class="auth-wrapper">
         <div class="auth-box">
             <h3><b>M-TECHNO</b> Login</h3>
-            <div class="form-group-custom"><label>Username</label><input type="text" id="login_user" placeholder="Masukkan username"></div>
+            <div class="form-group-custom"><label>Email / Username</label><input type="text" id="login_user" placeholder="Masukkan email / username"></div>
             <div class="form-group-custom"><label>Password</label><input type="password" id="login_pass" placeholder="Masukkan password"></div>
-            <button class="btn-block-custom" onclick="login()">Sign In</button>
-            <p id="loginMsg" style="color: red; font-size: 12px; text-align: center; margin-top: 10px;"></p>
+            <button class="btn-block-custom mb-3" onclick="login()">Sign In</button>
+            <p id="loginMsg" style="color: red; font-size: 12px; text-align: center; margin-top: 5px;"></p>
+            <div class="text-center" style="font-size: 13px;">
+                <span class="text-muted">Belum punya akun?</span> 
+                <a href="#" onclick="tampilRegister()" style="color: #3c8dbc; font-weight: 600; text-decoration: none;">Daftar Akun</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER SECTION -->
+    <div id="registerSection" class="auth-wrapper">
+        <div class="auth-box">
+            <h3><b>M-TECHNO</b> Register</h3>
+            <div class="form-group-custom"><label>Email / Username Baru</label><input type="text" id="reg_user" placeholder="Masukkan email atau username"></div>
+            <div class="form-group-custom"><label>Password Baru</label><input type="password" id="reg_pass" placeholder="Buat password"></div>
+            <button class="btn-block-custom mb-3" onclick="registerAkun()" style="background: #00a65a;">Daftar Akun</button>
+            <button class="btn btn-sm btn-secondary w-100 mb-2" onclick="tampilLogin()">Kembali ke Login</button>
+            <p id="regMsg" style="font-size: 12px; text-align: center; margin-top: 5px;"></p>
         </div>
     </div>
 
@@ -511,7 +505,20 @@
                 let avatarImg = document.getElementById('sidebarUserAvatar');
                 if(avatarImg) avatarImg.src = savedAvatar;
             }
-            if(localStorage.getItem('isLogin') === 'true') { showApp(); } else { tampilLogin(); }
+            let activeUser = localStorage.getItem('currentUserEmail');
+            if(activeUser) {
+                let elEmail = document.getElementById('sidebarUserEmail');
+                if(elEmail) {
+                    elEmail.innerText = activeUser;
+                    elEmail.title = activeUser;
+                }
+            }
+
+            if(localStorage.getItem('isLogin') === 'true') { 
+                showApp(); 
+            } else { 
+                tampilLogin(); 
+            }
         };
 
         function gantiFotoProfil(event) {
@@ -878,26 +885,88 @@
 
         function tampilLogin() {
             document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('registerSection').style.display = 'none';
         }
+
+        function tampilRegister() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'flex';
+            document.getElementById('regMsg').innerText = '';
+            document.getElementById('reg_user').value = '';
+            document.getElementById('reg_pass').value = '';
+        }
+
+        function registerAkun() {
+            let u = document.getElementById('reg_user').value.trim();
+            let p = document.getElementById('reg_pass').value.trim();
+            let msg = document.getElementById('regMsg');
+
+            if(!u || !p) {
+                msg.style.color = 'red';
+                msg.innerText = "Email dan password wajib diisi!";
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
+            let existing = users.find(x => x.username === u);
+            if(existing) {
+                msg.style.color = 'red';
+                msg.innerText = "Username/email sudah terdaftar!";
+                return;
+            }
+
+            users.push({ username: u, password: p });
+            localStorage.setItem('mtechno_users', JSON.stringify(users));
+
+            msg.style.color = 'green';
+            msg.innerText = "Registrasi berhasil! Silakan login.";
+            setTimeout(() => {
+                tampilLogin();
+            }, 1200);
+        }
+
         function login() {
-            if(document.getElementById('login_user').value.trim()) {
+            let u = document.getElementById('login_user').value.trim();
+            let p = document.getElementById('login_pass').value.trim();
+            let msg = document.getElementById('loginMsg');
+
+            let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
+            
+            // Default user jika belum pernah register sama sekali
+            if(users.length === 0) {
+                users.push({ username: "purnamasudang@gmail.com", password: "123" });
+            }
+
+            let validUser = users.find(x => x.username === u && x.password === p);
+
+            if(validUser) {
                 localStorage.setItem('isLogin', 'true');
+                localStorage.setItem('currentUserEmail', validUser.username);
+                let elEmail = document.getElementById('sidebarUserEmail');
+                if(elEmail) {
+                    elEmail.innerText = validUser.username;
+                    elEmail.title = validUser.username;
+                }
                 showApp();
             } else {
-                document.getElementById('loginMsg').innerText = "Masukkan username terlebih dahulu!";
+                msg.innerText = "Username atau password salah!";
             }
         }
+
         function showApp() {
             document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'none';
             document.getElementById('topHeader').style.display = 'flex';
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('mainAppContainer').style.display = 'block';
             bukaHalaman('Dashboard');
         }
+
         function logout() {
             localStorage.removeItem('isLogin');
             location.reload();
         }
+
         function bukaHalaman(h) {
             ['Dashboard', 'DetailFolder', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
                 let el = document.getElementById('halaman' + item);
