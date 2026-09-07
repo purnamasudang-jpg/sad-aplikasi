@@ -139,6 +139,8 @@
             margin-bottom: 20px;
         }
         .box-panel-success { border-top-color: #00a65a; }
+        .folder-clickable { cursor: pointer; transition: background 0.15s ease; }
+        .folder-clickable:hover { background-color: #f4f6f9 !important; }
 
         .auth-wrapper {
             min-height: 100vh;
@@ -162,7 +164,7 @@
         .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
-        #halamanDashboard, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
+        #halamanDashboard, #halamanDetailFolder, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
     </style>
 </head>
 <body>
@@ -315,6 +317,33 @@
                     </div>
                 </div>
             </div>
+
+            <!-- HALAMAN DETAIL FOLDER (KETIKA FOLDER DIKLIK) -->
+            <div id="halamanDetailFolder">
+                <div class="box-panel box-panel-success">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <button class="btn btn-sm btn-secondary me-2" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                            <h4 id="judulFolderDetail" style="font-size: 18px; font-weight: bold; display: inline-block; margin: 0; color: #333;"><i class="fa-solid fa-folder-open text-warning me-2"></i> Nama Folder</h4>
+                        </div>
+                        <button class="btn btn-sm btn-success" onclick="bukaModalUploadKeFolder()"><i class="fa-solid fa-cloud-arrow-up"></i> Unggah File ke Folder Ini</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle" style="font-size: 13px; margin-bottom: 0;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nama File</th>
+                                    <th>Jenis Dokumen</th>
+                                    <th>Instansi</th>
+                                    <th>Tahun</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelFileFolderBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             
             <div id="halamanPost" class="box-panel"><h4>Manajemen Post</h4></div>
             <div id="halamanPortfolio" class="box-panel"><h4>Manajemen Portfolio</h4></div>
@@ -325,7 +354,7 @@
         </div>
     </div>
 
-    <!-- MODAL UPLOAD ARSIP -->
+    <!-- MODAL UPLOAD ARSIR UMUM -->
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -355,7 +384,37 @@
         </div>
     </div>
 
-    <!-- MODAL MENU UNDUH (DENGAN TIPE DOKUMEN & TOMBOL LIHAT) -->
+    <!-- MODAL UPLOAD KHUSUS KE FOLDER AKTIF -->
+    <div class="modal fade" id="modalUploadKeFolder" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="judulModalUploadFolder">Unggah File ke Folder</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Instansi</label>
+                        <input type="text" id="inputInstansiFolder" class="form-control" placeholder="Contoh: SDN 1 Bandung">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tahun Dokumen</label>
+                        <input type="number" id="inputTahunFolder" class="form-control" value="2026">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pilih File Dokumen</label>
+                        <input type="file" id="inputFileFolderAktif" class="form-control" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success" onclick="simpanFileKeFolderAktif()">Unggah File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MENU UNDUH -->
     <div class="modal fade" id="modalMenuUnduh" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -371,6 +430,7 @@
                                 <tr>
                                     <th>Nama File</th>
                                     <th>Jenis Dokumen</th>
+                                    <th>Folder</th>
                                     <th>Instansi</th>
                                     <th>Tahun</th>
                                     <th>Aksi (Lihat & Unduh)</th>
@@ -411,15 +471,19 @@
             folders: [
                 { nama: "Arsip Kepegawaian", jumlah: 15 },
                 { nama: "Data Sekolah SD", jumlah: 20 },
-                { nama: "Data Sekolah SMP", jumlah: 13 }
+                { nama: "Data Sekolah SMP", jumlah: 13 },
+                { nama: "SDN KADEMANGAN 1", jumlah: 0 },
+                { nama: "SDNKADE", jumlah: 0 }
             ],
             files: [
-                { nama: "Laporan_Data_SDN_2026.pdf", tipe: "PDF", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "" },
-                { nama: "Rekap_Nilai_Siswa.xlsx", tipe: "EXCEL", instansi: "SMPN 2 Cimahi", tahun: "2025", dataUrl: "" },
-                { nama: "Surat_Keputusan.docx", tipe: "DOC", instansi: "SDN Sukamaju", tahun: "2026", dataUrl: "" },
-                { nama: "Foto_Gedung_Sekolah.jpg", tipe: "JPG", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "https://picsum.photos/600/400" }
+                { nama: "Laporan_Data_SDN_2026.pdf", tipe: "PDF", folder: "Arsip Kepegawaian", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "" },
+                { nama: "Rekap_Nilai_Siswa.xlsx", tipe: "EXCEL", folder: "Data Sekolah SD", instansi: "SMPN 2 Cimahi", tahun: "2025", dataUrl: "" },
+                { nama: "Surat_Keputusan.docx", tipe: "DOC", folder: "Data Sekolah SMP", instansi: "SDN Sukamaju", tahun: "2026", dataUrl: "" },
+                { nama: "Foto_Gedung_Sekolah.jpg", tipe: "JPG", folder: "Arsip Kepegawaian", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "https://picsum.photos/600/400" }
             ]
         };
+
+        let currentActiveFolder = "";
 
         window.onload = () => {
             loadSavedStats();
@@ -453,10 +517,14 @@
         function renderFolders() {
             let html = '';
             appData.folders.forEach((f, idx) => {
-                html += `<tr>
-                    <td><i class="fa-solid fa-folder text-warning me-2"></i> <strong>${f.nama}</strong></td>
-                    <td>${f.jumlah} File</td>
-                    <td><button class="btn btn-sm btn-danger" onclick="hapusFolder(${idx})"><i class="fa-solid fa-trash"></i></button></td>
+                // Hitung jumlah file real dari array files berdasarkan nama folder
+                let realCount = appData.files.filter(file => file.folder === f.nama).length;
+                f.jumlah = realCount > 0 ? realCount : f.jumlah;
+
+                html += `<tr class="folder-clickable">
+                    <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2"></i> <strong>${f.nama}</strong></td>
+                    <td onclick="bukaDetailFolder('${f.nama}')">${f.jumlah} File</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>`;
             });
             document.getElementById('tabelFolderBody').innerHTML = html;
@@ -471,21 +539,66 @@
             }
         }
 
-        function hapusFolder(idx) {
+        function hapusFolder(event, idx) {
+            event.stopPropagation();
             if(confirm("Hapus folder ini?")) {
                 appData.folders.splice(idx, 1);
                 saveStats();
             }
         }
 
-        function bukaModalUploadArsip() {
-            new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
+        function bukaDetailFolder(namaFolder) {
+            currentActiveFolder = namaFolder;
+            document.getElementById('judulFolderDetail').innerHTML = `<i class="fa-solid fa-folder-open text-warning me-2"></i> ${namaFolder}`;
+            
+            // Sembunyikan dashboard, tampilkan halaman detail folder
+            document.getElementById('halamanDashboard').style.display = 'none';
+            document.getElementById('halamanDetailFolder').style.display = 'block';
+            document.getElementById('pageTitleHeading').innerText = "Folder: " + namaFolder;
+            document.getElementById('breadcrumbActive').innerText = ' / Folder / ' + namaFolder;
+
+            renderFileDalamFolder();
         }
 
-        function simpanArsipBaru() {
-            let instansi = document.getElementById('inputNamaInstansi').value.trim();
-            let tahun = document.getElementById('inputTahunArsip').value.trim();
-            let fileInput = document.getElementById('inputFileArsip');
+        function renderFileDalamFolder() {
+            let filterFiles = appData.files.filter(f => f.folder === currentActiveFolder);
+            let html = '';
+
+            if(filterFiles.length === 0) {
+                html = `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada file di dalam folder ini. Silakan unggah file.</td></tr>`;
+            } else {
+                filterFiles.forEach((f, idx) => {
+                    let badgeColor = 'bg-secondary';
+                    if(f.tipe === 'PDF') badgeColor = 'bg-danger';
+                    else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
+                    else if(['XLS', 'XLSX', 'EXCEL'].includes(f.tipe)) badgeColor = 'bg-primary';
+                    else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
+
+                    html += `<tr>
+                        <td><i class="fa-solid fa-file me-2"></i> ${f.nama}</td>
+                        <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
+                        <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
+                        <td>${f.tahun}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info text-white me-1" onclick='bukaPratinjau(${JSON.stringify(f)})'><i class="fa-solid fa-eye"></i> Lihat</button>
+                            <button class="btn btn-sm btn-success me-1" onclick="unduhFile('${f.nama}')"><i class="fa-solid fa-download"></i> Unduh</button>
+                            <button class="btn btn-sm btn-danger" onclick="hapusFileDariFolder('${f.nama}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            }
+            document.getElementById('tabelFileFolderBody').innerHTML = html;
+        }
+
+        function bukaModalUploadKeFolder() {
+            document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke: " + currentActiveFolder;
+            new bootstrap.Modal(document.getElementById('modalUploadKeFolder')).show();
+        }
+
+        function simpanFileKeFolderAktif() {
+            let instansi = document.getElementById('inputInstansiFolder').value.trim();
+            let tahun = document.getElementById('inputTahunFolder').value.trim();
+            let fileInput = document.getElementById('inputFileFolderAktif');
 
             if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
 
@@ -503,6 +616,70 @@
                         appData.files.push({
                             nama: file.name,
                             tipe: ekstensi,
+                            folder: currentActiveFolder,
+                            instansi: instansi,
+                            tahun: tahun,
+                            dataUrl: e.target.result
+                        });
+                        appData.totalBytes += file.size;
+                        saveStats();
+                        renderFileDalamFolder();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                appData.files.push({
+                    nama: "Dokumen_" + instansi.replace(/\s+/g, '_') + ".pdf",
+                    tipe: "PDF",
+                    folder: currentActiveFolder,
+                    instansi: instansi,
+                    tahun: tahun,
+                    dataUrl: ""
+                });
+                saveStats();
+                renderFileDalamFolder();
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('modalUploadKeFolder')).hide();
+            alert("File berhasil diunggah ke folder " + currentActiveFolder + "!");
+        }
+
+        function hapusFileDariFolder(namaFile) {
+            if(confirm("Hapus file " + namaFile + "?")) {
+                appData.files = appData.files.filter(f => f.nama !== namaFile);
+                appData.arsipCount = Math.max(0, appData.arsipCount - 1);
+                saveStats();
+                renderFileDalamFolder();
+            }
+        }
+
+        function bukaModalUploadArsip() {
+            new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
+        }
+
+        function simpanArsipBaru() {
+            let instansi = document.getElementById('inputNamaInstansi').value.trim();
+            let tahun = document.getElementById('inputTahunArsip').value.trim();
+            let fileInput = document.getElementById('inputFileArsip');
+
+            if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
+
+            appData.terakhirInstansi = instansi;
+            appData.terakhirTahun = tahun || "2026";
+            appData.arsipCount += 1;
+            let defaultFolder = appData.folders.length > 0 ? appData.folders[0].nama : "Arsip Umum";
+
+            if(fileInput.files.length > 0) {
+                for(let i=0; i<fileInput.files.length; i++) {
+                    let file = fileInput.files[i];
+                    let ekstensi = file.name.split('.').pop().toUpperCase();
+                    let reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        appData.files.push({
+                            nama: file.name,
+                            tipe: ekstensi,
+                            folder: defaultFolder,
                             instansi: instansi,
                             tahun: tahun,
                             dataUrl: e.target.result
@@ -516,6 +693,7 @@
                 appData.files.push({
                     nama: "Dokumen_" + instansi.replace(/\s+/g, '_') + ".pdf",
                     tipe: "PDF",
+                    folder: defaultFolder,
                     instansi: instansi,
                     tahun: tahun,
                     dataUrl: ""
@@ -539,6 +717,7 @@
                 html += `<tr>
                     <td><i class="fa-solid fa-file me-2"></i> ${f.nama}</td>
                     <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
+                    <td><span class="badge bg-secondary">${f.folder || 'Umum'}</span></td>
                     <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
                     <td>${f.tahun}</td>
                     <td>
@@ -594,11 +773,12 @@
             location.reload();
         }
         function bukaHalaman(h) {
-            ['Dashboard', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
-                document.getElementById('halaman' + item).style.display = (item === h) ? 'block' : 'none';
+            ['Dashboard', 'DetailFolder', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
+                let el = document.getElementById('halaman' + item);
+                if(el) el.style.display = (item === h) ? 'block' : 'none';
             });
-            document.getElementById('pageTitleHeading').innerText = h;
-            document.getElementById('breadcrumbActive').innerText = ' / ' + h;
+            document.getElementById('pageTitleHeading').innerText = h === 'DetailFolder' ? 'Folder' : h;
+            document.getElementById('breadcrumbActive').innerText = ' / ' + (h === 'DetailFolder' ? currentActiveFolder : h);
         }
     </script>
 </body>
