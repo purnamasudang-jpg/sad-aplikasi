@@ -217,7 +217,7 @@
         }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
-        #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery { display: none; }
+        #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanActivityLog, #halamanPortfolio, #halamanPengguna, #halamanGallery { display: none; }
     </style>
 </head>
 <body>
@@ -252,7 +252,7 @@
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link active" href="#" id="menuLinkDashboard" onclick="bukaHalaman('Dashboard')"><div class="nav-link-left"><i class="fa-solid fa-house"></i> Dashboard</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkDetailFolder" onclick="bukaHalaman('DetailFolder')"><div class="nav-link-left"><i class="fa-solid fa-folder-open"></i> Data Folder & Arsip</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPost" onclick="bukaHalaman('Post')"><div class="nav-link-left"><i class="fa-solid fa-thumb-tack"></i> Post</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkActivityLog" onclick="bukaHalaman('ActivityLog')"><div class="nav-link-left"><i class="fa-solid fa-clock-rotate-left"></i> Log Aktivitas</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPortfolio" onclick="bukaHalaman('Portfolio')"><div class="nav-link-left"><i class="fa-solid fa-code"></i> Portfolio</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPengguna" onclick="bukaHalaman('Pengguna')"><div class="nav-link-left"><i class="fa-solid fa-users"></i> Pengguna</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkGallery" onclick="bukaHalaman('Gallery')"><div class="nav-link-left"><i class="fa-solid fa-image"></i> Dokumentasi & Visual</div></a></li>
@@ -422,7 +422,7 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <!-- WIDGET 1: NAMA INSTANSI (OTOMATIS AMBIL DARI FOLDER) -->
+                        <!-- WIDGET 1: NAMA INSTANSI -->
                         <div class="card text-white border-0 shadow-sm mb-3" style="background-color: #f39c12; border-radius: 6px;">
                             <div class="card-body p-3 position-relative">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.8;"><i class="fa-solid fa-school me-1"></i> 1. NAMA INSTANSI</div>
@@ -507,6 +507,40 @@
                 </div>
             </div>
 
+            <!-- HALAMAN LOG AKTIVITAS (ACTIVITY LOG) -->
+            <div id="halamanActivityLog" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fw-bold text-white m-0"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Log Aktivitas Sistem</h3>
+                        <p class="text-white-50 small m-0 mt-1">Riwayat aktivitas, audit trail, dan rekam jejak operasional sistem arsip digital.</p>
+                    </div>
+                    <button class="btn btn-outline-light btn-sm fw-bold" onclick="bersihkanLog()"><i class="fa-solid fa-trash me-1"></i> Bersihkan Log</button>
+                </div>
+
+                <div class="card bg-white text-dark border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #f39c12 !important;">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-list-check text-warning me-2"></i> Daftar Riwayat Aktivitas</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="py-3 ps-3" style="width: 170px;">WAKTU</th>
+                                        <th class="py-3" style="width: 150px;">PENGGUNA</th>
+                                        <th class="py-3" style="width: 140px;">AKSI</th>
+                                        <th class="py-3">KETERANGAN AKTIVITAS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelLogBody">
+                                    <!-- Log aktivitas dimuat dinamis -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- HALAMAN GALLERY / DOKUMENTASI VISUAL -->
             <div id="halamanGallery" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -517,14 +551,12 @@
                     <button class="btn btn-primary btn-sm fw-bold" onclick="bukaModalUploadMedia()"><i class="fa-solid fa-upload me-1"></i> Upload Media</button>
                 </div>
 
-                <!-- Grid Galeri Dokumentasi -->
                 <div class="row g-4" id="gridGaleriMedia">
                     <!-- Data galeri akan dimuat dinamis -->
                 </div>
             </div>
 
             <!-- HALAMAN MENU LAINNYA -->
-            <div id="halamanPost" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Post</h4></div>
             <div id="halamanPortfolio" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Portfolio</h4></div>
             <div id="halamanPengguna" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Pengguna</h4></div>
         </div>
@@ -623,11 +655,12 @@
                 localStorage.setItem('mtechno_berkas', JSON.stringify([]));
             }
             if(!localStorage.getItem('mtechno_media')) {
-                let defaultMedia = [
-                    { id: 1, judul: "Dokumentasi Ruang Arsip 1", ket: "Foto kondisi fisik ruangan arsip.", tipe: "JPG", fileData: "" },
-                    { id: 2, judul: "Video Kegiatan Input Data", ket: "Video tata cara pengelolaan arsip.", tipe: "MP4", fileData: "" }
-                ];
-                localStorage.setItem('mtechno_media', JSON.stringify(defaultMedia));
+                localStorage.setItem('mtechno_media', JSON.stringify([]));
+            }
+            if(!localStorage.getItem('mtechno_logs')) {
+                localStorage.setItem('mtechno_logs', JSON.stringify([
+                    { waktu: formatTanggal(new Date()), user: "System", aksi: "INITIALIZE", ket: "Sistem Arsip Digital berhasil diinisialisasi." }
+                ]));
             }
 
             if(localStorage.getItem('isLogin') === 'true') { 
@@ -637,6 +670,31 @@
             }
         };
 
+        function formatTanggal(date) {
+            let d = new Date(date);
+            let tgl = String(d.getDate()).padStart(2, '0');
+            let bln = String(d.getMonth() + 1).padStart(2, '0');
+            let thn = d.getFullYear();
+            let jam = String(d.getHours()).padStart(2, '0');
+            let mnt = String(d.getMinutes()).padStart(2, '0');
+            let dtk = String(d.getSeconds()).padStart(2, '0');
+            return `${tgl}/${bln}/${thn} ${jam}:${mnt}:${dtk}`;
+        }
+
+        function catatLog(aksi, ket) {
+            let logs = JSON.parse(localStorage.getItem('mtechno_logs') || '[]');
+            let user = localStorage.getItem('currentUserEmail') || 'Administrator';
+            logs.unshift({
+                waktu: formatTanggal(new Date()),
+                user: user,
+                aksi: aksi,
+                ket: ket
+            });
+            // Batasi maksimal 100 log terakhir agar tidak terlalu besar
+            if(logs.length > 100) logs.pop();
+            localStorage.setItem('mtechno_logs', JSON.stringify(logs));
+        }
+
         function gantiFotoProfil(event) {
             let file = event.target.files[0];
             if (file) {
@@ -645,6 +703,7 @@
                     let avatarImg = document.getElementById('sidebarUserAvatar');
                     if(avatarImg) avatarImg.src = e.target.result;
                     localStorage.setItem('mtechno_avatar', e.target.result);
+                    catatLog("UPDATE PROFIL", "Mengganti foto profil akun.");
                 }
                 reader.readAsDataURL(file);
             }
@@ -674,6 +733,7 @@
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
             users.push({ username: u, password: p });
             localStorage.setItem('mtechno_users', JSON.stringify(users));
+            catatLog("REGISTER", `Mendaftarkan akun baru: ${u}`);
 
             msg.style.color = 'green';
             msg.innerText = "Registrasi berhasil! Silakan login.";
@@ -694,6 +754,7 @@
             if(validUser) {
                 localStorage.setItem('isLogin', 'true');
                 localStorage.setItem('currentUserEmail', validUser.username);
+                catatLog("LOGIN", `Pengguna ${validUser.username} masuk ke sistem.`);
                 showApp();
             } else {
                 msg.innerText = "Username atau password salah!";
@@ -710,12 +771,13 @@
         }
 
         function logout() {
+            catatLog("LOGOUT", "Pengguna keluar dari sistem.");
             localStorage.removeItem('isLogin');
             location.reload();
         }
 
         function bukaHalaman(h) {
-            ['Dashboard', 'DetailFolder', 'UploadArsip', 'Post', 'Portfolio', 'Pengguna', 'Gallery'].forEach(item => {
+            ['Dashboard', 'DetailFolder', 'UploadArsip', 'ActivityLog', 'Portfolio', 'Pengguna', 'Gallery'].forEach(item => {
                 let el = document.getElementById('halaman' + item);
                 if(el) el.style.display = (item === h) ? 'block' : 'none';
                 
@@ -731,6 +793,8 @@
 
             if(h === 'DetailFolder') {
                 muatTabelFolder();
+            } else if(h === 'ActivityLog') {
+                muatTabelLog();
             } else if(h === 'Gallery') {
                 muatGaleriMedia();
             }
@@ -775,7 +839,7 @@
                     <td>${jumlahFileInFolder} File</td>
                     <td class="text-center">
                         <button class="btn btn-primary btn-sm me-1" onclick="bukaFolder(${f.id}, '${f.nama}')" title="Buka Folder / Upload"><i class="fa-solid fa-folder-open"></i></button>
-                        <button class="btn btn-danger btn-sm" onclick="hapusFolder(${f.id})" title="Hapus Folder"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusFolder(${f.id}, '${f.nama}')" title="Hapus Folder"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -799,13 +863,15 @@
             folders.push({ id: newId, nama: nama });
             localStorage.setItem('mtechno_folders', JSON.stringify(folders));
 
+            catatLog("BUAT FOLDER", `Membuat folder arsip baru: "${nama}"`);
+
             let modalEl = bootstrap.Modal.getInstance(document.getElementById('modalBuatFolder'));
             modalEl.hide();
             muatTabelFolder();
         }
 
-        function hapusFolder(id) {
-            if(confirm('Yakin ingin menghapus folder ini beserta seluruh berkas di dalamnya?')) {
+        function hapusFolder(id, namaFolder) {
+            if(confirm(`Yakin ingin menghapus folder "${namaFolder}" beserta seluruh berkas di dalamnya?`)) {
                 let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
                 folders = folders.filter(f => f.id !== id);
                 localStorage.setItem('mtechno_folders', JSON.stringify(folders));
@@ -814,6 +880,7 @@
                 berkas = berkas.filter(b => b.folderId !== id);
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
 
+                catatLog("HAPUS FOLDER", `Menghapus folder arsip: "${namaFolder}"`);
                 muatTabelFolder();
             }
         }
@@ -861,6 +928,8 @@
                 berkas.push(newBerkas);
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
 
+                catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name})`);
+
                 document.getElementById('inputNamaBerkas').value = '';
                 document.getElementById('inputFileArsip').value = '';
                 muatTabelBerkas();
@@ -895,7 +964,7 @@
                     <td>${b.ukuranFormatted}</td>
                     <td class="text-center">
                         <button class="btn btn-info btn-sm text-white me-1" onclick="lihatDokumen(${b.id})" title="Lihat Dokumen"><i class="fa-solid fa-eye"></i></button>
-                        <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id})" title="Hapus Berkas"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id}, '${b.nama}')" title="Hapus Berkas"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -909,6 +978,8 @@
                 alert('Data file tidak ditemukan!');
                 return;
             }
+
+            catatLog("LIHAT BERKAS", `Melihat pratinjau dokumen: "${b.nama}"`);
 
             document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-file-lines text-primary me-2"></i> ${b.nama}`;
             document.getElementById('infoDetailFile').innerText = `Nama File: ${b.namaFileAsli || 'Arsip'} | Ukuran: ${b.ukuranFormatted} | Tipe: ${b.tipe}`;
@@ -948,12 +1019,49 @@
             new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
         }
 
-        function hapusBerkas(id) {
-            if(confirm('Hapus berkas ini?')) {
+        function hapusBerkas(id, namaBerkas) {
+            if(confirm(`Hapus berkas "${namaBerkas}"?`)) {
                 let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
                 berkas = berkas.filter(b => b.id !== id);
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+                catatLog("HAPUS BERKAS", `Menghapus berkas/register: "${namaBerkas}"`);
                 muatTabelFolder();
+            }
+        }
+
+        function muatTabelLog() {
+            let logs = JSON.parse(localStorage.getItem('mtechno_logs') || '[]');
+            let tbody = document.getElementById('tabelLogBody');
+            tbody.innerHTML = '';
+
+            if(logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Belum ada riwayat aktivitas tercatat.</td></tr>`;
+                return;
+            }
+
+            logs.forEach(l => {
+                let badgeColor = "bg-secondary";
+                if(l.aksi.includes("BUAT") || l.aksi.includes("UPLOAD")) badgeColor = "bg-success";
+                else if(l.aksi.includes("HAPUS")) badgeColor = "bg-danger";
+                else if(l.aksi.includes("LOGIN") || l.aksi.includes("REGISTER")) badgeColor = "bg-primary";
+                else if(l.aksi.includes("LIHAT")) badgeColor = "bg-info text-dark";
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 text-muted small fw-bold">${l.waktu}</td>
+                    <td><span class="text-dark small"><i class="fa-solid fa-user-circle text-secondary me-1"></i> ${l.user}</span></td>
+                    <td><span class="badge ${badgeColor}">${l.aksi}</span></td>
+                    <td class="text-dark">${l.ket}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bersihkanLog() {
+            if(confirm('Yakin ingin membersihkan seluruh riwayat log aktivitas?')) {
+                localStorage.setItem('mtechno_logs', JSON.stringify([]));
+                catatLog("BERSIHKAN LOG", "Administrator membersihkan riwayat log aktivitas.");
+                muatTabelLog();
             }
         }
 
@@ -995,6 +1103,8 @@
 
                 mediaList.push(newMedia);
                 localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+
+                catatLog("UPLOAD MEDIA", `Mengunggah dokumentasi visual: "${judul}" (${file.name})`);
 
                 let modalEl = bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia'));
                 modalEl.hide();
@@ -1048,7 +1158,7 @@
                                 <span class="badge ${badgeBg}">${m.tipe}</span>
                                 <div>
                                     <button class="btn btn-info btn-sm text-white me-1" onclick="lihatMedia(${m.id})" title="Lihat Media"><i class="fa-solid fa-eye"></i></button>
-                                    <button class="btn btn-danger btn-sm" onclick="hapusMedia(${m.id})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                                    <button class="btn btn-danger btn-sm" onclick="hapusMedia(${m.id}, '${m.judul}')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -1065,6 +1175,8 @@
                 alert('Media tidak ditemukan!');
                 return;
             }
+
+            catatLog("LIHAT MEDIA", `Melihat pratinjau galeri: "${m.judul}"`);
 
             document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-photo-film text-primary me-2"></i> ${m.judul}`;
             document.getElementById('infoDetailFile').innerText = `Keterangan: ${m.ket} | Tipe: ${m.tipe}`;
@@ -1109,11 +1221,12 @@
             new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
         }
 
-        function hapusMedia(id) {
-            if(confirm('Hapus dokumentasi media ini?')) {
+        function hapusMedia(id, judulMedia) {
+            if(confirm(`Hapus dokumentasi media "${judulMedia}"?`)) {
                 let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
                 mediaList = mediaList.filter(x => x.id !== id);
                 localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+                catatLog("HAPUS MEDIA", `Menghapus galeri dokumentasi: "${judulMedia}"`);
                 muatGaleriMedia();
             }
         }
