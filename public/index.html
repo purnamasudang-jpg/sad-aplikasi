@@ -425,6 +425,19 @@
                 </div>
             </div>
 
+            <!-- HALAMAN MANAJEMEN PORTFOLIO -->
+            <div id="halamanPortfolio" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fw-bold text-white m-0"><i class="fa-solid fa-code text-warning me-2"></i> Manajemen Portfolio & Proyek</h3>
+                        <p class="text-white-50 small m-0 mt-1">Kelola etalase karya, tautan aplikasi web, atau dokumentasi program pengembangan institusi.</p>
+                    </div>
+                    <button class="btn btn-warning btn-sm fw-bold text-dark" onclick="bukaModalTambahPortfolio()"><i class="fa-solid fa-plus me-1"></i> Tambah Portfolio</button>
+                </div>
+
+                <div class="row g-4" id="gridPortfolio"></div>
+            </div>
+
             <!-- HALAMAN PENGGUNA (MANAJEMEN PENGGUNA) -->
             <div id="halamanPengguna" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -466,7 +479,6 @@
                 <div class="row g-4" id="gridGaleriMedia"></div>
             </div>
 
-            <div id="halamanPortfolio" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Portfolio</h4></div>
         </div>
     </div>
 
@@ -477,6 +489,21 @@
                 <div class="modal-header"><h5 class="modal-title fw-bold"><i class="fa-solid fa-folder-plus text-success me-2"></i> Buat Folder Arsip Baru</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body"><div class="mb-3"><label class="form-label fw-bold small">Nama Folder / Instansi</label><input type="text" id="inputNamaFolderBaru" class="form-control" placeholder="Contoh: SDIT AL-IKHLAS"></div></div>
                 <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-success btn-sm fw-bold" onclick="simpanFolderBaru()">Simpan Folder</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH PORTFOLIO -->
+    <div class="modal fade" id="modalTambahPortfolio" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content text-dark">
+                <div class="modal-header bg-light"><h5 class="modal-title fw-bold"><i class="fa-solid fa-code text-warning me-2"></i> Tambah Proyek Portfolio</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <div class="mb-3"><label class="form-label fw-bold small">Judul Proyek / Aplikasi</label><input type="text" id="inputPortJudul" class="form-control" placeholder="Contoh: Sudang Tools / Portal Sekolah"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Deskripsi Singkat</label><textarea id="inputPortDesc" class="form-control" rows="3" placeholder="Jelaskan secara singkat kegunaan atau fitur proyek ini..."></textarea></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Tautan / Link Proyek (URL)</label><input type="text" id="inputPortLink" class="form-control" placeholder="https://github.com/username/project"></div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-warning btn-sm fw-bold text-dark" onclick="simpanPortfolioBaru()">Simpan Portfolio</button></div>
             </div>
         </div>
     </div>
@@ -547,6 +574,11 @@
             if(!localStorage.getItem('mtechno_folders')) localStorage.setItem('mtechno_folders', JSON.stringify([]));
             if(!localStorage.getItem('mtechno_berkas')) localStorage.setItem('mtechno_berkas', JSON.stringify([]));
             if(!localStorage.getItem('mtechno_media')) localStorage.setItem('mtechno_media', JSON.stringify([]));
+            if(!localStorage.getItem('mtechno_portfolio')) {
+                localStorage.setItem('mtechno_portfolio', JSON.stringify([
+                    { id: 1, judul: "Sistem Arsip Digital (SAD)", desc: "Aplikasi pengelola arsip digital dan register dokumen berbasis web.", link: "#" }
+                ]));
+            }
             if(!localStorage.getItem('mtechno_users')) {
                 localStorage.setItem('mtechno_users', JSON.stringify([
                     { username: "purnamasudang@gmail.com", password: "123", role: "Administrator" }
@@ -669,6 +701,78 @@
             else if(h === 'ActivityLog') muatTabelLog();
             else if(h === 'Pengguna') muatTabelPengguna();
             else if(h === 'Gallery') muatGaleriMedia();
+            else if(h === 'Portfolio') muatGridPortfolio();
+        }
+
+        /* MANAJEMEN PORTFOLIO SCRIPT */
+        function muatGridPortfolio() {
+            let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+            let grid = document.getElementById('gridPortfolio');
+            grid.innerHTML = '';
+
+            if(portfolios.length === 0) {
+                grid.innerHTML = `<div class="col-12 text-center text-white-50 py-4">Belum ada portfolio proyek tersimpan.</div>`;
+                return;
+            }
+
+            portfolios.forEach(item => {
+                let col = document.createElement('div');
+                col.className = 'col-md-4';
+                col.innerHTML = `
+                    <div class="card bg-white text-dark border-0 shadow-sm h-100">
+                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa-solid fa-laptop-code text-warning fs-4 me-2"></i>
+                                    <h5 class="fw-bold mb-0 text-truncate">${item.judul}</h5>
+                                </div>
+                                <p class="text-muted small mb-3" style="min-height: 40px;">${item.desc || 'Tidak ada deskripsi.'}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <a href="${item.link || '#'}" target="_blank" class="btn btn-sm btn-outline-primary fw-bold"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Kunjungi</a>
+                                <button class="btn btn-sm btn-danger" onclick="hapusPortfolio(${item.id}, '${item.judul}')" title="Hapus Portfolio"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(col);
+            });
+        }
+
+        function bukaModalTambahPortfolio() {
+            document.getElementById('inputPortJudul').value = '';
+            document.getElementById('inputPortDesc').value = '';
+            document.getElementById('inputPortLink').value = '';
+            new bootstrap.Modal(document.getElementById('modalTambahPortfolio')).show();
+        }
+
+        function simpanPortfolioBaru() {
+            let judul = document.getElementById('inputPortJudul').value.trim();
+            let desc = document.getElementById('inputPortDesc').value.trim();
+            let link = document.getElementById('inputPortLink').value.trim();
+
+            if(!judul) { alert('Judul proyek wajib diisi!'); return; }
+
+            let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+            let newId = portfolios.length > 0 ? portfolios[portfolios.length - 1].id + 1 : 1;
+            portfolios.push({ id: newId, judul: judul, desc: desc, link: link || '#' });
+            localStorage.setItem('mtechno_portfolio', JSON.stringify(portfolios));
+
+            catatLog("TAMBAH PORTFOLIO", `Menambahkan proyek portfolio: "${judul}"`);
+
+            bootstrap.Modal.getInstance(document.getElementById('modalTambahPortfolio')).hide();
+            muatGridPortfolio();
+            alert('Proyek portfolio berhasil ditambahkan!');
+        }
+
+        function hapusPortfolio(id, judul) {
+            if(confirm(`Yakin ingin menghapus portfolio "${judul}"?`)) {
+                let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+                portfolios = portfolios.filter(x => x.id !== id);
+                localStorage.setItem('mtechno_portfolio', JSON.stringify(portfolios));
+                catatLog("HAPUS PORTFOLIO", `Menghapus portfolio: "${judul}"`);
+                muatGridPortfolio();
+            }
         }
 
         /* MANAJEMEN PENGGUNA SCRIPT */
