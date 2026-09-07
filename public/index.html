@@ -187,17 +187,26 @@
         </div>
         <div class="header-right">
             <div><i class="fa-regular fa-envelope" style="font-size: 16px; cursor: pointer;"></i> <span class="badge bg-danger" style="font-size: 9px; vertical-align: top;">3</span></div>
-            <div class="user-panel-header" onclick="document.getElementById('inputFotoProfil').click()" title="Ganti foto profil">
-                <img id="headerUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar">
-                <span id="headerUsernameText">purnamasudang@gmail.com</span>
-            </div>
-            <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
-            <span onclick="logout()" style="cursor: pointer; font-size: 16px;" title="Sign Out"><i class="fa-solid fa-power-off"></i></span>
         </div>
     </div>
 
     <!-- SIDEBAR -->
     <div id="sidebar" style="display: none;">
+        <!-- USER PANEL DI ATAS SIDEBAR -->
+        <div class="d-flex align-items-center px-3 pb-3 mb-2 border-bottom border-secondary" style="border-bottom-color: #374850 !important;">
+            <div class="image me-2" onclick="document.getElementById('inputFotoProfil').click()" style="cursor: pointer;" title="Ganti foto profil">
+                <img id="sidebarUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover; border: 1px solid rgba(255,255,255,0.6);">
+            </div>
+            <div class="info text-truncate" style="max-width: 120px;">
+                <span class="d-block text-white text-decoration-none small text-truncate" title="purnamasudang@gmail.com" style="font-size: 12px; font-weight: 600;">purnamasudang@gmail.com</span>
+                <span class="status text-success" style="font-size: 10px;"><i class="fa fa-circle text-success me-1"></i> Online</span>
+            </div>
+            <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
+            <div class="ms-auto">
+                <span onclick="logout()" style="cursor: pointer; font-size: 15px;" class="text-danger" title="Sign Out"><i class="fa-solid fa-power-off"></i></span>
+            </div>
+        </div>
+
         <div class="sidebar-menu-label">Menu Utama</div>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link active" href="#" onclick="bukaHalaman('Dashboard')"><div class="nav-link-left"><i class="fa-solid fa-house"></i> Dashboard</div></a></li>
@@ -235,7 +244,6 @@
 
             <!-- HALAMAN DASHBOARD -->
             <div id="halamanDashboard">
-                <!-- 3 Kotak Atas (Jumlah Arsip telah dihapus, menggunakan col-md-4 agar pas 3 kotak) -->
                 <div class="row">
                     <div class="col-md-4 col-sm-6">
                         <div class="stat-card" onclick="tambahFolderInteraktif()">
@@ -267,7 +275,6 @@
                 </div>
 
                 <div class="row">
-                    <!-- Deretan Nama Folder Arsip -->
                     <div class="col-md-8">
                         <div class="box-panel box-panel-success">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -289,9 +296,7 @@
                         </div>
                     </div>
 
-                    <!-- 3 Kotak Kanan -->
                     <div class="col-md-4">
-                        <!-- Kotak 1: Nama Instansi -->
                         <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;" onclick="bukaModalDaftarInstansi()">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -301,7 +306,6 @@
                             </div>
                         </div>
 
-                        <!-- Kotak 2: Tahun Dokumen -->
                         <div class="stat-card" style="border-top: none; background: #00a65a; color: white; margin-bottom: 15px;">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-calendar-days"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -311,7 +315,6 @@
                             </div>
                         </div>
 
-                        <!-- Kotak 3: Menu Unduh -->
                         <div class="stat-card" style="border-top: none; background: #dd4b39; color: white; margin-bottom: 15px; cursor: pointer;" onclick="bukaMenuUnduh()">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-download"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -403,9 +406,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Nama Instansi / Folder Tujuan</label>
-                        <select id="selectInstansiFolder" class="form-select">
-                            <!-- Diisi dinamis dari folder -->
-                        </select>
+                        <select id="selectInstansiFolder" class="form-select"></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tahun Dokumen</label>
@@ -487,9 +488,7 @@
                     <h5 class="modal-title" id="judulPratinjau"><i class="fa-solid fa-eye me-2"></i> Pratinjau Dokumen</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body text-center" id="kontenPratinjau" style="min-height: 350px; display: flex; align-items: center; justify-content: center; background: #f8fafc;">
-                    <!-- Konten pratinjau muncul di sini -->
-                </div>
+                <div class="modal-body text-center" id="kontenPratinjau" style="min-height: 350px; display: flex; align-items: center; justify-content: center; background: #f8fafc;"></div>
             </div>
         </div>
     </div>
@@ -507,8 +506,26 @@
 
         window.onload = () => {
             loadSavedStats();
+            let savedAvatar = localStorage.getItem('mtechno_avatar');
+            if(savedAvatar) {
+                let avatarImg = document.getElementById('sidebarUserAvatar');
+                if(avatarImg) avatarImg.src = savedAvatar;
+            }
             if(localStorage.getItem('isLogin') === 'true') { showApp(); } else { tampilLogin(); }
         };
+
+        function gantiFotoProfil(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let avatarImg = document.getElementById('sidebarUserAvatar');
+                    if(avatarImg) avatarImg.src = e.target.result;
+                    localStorage.setItem('mtechno_avatar', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
         function loadSavedStats() {
             let saved = localStorage.getItem('mtechno_appdata');
@@ -545,7 +562,6 @@
             document.getElementById('valUkuranData').innerText = ukuranStr;
             document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
 
-            // SINKRONISASI NAMA INSTANSI & TAHUN DARI FOLDER TERBARU
             if(totalFolder > 0) {
                 let folderTerbaru = appData.folders[appData.folders.length - 1];
                 document.getElementById('valInstansi').innerText = folderTerbaru.nama;
@@ -583,7 +599,6 @@
             document.getElementById('tabelFolderBody').innerHTML = html;
         }
 
-        // FUNGSI MEMBUKA MODAL DERETAN NAMA INSTANSI
         function bukaModalDaftarInstansi() {
             let html = '';
             if(appData.folders.length === 0) {
