@@ -76,7 +76,6 @@
             border-left-color: #3c8dbc;
         }
         .nav-link-left { display: flex; align-items: center; gap: 12px; }
-        .badge-custom { background-color: #00a65a; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
 
         #content-wrapper {
             margin-left: 230px;
@@ -218,7 +217,7 @@
         }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
-        #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
+        #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery { display: none; }
     </style>
 </head>
 <body>
@@ -257,9 +256,6 @@
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPortfolio" onclick="bukaHalaman('Portfolio')"><div class="nav-link-left"><i class="fa-solid fa-code"></i> Portfolio</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPengguna" onclick="bukaHalaman('Pengguna')"><div class="nav-link-left"><i class="fa-solid fa-users"></i> Pengguna</div></a></li>
             <li class="nav-item"><a class="nav-link" href="#" id="menuLinkGallery" onclick="bukaHalaman('Gallery')"><div class="nav-link-left"><i class="fa-solid fa-image"></i> Dokumentasi & Visual</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkKomentar" onclick="bukaHalaman('Komentar')"><div class="nav-link-left"><i class="fa-regular fa-comment"></i> Komentar</div><span class="badge-custom">2</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkInbox" onclick="bukaHalaman('Inbox')"><div class="nav-link-left"><i class="fa-regular fa-envelope"></i> Inbox</div><span class="badge-custom">6</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="logout()"><div class="nav-link-left"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div></a></li>
         </ul>
     </div>
 
@@ -531,8 +527,6 @@
             <div id="halamanPost" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Post</h4></div>
             <div id="halamanPortfolio" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Portfolio</h4></div>
             <div id="halamanPengguna" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Manajemen Pengguna</h4></div>
-            <div id="halamanKomentar" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Daftar Komentar</h4></div>
-            <div id="halamanInbox" class="box-panel p-4 bg-white text-dark rounded" style="display: none;"><h4>Pesan Masuk (Inbox)</h4></div>
         </div>
     </div>
 
@@ -629,7 +623,6 @@
                 localStorage.setItem('mtechno_berkas', JSON.stringify([]));
             }
             if(!localStorage.getItem('mtechno_media')) {
-                // Inisialisasi contoh default jika galeri masih kosong
                 let defaultMedia = [
                     { id: 1, judul: "Dokumentasi Ruang Arsip 1", ket: "Foto kondisi fisik ruangan arsip.", tipe: "JPG", fileData: "" },
                     { id: 2, judul: "Video Kegiatan Input Data", ket: "Video tata cara pengelolaan arsip.", tipe: "MP4", fileData: "" }
@@ -722,7 +715,7 @@
         }
 
         function bukaHalaman(h) {
-            ['Dashboard', 'DetailFolder', 'UploadArsip', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
+            ['Dashboard', 'DetailFolder', 'UploadArsip', 'Post', 'Portfolio', 'Pengguna', 'Gallery'].forEach(item => {
                 let el = document.getElementById('halaman' + item);
                 if(el) el.style.display = (item === h) ? 'block' : 'none';
                 
@@ -964,7 +957,6 @@
             }
         }
 
-        // --- MANAJEMEN GALLERY / DOKUMENTASI VISUAL ---
         function bukaModalUploadMedia() {
             document.getElementById('inputJudulMedia').value = '';
             document.getElementById('inputFileMedia').value = '';
