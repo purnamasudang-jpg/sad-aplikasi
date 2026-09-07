@@ -475,9 +475,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Data default awal bersih/kosong atau menyesuaikan kebutuhan dinamis
         let appData = {
             folders: [
-                { nama: "SDN KADEMANGAN 1" }
+                { nama: "SDN KADEMANGAN 1" },
+                { nama: "SMP IT HIDAYATUL QUR'AN" }
             ],
             files: []
         };
@@ -493,10 +495,6 @@
             let saved = localStorage.getItem('mtechno_appdata');
             if(saved) {
                 appData = JSON.parse(saved);
-                // Pastikan jika data lama kosong atau default, minimal ada SDN KADEMANGAN 1 jika belum diubah user
-                if(!appData.folders || appData.folders.length === 0) {
-                    appData.folders = [{ nama: "SDN KADEMANGAN 1" }];
-                }
             }
             updateStatUI();
             renderFolders();
@@ -529,16 +527,18 @@
             document.getElementById('valUkuranData').innerText = ukuranStr;
             document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
 
-            // Kotak Informasi Kanan (Nomor 2) - Sinkronisasi Instansi & Tahun secara Dinamis
+            // SINKRONISASI DINAMIS KOTAK KANAN (NAMA INSTANSI & TAHUN)
             if(totalArsip > 0) {
                 let fileTerakhir = appData.files[appData.files.length - 1];
-                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || appData.folders[0].nama;
+                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || appData.folders[appData.folders.length - 1].nama;
                 document.getElementById('valTahun').innerText = fileTerakhir.tahun || "2026";
             } else if(totalFolder > 0) {
-                // Jika file kosong tapi folder ada, ambil nama folder pertama sebagai nama instansi otomatis
-                document.getElementById('valInstansi').innerText = appData.folders[0].nama;
+                // Jika belum ada file tapi folder ada, ambil nama folder terakhir yang dibuat
+                let folderTerakhir = appData.folders[appData.folders.length - 1];
+                document.getElementById('valInstansi').innerText = folderTerakhir.nama;
                 document.getElementById('valTahun').innerText = "2026";
             } else {
+                // Jika kosong murni (folder & file 0)
                 document.getElementById('valInstansi').innerText = "Belum ada instansi";
                 document.getElementById('valTahun').innerText = "-";
             }
@@ -564,7 +564,7 @@
         }
 
         function tambahFolderInteraktif() {
-            let namaFolder = prompt("Masukkan nama folder baru:", "SDN KADEMANGAN 1");
+            let namaFolder = prompt("Masukkan nama folder baru:");
             if(namaFolder && namaFolder.trim() !== "") {
                 let namaClean = namaFolder.trim();
                 if(appData.folders.some(f => f.nama.toLowerCase() === namaClean.toLowerCase())) {
@@ -702,7 +702,7 @@
                 alert("Harap buat folder arsip terlebih dahulu di tabel sebelah kiri!");
                 return;
             }
-            document.getElementById('inputNamaInstansi').value = appData.folders[0].nama;
+            document.getElementById('inputNamaInstansi').value = appData.folders[appData.folders.length - 1].nama;
             new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
         }
 
@@ -712,7 +712,7 @@
             let fileInput = document.getElementById('inputFileArsip');
 
             if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
-            let defaultFolder = appData.folders[0].nama;
+            let defaultFolder = appData.folders[appData.folders.length - 1].nama;
 
             if(fileInput.files.length > 0) {
                 let processed = 0;
