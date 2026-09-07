@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-TECHNO Admin Dashboard</title>
+    <title>M-TECHNO - Prosedur Pengelolaan Arsip</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -11,14 +11,14 @@
     <style>
         body { 
             font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            background: #ecf0f5; 
-            color: #333; 
+            background: #2b526d; 
+            color: #fff; 
             margin: 0; 
             overflow-x: hidden;
         }
 
         .main-header {
-            background-color: #3c8dbc;
+            background-color: #1f3b50;
             color: white;
             height: 52px;
             display: flex;
@@ -42,7 +42,7 @@
         #sidebar {
             width: 230px;
             min-height: 100vh;
-            background-color: #222d32;
+            background-color: #1b3142;
             color: #b8c7ce;
             position: fixed;
             top: 52px;
@@ -55,7 +55,7 @@
             font-size: 11px;
             text-transform: uppercase;
             padding: 10px 15px 5px 15px;
-            color: #4b646f;
+            color: #7995a8;
             font-weight: bold;
             letter-spacing: 0.5px;
         }
@@ -72,7 +72,7 @@
         }
         #sidebar .nav-link:hover, #sidebar .nav-link.active {
             color: #ffffff;
-            background: #1e282c;
+            background: #244259;
             border-left-color: #3c8dbc;
         }
         .nav-link-left { display: flex; align-items: center; gap: 12px; }
@@ -81,53 +81,8 @@
         #content-wrapper {
             margin-left: 230px;
             margin-top: 52px;
-            padding: 20px 25px;
+            padding: 25px 30px;
         }
-
-        .content-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            background: transparent;
-        }
-        .content-header-bar h1 { font-size: 24px; font-weight: 500; margin: 0; color: #2c3b41; }
-        .breadcrumb-custom { background: transparent; padding: 0; margin: 0; font-size: 13px; }
-        .breadcrumb-custom a { color: #3c8dbc; text-decoration: none; }
-
-        .stat-card {
-            background: white;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.25s ease;
-        }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-        .stat-card-icon { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; }
-        .bg-folder { background-color: #00c0ef; }
-        .bg-storage { background-color: #00a65a; }
-        .bg-home { background-color: #f39c12; }
-
-        .stat-card-body { padding: 12px 18px; width: 100%; }
-        .stat-card-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #718096; margin-bottom: 4px; letter-spacing: 0.5px; }
-        .stat-card-value { font-size: 20px; font-weight: 700; color: #2d3748; }
-
-        .box-panel {
-            background: #ffffff;
-            border-top: 3px solid #cbd5e1;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .box-panel-success { border-top-color: #00a65a; }
-        .folder-clickable { cursor: pointer; transition: background-color 0.15s ease; }
-        .folder-clickable:hover { background-color: #f8fafc !important; }
 
         .auth-wrapper {
             min-height: 100vh;
@@ -143,14 +98,109 @@
             border-radius: 6px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             border-top: 4px solid #3c8dbc;
+            color: #333;
         }
         .auth-box h3 { text-align: center; margin-bottom: 25px; font-size: 22px; font-weight: bold; color: #2d3748; }
         .form-group-custom { margin-bottom: 18px; }
         .form-group-custom label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #4a5568; }
-        .form-group-custom input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
-        .form-group-custom input:focus { border-color: #3c8dbc; outline: none; box-shadow: 0 0 0 3px rgba(60,141,188,0.15); }
-        .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        .form-group-custom input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; }
         .btn-block-custom:hover { background: #357ca5; }
+
+        /* Styling Infografis Prosedur Pengelolaan Arsip */
+        .infografis-container {
+            position: relative;
+            background: #284f6c;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid #38678c;
+            overflow: hidden;
+        }
+        .infografis-title {
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 26px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .step-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        .step-row.justify-end { justify-content: flex-end; }
+        .step-row.justify-start { justify-content: flex-start; }
+        .step-row.justify-center { justify-content: center; }
+
+        .step-box {
+            width: 480px;
+            border-radius: 40px;
+            padding: 18px 25px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 2;
+        }
+        .step-box:hover { transform: scale(1.02); }
+
+        .box-step-1 { background-color: #ff5722; }
+        .box-step-2 { background-color: #f39c12; }
+        .box-step-3 { background-color: #00bcd4; }
+        .box-step-4 { background-color: #ffffff; color: #2b526d; }
+
+        .step-number {
+            position: absolute;
+            font-size: 32px;
+            font-style: italic;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            z-index: 3;
+        }
+        .num-left { left: -35px; top: -10px; }
+        .num-right { right: -35px; top: -10px; }
+
+        .step-icon {
+            font-size: 36px;
+            min-width: 60px;
+            text-align: center;
+            margin-right: 20px;
+        }
+        .step-text {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Garis Kurva Titik-titik Penghubung */
+        .connector-line {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+            border: 3px dashed rgba(255, 255, 255, 0.6);
+        }
+        
+        .digiar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-top: 10px;
+        }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
         #halamanDashboard, #halamanDetailFolder, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
@@ -170,13 +220,12 @@
 
     <!-- SIDEBAR -->
     <div id="sidebar" style="display: none;">
-        <!-- USER PANEL DI ATAS SIDEBAR -->
-        <div class="d-flex align-items-center px-3 pb-3 mb-2 border-bottom border-secondary" style="border-bottom-color: #374850 !important;">
+        <div class="d-flex align-items-center px-3 pb-3 mb-2 border-bottom border-secondary" style="border-bottom-color: #2b465b !important;">
             <div class="image me-2" onclick="document.getElementById('inputFotoProfil').click()" style="cursor: pointer;" title="Ganti foto profil">
                 <img id="sidebarUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover; border: 1px solid rgba(255,255,255,0.6);">
             </div>
             <div class="info text-truncate" style="max-width: 120px;">
-                <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" title="purnamasudang@gmail.com" style="font-size: 12px; font-weight: 600;">purnamasudang@gmail.com</span>
+                <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" style="font-size: 12px; font-weight: 600;">user@mtechno.com</span>
                 <span class="status text-success" style="font-size: 10px;"><i class="fa fa-circle text-success me-1"></i> Online</span>
             </div>
             <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
@@ -228,278 +277,87 @@
     <!-- MAIN APP CONTAINER -->
     <div id="mainAppContainer">
         <div id="content-wrapper">
-            <div class="content-header-bar">
-                <h1 id="pageTitleHeading">Dashboard</h1>
-                <ol class="breadcrumb breadcrumb-custom">
-                    <li><a href="#" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-home"></i> Home</a></li>
-                    <li id="breadcrumbActive" style="color: #64748b; display: inline-block; margin-left: 5px;"> / Dashboard</li>
-                </ol>
-            </div>
-
-            <!-- HALAMAN DASHBOARD -->
-            <div id="halamanDashboard">
-                <div class="row">
-                    <div class="col-md-4 col-sm-6">
-                        <div class="stat-card" onclick="tambahFolderInteraktif()">
-                            <div class="stat-card-icon bg-folder"><i class="fa-solid fa-folder-open"></i></div>
-                            <div class="stat-card-body">
-                                <div class="stat-card-title">JUMLAH FOLDER</div>
-                                <div class="stat-card-value" id="valJumlahFolder">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="stat-card">
-                            <div class="stat-card-icon bg-storage"><i class="fa-solid fa-hard-drive"></i></div>
-                            <div class="stat-card-body">
-                                <div class="stat-card-title">TOTAL UKURAN DATA</div>
-                                <div class="stat-card-value" id="valUkuranData">0.00 KB</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="stat-card" onclick="bukaHalaman('Dashboard')">
-                            <div class="stat-card-icon bg-home"><i class="fa-solid fa-house-chimney"></i></div>
-                            <div class="stat-card-body">
-                                <div class="stat-card-title">STATUS HOME</div>
-                                <div class="stat-card-value" id="valStatusHome">Kosong</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="box-panel box-panel-success">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h4 style="font-size: 16px; font-weight: 600; margin: 0; color: #1e293b;"><i class="fa-solid fa-folder-tree text-success me-2"></i> Deretan Nama Folder Arsip</h4>
-                                <button class="btn btn-sm btn-success px-3" onclick="tambahFolderInteraktif()"><i class="fa-solid fa-plus me-1"></i> Buat Folder</button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle" style="font-size: 14px; margin-bottom: 0;">
-                                    <thead class="table-light text-uppercase fs-7 text-secondary">
-                                        <tr>
-                                            <th>Nama Folder</th>
-                                            <th>Jumlah File</th>
-                                            <th style="width: 80px; text-align: center;">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabelFolderBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;" onclick="bukaModalDaftarInstansi()">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
-                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
-                                <div class="stat-card-title" style="color: white;">1. NAMA INSTANSI <i class="fa-solid fa-arrow-up-right-from-square float-end" style="font-size: 11px; opacity: 0.8;" title="Klik untuk lihat semua instansi"></i></div>
-                                <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 13px; font-weight: 600;">Belum ada instansi</div>
-                                <div style="font-size: 11px; opacity: 0.9;">Klik untuk daftar instansi arsip</div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card" style="border-top: none; background: #00a65a; color: white; margin-bottom: 15px;">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
-                                <div class="stat-card-title" style="color: white;">2. TAHUN DOKUMEN</div>
-                                <div class="stat-card-value" id="valTahun" style="color: white;">-</div>
-                                <div style="font-size: 11px; opacity: 0.9;">Tahun Arsip Disimpan</div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card" style="border-top: none; background: #dd4b39; color: white; margin-bottom: 15px; cursor: pointer;" onclick="bukaMenuUnduh()">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-download"></i></div>
-                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
-                                <div class="stat-card-title" style="color: white;">3. MENU UNDUH</div>
-                                <div class="stat-card-value" id="valJumlahUnduh" style="color: white;">0 File</div>
-                                <div style="font-size: 11px; opacity: 0.9;">Pusat Kumpulan File Unduhan</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HALAMAN DETAIL FOLDER -->
-            <div id="halamanDetailFolder">
-                <div class="box-panel box-panel-success">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <div>
-                            <button class="btn btn-sm btn-outline-secondary me-2 px-3" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</button>
-                            <h4 id="judulFolderDetail" style="font-size: 17px; font-weight: 600; display: inline-block; margin: 0; color: #1e293b;"><i class="fa-solid fa-folder-open text-warning me-2"></i> Nama Folder</h4>
-                        </div>
-                        <button class="btn btn-sm btn-success px-3" onclick="bukaModalUploadKeFolder()"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Unggah File ke Folder Ini</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle" style="font-size: 13px; margin-bottom: 0;">
-                            <thead class="table-light text-uppercase fs-7 text-secondary">
-                                <tr>
-                                    <th>Nama File</th>
-                                    <th>Jenis Dokumen</th>
-                                    <th>Instansi</th>
-                                    <th>Tahun</th>
-                                    <th style="width: 160px; text-align: center;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelFileFolderBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
             
-            <div id="halamanPost" class="box-panel"><h4>Manajemen Post</h4></div>
-            <div id="halamanPortfolio" class="box-panel"><h4>Manajemen Portfolio</h4></div>
-            <div id="halamanPengguna" class="box-panel"><h4>Manajemen Pengguna</h4></div>
-            <div id="halamanGallery" class="box-panel"><h4>Galeri Foto</h4></div>
-            <div id="halamanKomentar" class="box-panel"><h4>Daftar Komentar</h4></div>
-            <div id="halamanInbox" class="box-panel"><h4>Pesan Masuk (Inbox)</h4></div>
+            <!-- HALAMAN DASHBOARD (INFOGRAFIS PROSEDUR PENGELOLAAN ARSIP) -->
+            <div id="halamanDashboard">
+                <div class="infografis-container">
+                    <div class="infografis-title">PROSEDUR PENGELOLAAN ARSIP</div>
+
+                    <!-- STEP 1 -->
+                    <div class="step-row justify-start">
+                        <div class="step-box box-step-1" onclick="bukaModalUploadArsip()">
+                            <div class="step-number num-left">1</div>
+                            <div class="step-icon"><i class="fa-solid fa-desktop"></i></div>
+                            <div class="step-text">Input Dokumen yang akan disimpan ke dalam Aplikasi DIGIAR</div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step-row justify-center" style="margin-right: -100px;">
+                        <div class="step-box box-step-2" onclick="bukaModalDaftarInstansi()">
+                            <div class="step-number num-right" style="right: auto; left: -35px;">2</div>
+                            <div class="step-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                            <div class="step-text">Menyerahkan Dokumen fisik kepada administrator untuk di verifikasi</div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step-row justify-start" style="margin-left: 50px;">
+                        <div class="step-box box-step-3" onclick="bukaMenuUnduh()">
+                            <div class="step-number num-left">3</div>
+                            <div class="step-icon"><i class="fa-solid fa-file-pen"></i></div>
+                            <div class="step-text">Menandatangani Berita Acara serah terima dokumen</div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step-row justify-end">
+                        <div class="step-box box-step-4" onclick="bukaHalaman('Dashboard')">
+                            <div class="step-number num-right" style="color: #2b526d;">4</div>
+                            <div class="step-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="step-text">Dokumen fisik akan disimpan di depo arsip oleh administrator</div>
+                        </div>
+                    </div>
+
+                    <!-- LOGO DIGIAR DI BAWAH KIRI -->
+                    <div class="d-flex align-items-center justify-content-between mt-4 pt-3 border-top border-secondary">
+                        <div class="digiar-brand">
+                            <i class="fa-solid fa-folder-open text-warning"></i> DIGIAR
+                        </div>
+                        <div class="text-white-50 small">
+                            Sistem Pengelolaan Arsip Digital M-Techno &copy; 2026
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HALAMAN MENU LAINNYA -->
+            <div id="halamanDetailFolder" class="box-panel p-4 bg-white text-dark rounded"><h4>Detail Folder</h4></div>
+            <div id="halamanPost" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Post</h4></div>
+            <div id="halamanPortfolio" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Portfolio</h4></div>
+            <div id="halamanPengguna" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Pengguna</h4></div>
+            <div id="halamanGallery" class="box-panel p-4 bg-white text-dark rounded"><h4>Galeri Foto</h4></div>
+            <div id="halamanKomentar" class="box-panel p-4 bg-white text-dark rounded"><h4>Daftar Komentar</h4></div>
+            <div id="halamanInbox" class="box-panel p-4 bg-white text-dark rounded"><h4>Pesan Masuk (Inbox)</h4></div>
         </div>
     </div>
 
-    <!-- MODAL DAFTAR NAMA INSTANSI -->
+    <!-- MODAL DUMMY -->
     <div class="modal fade" id="modalDaftarInstansi" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-school me-2"></i> Deretan Nama Instansi & Folder Arsip</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small mb-3">Berikut adalah daftar seluruh instansi yang bersumber dari folder arsip. Klik tombol <strong>Buka Folder</strong> untuk mengelola file di dalamnya:</p>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle" style="font-size: 13px;">
-                            <thead class="table-light text-uppercase fs-7 text-secondary">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Instansi / Folder</th>
-                                    <th>Jumlah File</th>
-                                    <th style="width: 150px; text-align: center;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelModalInstansiBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-success btn-sm px-3" onclick="bootstrap.Modal.getInstance(document.getElementById('modalDaftarInstansi')).hide(); tambahFolderInteraktif();"><i class="fa-solid fa-plus me-1"></i> Tambah Instansi Baru</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Verifikasi Dokumen</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Fitur verifikasi dokumen fisik oleh administrator.</p></div></div></div>
     </div>
-
-    <!-- MODAL UPLOAD ARSIP UMUM -->
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-file-arrow-up me-2"></i> Unggah Arsip & Catat Instansi</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Instansi / Folder Tujuan</label>
-                        <select id="selectInstansiFolder" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tahun Dokumen</label>
-                        <input type="number" id="inputTahunArsip" class="form-control" value="2026">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Pilih File Dokumen (PDF, PNG, JPG, DOC, Excel, dll.)</label>
-                        <input type="file" id="inputFileArsip" class="form-control" multiple>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary btn-sm px-3" onclick="simpanArsipBaru()">Simpan & Catat</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Input Dokumen DIGIAR</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Form unggah dokumen baru ke aplikasi.</p></div></div></div>
     </div>
-
-    <!-- MODAL UPLOAD KHUSUS KE FOLDER AKTIF -->
-    <div class="modal fade" id="modalUploadKeFolder" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="judulModalUploadFolder"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Unggah File ke Folder</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Tahun Dokumen</label>
-                        <input type="number" id="inputTahunFolder" class="form-control" value="2026">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Pilih File Dokumen</label>
-                        <input type="file" id="inputFileFolderAktif" class="form-control" multiple>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-success btn-sm px-3" onclick="simpanFileKeFolderAktif()">Unggah File</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL MENU UNDUH -->
     <div class="modal fade" id="modalMenuUnduh" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-download me-2"></i> Pusat Menu Unduh Dokumen</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small mb-3">Daftar seluruh file arsip lengkap dengan jenis dokumen, tombol pratinjau (lihat), dan unduh:</p>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle" style="font-size: 13px;">
-                            <thead class="table-light text-uppercase fs-7 text-secondary">
-                                <tr>
-                                    <th>Nama File</th>
-                                    <th>Jenis Dokumen</th>
-                                    <th>Folder / Instansi</th>
-                                    <th>Tahun</th>
-                                    <th style="width: 170px; text-align: center;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelUnduhBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL PRATINJAU / LIHAT DOKUMEN -->
-    <div class="modal fade" id="modalPratinjau" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="judulPratinjau"><i class="fa-solid fa-eye me-2"></i> Pratinjau Dokumen</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center" id="kontenPratinjau" style="min-height: 350px; display: flex; align-items: center; justify-content: center; background: #f8fafc;"></div>
-            </div>
-        </div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Berita Acara</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Kelola berita acara serah terima dokumen.</p></div></div></div>
     </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        let appData = {
-            folders: [],
-            files: []
-        };
-
-        let currentActiveFolder = "";
-
         window.onload = () => {
-            loadSavedStats();
             let savedAvatar = localStorage.getItem('mtechno_avatar');
             if(savedAvatar) {
                 let avatarImg = document.getElementById('sidebarUserAvatar');
@@ -508,10 +366,7 @@
             let activeUser = localStorage.getItem('currentUserEmail');
             if(activeUser) {
                 let elEmail = document.getElementById('sidebarUserEmail');
-                if(elEmail) {
-                    elEmail.innerText = activeUser;
-                    elEmail.title = activeUser;
-                }
+                if(elEmail) elEmail.innerText = activeUser;
             }
 
             if(localStorage.getItem('isLogin') === 'true') { 
@@ -534,355 +389,6 @@
             }
         }
 
-        function loadSavedStats() {
-            let saved = localStorage.getItem('mtechno_appdata');
-            if(saved) {
-                appData = JSON.parse(saved);
-            }
-            updateStatUI();
-            renderFolders();
-        }
-
-        function saveStats() {
-            localStorage.setItem('mtechno_appdata', JSON.stringify(appData));
-            updateStatUI();
-            renderFolders();
-        }
-
-        function updateStatUI() {
-            let totalFolder = appData.folders.length;
-            let totalArsip = appData.files.length;
-            
-            document.getElementById('valJumlahFolder').innerText = totalFolder;
-            
-            let totalBytes = appData.files.reduce((acc, curr) => acc + (curr.size || 0), 0);
-            let ukuranStr = "0.00 KB";
-            if(totalBytes > 0) {
-                if(totalBytes >= 1024 * 1024 * 1024) {
-                    ukuranStr = (totalBytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-                } else if(totalBytes >= 1024 * 1024) {
-                    ukuranStr = (totalBytes / (1024 * 1024)).toFixed(2) + " MB";
-                } else {
-                    ukuranStr = (totalBytes / 1024).toFixed(2) + " KB";
-                }
-            }
-            document.getElementById('valUkuranData').innerText = ukuranStr;
-            document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
-
-            if(totalFolder > 0) {
-                let folderTerbaru = appData.folders[appData.folders.length - 1];
-                document.getElementById('valInstansi').innerText = folderTerbaru.nama;
-                
-                let fileDiFolder = appData.files.filter(f => f.folder === folderTerbaru.nama);
-                if(fileDiFolder.length > 0) {
-                    document.getElementById('valTahun').innerText = fileDiFolder[fileDiFolder.length - 1].tahun || "2026";
-                } else if(appData.files.length > 0) {
-                    document.getElementById('valTahun').innerText = appData.files[appData.files.length - 1].tahun || "2026";
-                } else {
-                    document.getElementById('valTahun').innerText = "-";
-                }
-            } else {
-                document.getElementById('valInstansi').innerText = "Belum ada instansi";
-                document.getElementById('valTahun').innerText = "-";
-            }
-            document.getElementById('valJumlahUnduh').innerText = totalArsip + " File";
-        }
-
-        function renderFolders() {
-            let html = '';
-            if(appData.folders.length === 0) {
-                html = `<tr><td colspan="3" class="text-center text-muted py-4">Belum ada folder arsip. Silakan klik tombol "Buat Folder".</td></tr>`;
-            } else {
-                appData.folders.forEach((f, idx) => {
-                    let realCount = appData.files.filter(file => file.folder === f.nama).length;
-                    
-                    html += `<tr class="folder-clickable">
-                        <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2 fs-5 align-middle"></i> <strong class="text-dark">${f.nama}</strong></td>
-                        <td onclick="bukaDetailFolder('${f.nama}')"><span class="text-secondary fw-semibold">${realCount} File</span></td>
-                        <td class="text-center"><button class="btn btn-sm btn-outline-danger border-0" title="Hapus Folder" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('tabelFolderBody').innerHTML = html;
-        }
-
-        function bukaModalDaftarInstansi() {
-            let html = '';
-            if(appData.folders.length === 0) {
-                html = `<tr><td colspan="4" class="text-center text-muted py-4">Belum ada instansi atau folder arsip yang terdaftar.</td></tr>`;
-            } else {
-                appData.folders.forEach((f, idx) => {
-                    let realCount = appData.files.filter(file => file.folder === f.nama).length;
-                    html += `<tr>
-                        <td>${idx + 1}</td>
-                        <td><i class="fa-solid fa-school text-warning me-2"></i> <strong>${f.nama}</strong></td>
-                        <td><span class="badge bg-success">${realCount} File</span></td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-primary px-2 py-1 me-1" onclick="pilihInstansiDariModal('${f.nama}')" title="Buka Folder"><i class="fa-solid fa-folder-open me-1"></i> Buka</button>
-                            <button class="btn btn-sm btn-danger px-2 py-1" onclick="hapusInstansiDariModal(event, ${idx})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('tabelModalInstansiBody').innerHTML = html;
-            new bootstrap.Modal(document.getElementById('modalDaftarInstansi')).show();
-        }
-
-        function pilihInstansiDariModal(namaInstansi) {
-            bootstrap.Modal.getInstance(document.getElementById('modalDaftarInstansi')).hide();
-            bukaDetailFolder(namaInstansi);
-        }
-
-        function hapusInstansiDariModal(event, idx) {
-            event.stopPropagation();
-            let folderDihapus = appData.folders[idx].nama;
-            if(confirm("Hapus instansi / folder '" + folderDihapus + "' beserta seluruh file di dalamnya?")) {
-                appData.files = appData.files.filter(f => f.folder !== folderDihapus);
-                appData.folders.splice(idx, 1);
-                saveStats();
-                bukaModalDaftarInstansi();
-            }
-        }
-
-        function tambahFolderInteraktif() {
-            let namaFolder = prompt("Masukkan nama folder / instansi baru:");
-            if(namaFolder && namaFolder.trim() !== "") {
-                let namaClean = namaFolder.trim().toUpperCase();
-                if(appData.folders.some(f => f.nama.toUpperCase() === namaClean)) {
-                    alert("Nama folder/instansi sudah ada!");
-                    return;
-                }
-                appData.folders.push({ nama: namaClean });
-                saveStats();
-                alert("Folder instansi berhasil ditambahkan!");
-            }
-        }
-
-        function hapusFolder(event, idx) {
-            event.stopPropagation();
-            let folderDihapus = appData.folders[idx].nama;
-            if(confirm("Hapus folder '" + folderDihapus + "' beserta seluruh file di dalamnya?")) {
-                appData.files = appData.files.filter(f => f.folder !== folderDihapus);
-                appData.folders.splice(idx, 1);
-                saveStats();
-            }
-        }
-
-        function bukaDetailFolder(namaFolder) {
-            currentActiveFolder = namaFolder;
-            document.getElementById('judulFolderDetail').innerHTML = `<i class="fa-solid fa-folder-open text-warning me-2"></i> ${namaFolder}`;
-            
-            document.getElementById('halamanDashboard').style.display = 'none';
-            document.getElementById('halamanDetailFolder').style.display = 'block';
-            document.getElementById('pageTitleHeading').innerText = "Folder: " + namaFolder;
-            document.getElementById('breadcrumbActive').innerText = ' / Folder / ' + namaFolder;
-
-            renderFileDalamFolder();
-        }
-
-        function renderFileDalamFolder() {
-            let filterFiles = appData.files.filter(f => f.folder === currentActiveFolder);
-            let html = '';
-
-            if(filterFiles.length === 0) {
-                html = `<tr><td colspan="5" class="text-center text-muted py-5">Belum ada file di dalam folder ini. Silakan unggah file.</td></tr>`;
-            } else {
-                filterFiles.forEach((f) => {
-                    let badgeColor = 'bg-secondary';
-                    if(f.tipe === 'PDF') badgeColor = 'bg-danger';
-                    else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
-                    else if(['XLS', 'XLSX', 'EXCEL'].includes(f.tipe)) badgeColor = 'bg-primary';
-                    else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
-
-                    html += `<tr>
-                        <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
-                        <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
-                        <td><span class="badge bg-warning text-dark">${f.folder}</span></td>
-                        <td>${f.tahun}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
-                            <button class="btn btn-sm btn-danger px-2 py-1" onclick="hapusFileDariFolder('${f.nama}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('tabelFileFolderBody').innerHTML = html;
-        }
-
-        function bukaModalUploadKeFolder() {
-            if(appData.folders.length === 0) {
-                alert("Buat folder terlebih dahulu sebelum mengunggah file!");
-                return;
-            }
-            document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke Folder: " + currentActiveFolder;
-            new bootstrap.Modal(document.getElementById('modalUploadKeFolder')).show();
-        }
-
-        function simpanFileKeFolderAktif() {
-            let tahun = document.getElementById('inputTahunFolder').value.trim();
-            let fileInput = document.getElementById('inputFileFolderAktif');
-
-            if(fileInput.files.length > 0) {
-                let processed = 0;
-                for(let i=0; i<fileInput.files.length; i++) {
-                    let file = fileInput.files[i];
-                    let ekstensi = file.name.split('.').pop().toUpperCase();
-                    let reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        appData.files.push({
-                            nama: file.name,
-                            tipe: ekstensi,
-                            folder: currentActiveFolder,
-                            tahun: tahun || "2026",
-                            size: file.size,
-                            dataUrl: e.target.result
-                        });
-                        processed++;
-                        if(processed === fileInput.files.length) {
-                            saveStats();
-                            renderFileDalamFolder();
-                        }
-                    }
-                    reader.readAsDataURL(file);
-                }
-            } else {
-                appData.files.push({
-                    nama: "Dokumen_" + currentActiveFolder.replace(/\s+/g, '_') + ".pdf",
-                    tipe: "PDF",
-                    folder: currentActiveFolder,
-                    tahun: tahun || "2026",
-                    size: 154200,
-                    dataUrl: ""
-                });
-                saveStats();
-                renderFileDalamFolder();
-            }
-
-            bootstrap.Modal.getInstance(document.getElementById('modalUploadKeFolder')).hide();
-            alert("File berhasil diunggah ke folder " + currentActiveFolder + "!");
-        }
-
-        function hapusFileDariFolder(namaFile) {
-            if(confirm("Hapus file " + namaFile + "?")) {
-                appData.files = appData.files.filter(f => f.nama !== namaFile);
-                saveStats();
-                renderFileDalamFolder();
-            }
-        }
-
-        function bukaModalUploadArsip() {
-            if(appData.folders.length === 0) {
-                alert("Harap buat folder arsip terlebih dahulu di tabel sebelah kiri!");
-                return;
-            }
-            
-            let selectHtml = '';
-            appData.folders.forEach(f => {
-                selectHtml += `<option value="${f.nama}">${f.nama}</option>`;
-            });
-            document.getElementById('selectInstansiFolder').innerHTML = selectHtml;
-            
-            new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
-        }
-
-        function simpanArsipBaru() {
-            let folderTujuan = document.getElementById('selectInstansiFolder').value;
-            let tahun = document.getElementById('inputTahunArsip').value.trim();
-            let fileInput = document.getElementById('inputFileArsip');
-
-            if(!folderTujuan) { alert("Pilih folder instansi tujuan!"); return; }
-
-            if(fileInput.files.length > 0) {
-                let processed = 0;
-                for(let i=0; i<fileInput.files.length; i++) {
-                    let file = fileInput.files[i];
-                    let ekstensi = file.name.split('.').pop().toUpperCase();
-                    let reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        appData.files.push({
-                            nama: file.name,
-                            tipe: ekstensi,
-                            folder: folderTujuan,
-                            tahun: tahun || "2026",
-                            size: file.size,
-                            dataUrl: e.target.result
-                        });
-                        processed++;
-                        if(processed === fileInput.files.length) {
-                            saveStats();
-                        }
-                    }
-                    reader.readAsDataURL(file);
-                }
-            } else {
-                appData.files.push({
-                    nama: "Dokumen_" + folderTujuan.replace(/\s+/g, '_') + ".pdf",
-                    tipe: "PDF",
-                    folder: folderTujuan,
-                    tahun: tahun || "2026",
-                    size: 154200,
-                    dataUrl: ""
-                });
-                saveStats();
-            }
-
-            bootstrap.Modal.getInstance(document.getElementById('modalUploadArsip')).hide();
-            alert("Arsip berhasil diunggah ke folder " + folderTujuan + "!");
-        }
-
-        function bukaMenuUnduh() {
-            let html = '';
-            if(appData.files.length === 0) {
-                html = `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada file arsip yang tersedia untuk diunduh.</td></tr>`;
-            } else {
-                appData.files.forEach((f) => {
-                    let badgeColor = 'bg-secondary';
-                    if(f.tipe === 'PDF') badgeColor = 'bg-danger';
-                    else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
-                    else if(['XLS', 'XLSX', 'EXCEL'].includes(f.tipe)) badgeColor = 'bg-primary';
-                    else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
-
-                    html += `<tr>
-                        <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
-                        <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
-                        <td><span class="badge bg-warning text-dark">${f.folder}</span></td>
-                        <td>${f.tahun}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
-                        </td>
-                    </tr>`;
-                });
-            }
-            document.getElementById('tabelUnduhBody').innerHTML = html;
-            new bootstrap.Modal(document.getElementById('modalMenuUnduh')).show();
-        }
-
-        function bukaPratinjau(fileObj) {
-            document.getElementById('judulPratinjau').innerHTML = `<i class="fa-solid fa-eye me-2"></i> Pratinjau: ${fileObj.nama}`;
-            let kontainer = document.getElementById('kontenPratinjau');
-            
-            if(['JPG', 'JPEG', 'PNG'].includes(fileObj.tipe) && fileObj.dataUrl) {
-                kontainer.innerHTML = `<img src="${fileObj.dataUrl}" class="img-fluid rounded shadow-sm" style="max-height: 400px;" alt="Pratinjau Gambar">`;
-            } else if(fileObj.tipe === 'PDF' && fileObj.dataUrl) {
-                kontainer.innerHTML = `<iframe src="${fileObj.dataUrl}" width="100%" height="400px" style="border:none;" class="rounded"></iframe>`;
-            } else {
-                kontainer.innerHTML = `<div class="text-center p-5">
-                    <i class="fa-solid fa-file-lines fa-4x text-secondary mb-3"></i>
-                    <h5>Pratinjau langsung tidak tersedia untuk format .${fileObj.tipe.toLowerCase()}</h5>
-                    <p class="text-muted small">Silakan klik tombol unduh untuk melihat isi dokumen secara penuh di perangkat Anda.</p>
-                </div>`;
-            }
-            new bootstrap.Modal(document.getElementById('modalPratinjau')).show();
-        }
-
-        function unduhFile(namaFile) {
-            alert("Mengunduh file: " + namaFile + "\nFile berhasil diunduh!");
-        }
-
         function tampilLogin() {
             document.getElementById('loginSection').style.display = 'flex';
             document.getElementById('registerSection').style.display = 'none';
@@ -891,9 +397,6 @@
         function tampilRegister() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('registerSection').style.display = 'flex';
-            document.getElementById('regMsg').innerText = '';
-            document.getElementById('reg_user').value = '';
-            document.getElementById('reg_pass').value = '';
         }
 
         function registerAkun() {
@@ -908,21 +411,12 @@
             }
 
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
-            let existing = users.find(x => x.username === u);
-            if(existing) {
-                msg.style.color = 'red';
-                msg.innerText = "Username/email sudah terdaftar!";
-                return;
-            }
-
             users.push({ username: u, password: p });
             localStorage.setItem('mtechno_users', JSON.stringify(users));
 
             msg.style.color = 'green';
             msg.innerText = "Registrasi berhasil! Silakan login.";
-            setTimeout(() => {
-                tampilLogin();
-            }, 1200);
+            setTimeout(() => { tampilLogin(); }, 1200);
         }
 
         function login() {
@@ -931,22 +425,14 @@
             let msg = document.getElementById('loginMsg');
 
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
-            
-            // Default user jika belum pernah register sama sekali
             if(users.length === 0) {
                 users.push({ username: "purnamasudang@gmail.com", password: "123" });
             }
 
             let validUser = users.find(x => x.username === u && x.password === p);
-
             if(validUser) {
                 localStorage.setItem('isLogin', 'true');
                 localStorage.setItem('currentUserEmail', validUser.username);
-                let elEmail = document.getElementById('sidebarUserEmail');
-                if(elEmail) {
-                    elEmail.innerText = validUser.username;
-                    elEmail.title = validUser.username;
-                }
                 showApp();
             } else {
                 msg.innerText = "Username atau password salah!";
@@ -972,8 +458,16 @@
                 let el = document.getElementById('halaman' + item);
                 if(el) el.style.display = (item === h) ? 'block' : 'none';
             });
-            document.getElementById('pageTitleHeading').innerText = h === 'DetailFolder' ? 'Folder' : h;
-            document.getElementById('breadcrumbActive').innerText = ' / ' + (h === 'DetailFolder' ? currentActiveFolder : h);
+        }
+
+        function bukaModalUploadArsip() {
+            new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
+        }
+        function bukaModalDaftarInstansi() {
+            new bootstrap.Modal(document.getElementById('modalDaftarInstansi')).show();
+        }
+        function bukaMenuUnduh() {
+            new bootstrap.Modal(document.getElementById('modalMenuUnduh')).show();
         }
     </script>
 </body>
