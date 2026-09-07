@@ -874,7 +874,7 @@
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="ps-3 fw-bold">
-                        <a href="#" onclick="lihatDokumen(${b.id})" class="text-decoration-none text-primary d-flex align-items-center">
+                        <a href="javascript:void(0);" onclick="lihatDokumen(${b.id})" class="text-decoration-none text-primary d-flex align-items-center">
                             <i class="fa-solid fa-file-lines me-2"></i> <span>${b.nama}</span>
                         </a>
                         <small class="text-muted d-block" style="font-size: 11px;">File: ${b.namaFileAsli || 'dokumen'}</small>
@@ -893,26 +893,43 @@
         function lihatDokumen(id) {
             let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
             let b = berkas.find(x => x.id === id);
-            if(!b) return;
+            if(!b) {
+                alert('Data file tidak ditemukan!');
+                return;
+            }
 
             document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-file-lines text-primary me-2"></i> ${b.nama}`;
             document.getElementById('infoDetailFile').innerText = `Nama File: ${b.namaFileAsli || 'Arsip'} | Ukuran: ${b.ukuranFormatted} | Tipe: ${b.tipe}`;
             
             let container = document.getElementById('containerPreviewFile');
             let btnDown = document.getElementById('btnDownloadFile');
-            btnDown.href = b.fileData || '#';
-            btnDown.download = b.namaFileAsli || 'dokumen';
+            
+            if(b.fileData) {
+                btnDown.href = b.fileData;
+                btnDown.style.display = 'inline-block';
+                btnDown.download = b.namaFileAsli || 'dokumen';
 
-            if(b.tipe === 'JPG' || b.tipe === 'JPEG' || b.tipe === 'PNG' || b.tipe === 'GIF') {
-                container.innerHTML = `<img src="${b.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
-            } else if(b.tipe === 'PDF') {
-                container.innerHTML = `<iframe src="${b.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
+                if(b.tipe === 'JPG' || b.tipe === 'JPEG' || b.tipe === 'PNG' || b.tipe === 'GIF') {
+                    container.innerHTML = `<img src="${b.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
+                } else if(b.tipe === 'PDF') {
+                    container.innerHTML = `<iframe src="${b.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
+                } else {
+                    container.innerHTML = `
+                        <div class="py-5 bg-light rounded border">
+                            <i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i>
+                            <h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5>
+                            <p class="text-muted small">Silakan klik tombol Download di bawah untuk membuka file.</p>
+                        </div>
+                    `;
+                }
             } else {
+                // Penanganan file lama yang tersimpan sebelum fitur base64 aktif
+                btnDown.style.display = 'none';
                 container.innerHTML = `
                     <div class="py-5 bg-light rounded border">
-                        <i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i>
-                        <h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5>
-                        <p class="text-muted small">Silakan klik tombol Download di bawah untuk membuka file.</p>
+                        <i class="fa-solid fa-triangle-exclamation fa-3x text-warning mb-3"></i>
+                        <h5 class="fw-bold">Data file fisik belum tersimpan (File Lama)</h5>
+                        <p class="text-muted small">Silakan hapus baris ini lalu upload ulang file dokumennya agar dapat dipratinjau.</p>
                     </div>
                 `;
             }
