@@ -200,8 +200,9 @@
             margin-right: 20px;
         }
         .step-text {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             line-height: 1.4;
         }
         
@@ -305,8 +306,8 @@
                     <div class="step-row justify-start">
                         <div class="step-box box-step-1" onclick="bukaModalUploadArsip()">
                             <div class="step-number num-left">1</div>
-                            <div class="step-icon"><i class="fa-solid fa-desktop"></i></div>
-                            <div class="step-text">Input Dokumen yang akan disimpan ke dalam Aplikasi DIGIAR</div>
+                            <div class="step-icon"><i class="fa-solid fa-folder-open"></i></div>
+                            <div class="step-text">DATA FOLDER</div>
                         </div>
                     </div>
 
@@ -314,8 +315,8 @@
                     <div class="step-row justify-center" style="margin-right: -100px;">
                         <div class="step-box box-step-2" onclick="bukaModalDaftarInstansi()">
                             <div class="step-number num-right" style="right: auto; left: -35px;">2</div>
-                            <div class="step-icon"><i class="fa-solid fa-clipboard-list"></i></div>
-                            <div class="step-text">Menyerahkan Dokumen fisik kepada administrator untuk di verifikasi</div>
+                            <div class="step-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                            <div class="step-text">No Register</div>
                         </div>
                     </div>
 
@@ -323,8 +324,8 @@
                     <div class="step-row justify-start" style="margin-left: 50px;">
                         <div class="step-box box-step-3" onclick="bukaMenuUnduh()">
                             <div class="step-number num-left">3</div>
-                            <div class="step-icon"><i class="fa-solid fa-file-pen"></i></div>
-                            <div class="step-text">Menandatangani Berita Acara serah terima dokumen</div>
+                            <div class="step-icon"><i class="fa-solid fa-camera"></i></div>
+                            <div class="step-text">DOKUMENTASI</div>
                         </div>
                     </div>
 
@@ -362,13 +363,13 @@
 
     <!-- MODAL DUMMY -->
     <div class="modal fade" id="modalDaftarInstansi" tabindex="-1">
-        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Verifikasi Dokumen</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Fitur verifikasi dokumen fisik oleh administrator.</p></div></div></div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">No Register</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Kelola nomor register arsip dokumen.</p></div></div></div>
     </div>
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
-        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Input Dokumen DIGIAR</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Form unggah dokumen baru ke aplikasi.</p></div></div></div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Data Folder</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Manajemen data folder penyimpanan arsip.</p></div></div></div>
     </div>
     <div class="modal fade" id="modalMenuUnduh" tabindex="-1">
-        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Berita Acara</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Kelola berita acara serah terima dokumen.</p></div></div></div>
+        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Galeri dokumentasi kegiatan arsip.</p></div></div></div>
     </div>
 
     <!-- Bootstrap JS Bundle -->
