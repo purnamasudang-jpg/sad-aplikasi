@@ -417,7 +417,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tabelFolderBody">
-                                            <!-- Data Folder akan dimuat dinamis lewat JavaScript -->
+                                            <!-- Data Folder akan dimuat dinamis -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -496,7 +496,7 @@
                                         <th class="py-3 ps-3">NAMA BERKAS / NO REGISTER</th>
                                         <th class="py-3">TIPE FILE</th>
                                         <th class="py-3">UKURAN</th>
-                                        <th class="py-3 text-center" style="width: 120px;">AKSI</th>
+                                        <th class="py-3 text-center" style="width: 180px;">AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabelBerkasBody">
@@ -577,11 +577,32 @@
         </div>
     </div>
 
+    <!-- MODAL LIHAT DOKUMEN -->
+    <div class="modal fade" id="modalLihatDokumen" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content text-dark">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold" id="modalJudulDokumen"><i class="fa-solid fa-file-lines text-primary me-2"></i> Pratinjau Dokumen</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div id="containerPreviewFile" class="mb-3">
+                        <!-- Konten pratinjau file -->
+                    </div>
+                    <div class="text-muted small" id="infoDetailFile"></div>
+                </div>
+                <div class="modal-footer">
+                    <a id="btnDownloadFile" href="#" class="btn btn-success btn-sm fw-bold" download><i class="fa-solid fa-download me-1"></i> Download File</a>
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Data Global di LocalStorage
         let folderAktifId = null;
 
         window.onload = () => {
@@ -596,7 +617,6 @@
                 if(elEmail) elEmail.innerText = activeUser;
             }
 
-            // Inisialisasi Data Default jika belum ada
             if(!localStorage.getItem('mtechno_folders')) {
                 let defaultFolders = [
                     { id: 1, nama: "SMP IT HIDAYATUL QUR'AN" }
@@ -711,7 +731,6 @@
             }
         }
 
-        // --- MANAJEMEN FOLDER & BERKAS ---
         function muatTabelFolder() {
             let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
             let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
@@ -810,24 +829,33 @@
             }
 
             let file = fileInput.files[0];
-            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let reader = new FileReader();
 
-            let newBerkas = {
-                id: Date.now(),
-                folderId: folderAktifId,
-                nama: namaBerkas,
-                tipe: file.name.split('.').pop().toUpperCase(),
-                ukuranBytes: file.size,
-                ukuranFormatted: (file.size / 1024).toFixed(2) + " KB"
+            reader.onload = function(e) {
+                let base64Data = e.target.result;
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+
+                let newBerkas = {
+                    id: Date.now(),
+                    folderId: folderAktifId,
+                    nama: namaBerkas,
+                    namaFileAsli: file.name,
+                    tipe: file.name.split('.').pop().toUpperCase(),
+                    ukuranBytes: file.size,
+                    ukuranFormatted: (file.size / 1024).toFixed(2) + " KB",
+                    fileData: base64Data
+                };
+
+                berkas.push(newBerkas);
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+
+                document.getElementById('inputNamaBerkas').value = '';
+                document.getElementById('inputFileArsip').value = '';
+                muatTabelBerkas();
+                alert('Berkas / No Register berhasil di-upload!');
             };
 
-            berkas.push(newBerkas);
-            localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
-
-            document.getElementById('inputNamaBerkas').value = '';
-            document.getElementById('inputFileArsip').value = '';
-            muatTabelBerkas();
-            alert('Berkas / No Register berhasil di-upload!');
+            reader.readAsDataURL(file);
         }
 
         function muatTabelBerkas() {
@@ -845,15 +873,51 @@
             folderBerkas.forEach(b => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-file-lines text-primary me-2"></i> ${b.nama}</td>
+                    <td class="ps-3 fw-bold">
+                        <a href="#" onclick="lihatDokumen(${b.id})" class="text-decoration-none text-primary d-flex align-items-center">
+                            <i class="fa-solid fa-file-lines me-2"></i> <span>${b.nama}</span>
+                        </a>
+                        <small class="text-muted d-block" style="font-size: 11px;">File: ${b.namaFileAsli || 'dokumen'}</small>
+                    </td>
                     <td><span class="badge bg-info text-dark">${b.tipe}</span></td>
                     <td>${b.ukuranFormatted}</td>
                     <td class="text-center">
+                        <button class="btn btn-info btn-sm text-white me-1" onclick="lihatDokumen(${b.id})" title="Lihat Dokumen"><i class="fa-solid fa-eye"></i></button>
                         <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id})" title="Hapus Berkas"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function lihatDokumen(id) {
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let b = berkas.find(x => x.id === id);
+            if(!b) return;
+
+            document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-file-lines text-primary me-2"></i> ${b.nama}`;
+            document.getElementById('infoDetailFile').innerText = `Nama File: ${b.namaFileAsli || 'Arsip'} | Ukuran: ${b.ukuranFormatted} | Tipe: ${b.tipe}`;
+            
+            let container = document.getElementById('containerPreviewFile');
+            let btnDown = document.getElementById('btnDownloadFile');
+            btnDown.href = b.fileData || '#';
+            btnDown.download = b.namaFileAsli || 'dokumen';
+
+            if(b.tipe === 'JPG' || b.tipe === 'JPEG' || b.tipe === 'PNG' || b.tipe === 'GIF') {
+                container.innerHTML = `<img src="${b.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
+            } else if(b.tipe === 'PDF') {
+                container.innerHTML = `<iframe src="${b.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
+            } else {
+                container.innerHTML = `
+                    <div class="py-5 bg-light rounded border">
+                        <i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i>
+                        <h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5>
+                        <p class="text-muted small">Silakan klik tombol Download di bawah untuk membuka file.</p>
+                    </div>
+                `;
+            }
+
+            new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
         }
 
         function hapusBerkas(id) {
