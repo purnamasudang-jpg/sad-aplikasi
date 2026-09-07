@@ -366,7 +366,7 @@
         </div>
     </div>
 
-    <!-- MODAL UPLOAD ARsip UMUM -->
+    <!-- MODAL UPLOAD ARSIP UMUM -->
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -377,7 +377,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Nama Instansi</label>
-                        <input type="text" id="inputNamaInstansi" class="form-control" placeholder="Contoh: SMPN 1 Bandung">
+                        <input type="text" id="inputNamaInstansi" class="form-control" placeholder="Contoh: SDN KADEMANGAN 1">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tahun Dokumen</label>
@@ -407,7 +407,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Nama Instansi</label>
-                        <input type="text" id="inputInstansiFolder" class="form-control" placeholder="Contoh: SDN 1 Bandung">
+                        <input type="text" id="inputInstansiFolder" class="form-control" placeholder="Contoh: SDN KADEMANGAN 1">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tahun Dokumen</label>
@@ -475,9 +475,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Default data dimulai kosong agar bisa diatur murni dinamis
         let appData = {
-            folders: [],
+            folders: [
+                { nama: "SDN KADEMANGAN 1" }
+            ],
             files: []
         };
 
@@ -492,6 +493,10 @@
             let saved = localStorage.getItem('mtechno_appdata');
             if(saved) {
                 appData = JSON.parse(saved);
+                // Pastikan jika data lama kosong atau default, minimal ada SDN KADEMANGAN 1 jika belum diubah user
+                if(!appData.folders || appData.folders.length === 0) {
+                    appData.folders = [{ nama: "SDN KADEMANGAN 1" }];
+                }
             }
             updateStatUI();
             renderFolders();
@@ -504,14 +509,12 @@
         }
 
         function updateStatUI() {
-            // Nomor 1: Statistik Atas
             let totalFolder = appData.folders.length;
             let totalArsip = appData.files.length;
             
             document.getElementById('valJumlahFolder').innerText = totalFolder;
             document.getElementById('valJumlahArsip').innerText = totalArsip.toLocaleString('id-ID');
             
-            // Hitung total ukuran byte secara riil dari file yang tersimpan
             let totalBytes = appData.files.reduce((acc, curr) => acc + (curr.size || 0), 0);
             let ukuranStr = "0.00 KB";
             if(totalBytes > 0) {
@@ -526,12 +529,15 @@
             document.getElementById('valUkuranData').innerText = ukuranStr;
             document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
 
-            // Nomor 2: Kotak Informasi Kanan
+            // Kotak Informasi Kanan (Nomor 2) - Sinkronisasi Instansi & Tahun secara Dinamis
             if(totalArsip > 0) {
-                // Ambil file terakhir yang diunggah
                 let fileTerakhir = appData.files[appData.files.length - 1];
-                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || "Tanpa Instansi";
+                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || appData.folders[0].nama;
                 document.getElementById('valTahun').innerText = fileTerakhir.tahun || "2026";
+            } else if(totalFolder > 0) {
+                // Jika file kosong tapi folder ada, ambil nama folder pertama sebagai nama instansi otomatis
+                document.getElementById('valInstansi').innerText = appData.folders[0].nama;
+                document.getElementById('valTahun').innerText = "2026";
             } else {
                 document.getElementById('valInstansi').innerText = "Belum ada instansi";
                 document.getElementById('valTahun').innerText = "-";
@@ -558,10 +564,9 @@
         }
 
         function tambahFolderInteraktif() {
-            let namaFolder = prompt("Masukkan nama folder baru:");
+            let namaFolder = prompt("Masukkan nama folder baru:", "SDN KADEMANGAN 1");
             if(namaFolder && namaFolder.trim() !== "") {
                 let namaClean = namaFolder.trim();
-                // Cek duplikasi
                 if(appData.folders.some(f => f.nama.toLowerCase() === namaClean.toLowerCase())) {
                     alert("Nama folder sudah ada!");
                     return;
@@ -576,7 +581,6 @@
             event.stopPropagation();
             let folderDihapus = appData.folders[idx].nama;
             if(confirm("Hapus folder '" + folderDihapus + "' beserta seluruh file di dalamnya?")) {
-                // Hapus juga file yang ada di dalam folder tersebut agar tersinkronisasi murni
                 appData.files = appData.files.filter(f => f.folder !== folderDihapus);
                 appData.folders.splice(idx, 1);
                 saveStats();
@@ -631,6 +635,7 @@
                 return;
             }
             document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke: " + currentActiveFolder;
+            document.getElementById('inputInstansiFolder').value = currentActiveFolder;
             new bootstrap.Modal(document.getElementById('modalUploadKeFolder')).show();
         }
 
@@ -673,7 +678,7 @@
                     folder: currentActiveFolder,
                     instansi: instansi,
                     tahun: tahun || "2026",
-                    size: 154200, // Dummy size
+                    size: 154200,
                     dataUrl: ""
                 });
                 saveStats();
@@ -697,6 +702,7 @@
                 alert("Harap buat folder arsip terlebih dahulu di tabel sebelah kiri!");
                 return;
             }
+            document.getElementById('inputNamaInstansi').value = appData.folders[0].nama;
             new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
         }
 
@@ -706,7 +712,7 @@
             let fileInput = document.getElementById('inputFileArsip');
 
             if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
-            let defaultFolder = appData.folders[0].nama; // Masuk otomatis ke folder pertama yang tersedia
+            let defaultFolder = appData.folders[0].nama;
 
             if(fileInput.files.length > 0) {
                 let processed = 0;
