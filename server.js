@@ -1,140 +1,153 @@
 const express = require('express');
-const path = require('path');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Memastikan folder public terbaca dengan benar di Vercel & Lokal
 app.use(express.static(path.join(__dirname, 'public')));
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } 
+});
 
-// Database sementara di memori (RAM) untuk Vercel Serverless agar aman
-let memDB = {
-    users: [
-        { username: 'admin', password: '123' }
-    ],
-    folders: [],
-    arsip: []
-};
+// Simulasi Database Persisten Sederhana
+const dbFile = path.join(__dirname, 'database.json');
 
-function getDB() {
-    return memDB;
+function loadDB() {
+    if (fs.existsSync(dbFile)) {
+        try {
+            return JSON.parse(fs.readFileSync(dbFile, 'utf8'));
+        } catch(e) {
+            return { users: [], folders: [], arsip: [] };
+        }
+    }
+    return { users: [], folders: [], arsip: [] };
 }
 
 function saveDB(data) {
-    memDB = data;
+    try {
+        fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
+    } catch(e) {
+        // Abaikan jika read-only di serverless murni
+    }
 }
 
-// Endpoint Login
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    const db = getDB();
-    
-    const user = db.users.find(u => u.username === username && u.password === password);
-    if (user) {
-        res.json({ success: true, user: { username: user.username } });
-    } else {
-        res.status(401).json({ success: false, error: 'Username atau password salah!' });
-    }
-});
-
-// Endpoint Register (Daftar Akun Baru)
+// API Register
 app.post('/api/register', (req, res) => {
     const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ success: false, error: 'Username dan password wajib diisi!' });
+    if(!username || !password) {
+        return res.json({ success: false, error: 'Username dan password wajib diisi' });
     }
-
-    const db = getDB();
-    const existingUser = db.users.find(u => u.username === username);
-    if (existingUser) {
-        return res.status(400).json({ success: false, error: 'Username sudah terdaftar, silakan gunakan yang lain.' });
+    let db = loadDB();
+    const existing = db.users.find(u => u.username === username);
+    if(existing) {
+        return res.json({ success: false, error: 'Username sudah terdaftar' });
     }
-
     db.users.push({ username, password });
     saveDB(db);
-    res.json({ success: true, message: 'Registrasi berhasil' });
+    res.json({ success: true });
 });
 
-// Endpoint Ambil Data Berdasarkan User yang Login
+// API Login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    let db = loadDB();
+    const user = db.users.find(u => u.username === username && u.password === password);
+    if(user) {
+        res.json({ success: true, user: { username: user.username } });
+    } else {
+        res.json({ success: false, error: 'Username atau password salah' });
+    }
+});
+
+// API Ambil Data
 app.get('/api/data', (req, res) => {
     const username = req.query.username || '';
-    const db = getDB();
-    
+    let db = loadDB();
     const userFolders = db.folders.filter(f => f.username === username);
-    const folderIds = userFolders.map(f => f.id);
-    const userArsip = db.arsip.filter(a => folderIds.includes(a.folder_id));
+    const userFolderIds = userFolders.map(f => f.id);
+    const userArsip = db.arsip.filter(a => userFolderIds.includes(a.folder_id));
 
-    const foldersWithCount = userFolders.map(f => {
+    const formattedFolders = userFolders.map(f => {
         const count = userArsip.filter(a => a.folder_id === f.id).length;
         return { ...f, jumlah_dokumen: count };
     });
 
     res.json({
         success: true,
-        folders: foldersWithCount,
+        folders: formattedFolders,
         arsip: userArsip
     });
 });
 
-// Endpoint Tambah Folder
+// API Buat Folder
 app.post('/api/folders', (req, res) => {
     const { nama_folder, tanggal, username } = req.body;
-    if (!nama_folder || !username) {
-        return res.status(400).json({ success: false, error: 'Data tidak lengkap' });
-    }
+    if(!nama_folder) return res.json({ success: false });
 
-    const db = getDB();
+    let db = loadDB();
     const newFolder = {
         id: Date.now(),
-        username,
         nama_folder,
-        tanggal: tanggal || new Date().toISOString().split('T')[0]
+        tanggal,
+        username
     };
-
     db.folders.push(newFolder);
     saveDB(db);
     res.json({ success: true, folder: newFolder });
 });
 
-// Endpoint Hapus Folder
+// API Hapus Folder
 app.delete('/api/folders/:id', (req, res) => {
-    const folderId = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
     const username = req.query.username || '';
-    const db = getDB();
-
-    const folderIndex = db.folders.findIndex(f => f.id === folderId && f.username === username);
-    if (folderIndex === -1) {
-        return res.status(403).json({ success: false, error: 'Akses ditolak atau folder tidak ditemukan' });
+    
+    let db = loadDB();
+    const folderIdx = db.folders.findIndex(f => f.id === id && f.username === username);
+    if(folderIdx !== -1) {
+        db.folders.splice(folderIdx, 1);
+        db.arsip = db.arsip.filter(a => a.folder_id !== id);
+        saveDB(db);
+        return res.json({ success: true });
     }
-
-    db.folders.splice(folderIndex, 1);
-    db.arsip = db.arsip.filter(a => a.folder_id !== folderId);
-    saveDB(db);
-
-    res.json({ success: true });
+    res.json({ success: false, error: 'Folder tidak ditemukan' });
 });
 
-// Endpoint Tambah Arsip Dokumen
+// API Simpan Arsip & Multi-Upload File
 app.post('/api/arsip', upload.array('berkas'), (req, res) => {
-    const { folder_id, judul_dokumen, keterangan, pengirim, tanggal, lokasi_fisik, username } = req.body;
-    const db = getDB();
-
-    const folderIdNum = parseInt(folder_id);
-    const folder = db.folders.find(f => f.id === folderIdNum && f.username === username);
-    if (!folder) {
-        return res.status(403).json({ success: false, error: 'Folder tidak valid atau bukan milik Anda' });
+    const { folder_id, judul_dokumen, keterangan, pengirim, tanggal, lokasi_fisik } = req.body;
+    
+    if(!judul_dokumen || !folder_id) {
+        return res.json({ success: false, error: 'Data tidak lengkap' });
     }
 
-    let files = req.files || [];
-    if (files.length === 0) {
+    let db = loadDB();
+    if(req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+            let ext = path.extname(file.originalname).replace('.', '').toUpperCase();
+            if(ext === 'JPEG') ext = 'JPG';
+
+            const newArsip = {
+                id: Date.now() + Math.random(),
+                folder_id: parseInt(folder_id),
+                judul_dokumen: req.files.length > 1 ? `${judul_dokumen} (${file.originalname})` : judul_dokumen,
+                keterangan,
+                pengirim,
+                tanggal,
+                lokasi_fisik,
+                file_tipe: ext,
+                file_data: file.buffer.toString('base64')
+            };
+            db.arsip.push(newArsip);
+        });
+    } else {
         const newArsip = {
             id: Date.now(),
-            folder_id: folderIdNum,
+            folder_id: parseInt(folder_id),
             judul_dokumen,
             keterangan,
             pengirim,
@@ -144,63 +157,29 @@ app.post('/api/arsip', upload.array('berkas'), (req, res) => {
             file_data: null
         };
         db.arsip.push(newArsip);
-    } else {
-        files.forEach((file, index) => {
-            const ext = path.extname(file.originalname).substring(1).toUpperCase();
-            const base64Data = file.buffer.toString('base64');
-            const newArsip = {
-                id: Date.now() + index,
-                folder_id: folderIdNum,
-                judul_dokumen: files.length > 1 ? `${judul_dokumen} (${index + 1})` : judul_dokumen,
-                keterangan,
-                pengirim,
-                tanggal,
-                lokasi_fisik,
-                file_tipe: ext || 'FILE',
-                file_data: base64Data
-            };
-            db.arsip.push(newArsip);
-        });
     }
 
     saveDB(db);
     res.json({ success: true });
 });
 
-// Endpoint Hapus Arsip
+// API Hapus Arsip
 app.delete('/api/arsip/:id', (req, res) => {
-    const arsipId = parseInt(req.params.id);
-    const username = req.query.username || '';
-    const db = getDB();
-
-    const arsip = db.arsip.find(a => a.id === arsipId);
-    if (!arsip) {
-        return res.status(404).json({ success: false, error: 'Arsip tidak ditemukan' });
+    const id = parseFloat(req.params.id);
+    let db = loadDB();
+    const index = db.arsip.findIndex(a => a.id === id);
+    if(index !== -1) {
+        db.arsip.splice(index, 1);
+        saveDB(db);
+        return res.json({ success: true });
     }
-
-    const folder = db.folders.find(f => f.id === arsip.folder_id && f.username === username);
-    if (!folder) {
-        return res.status(403).json({ success: false, error: 'Akses ditolak' });
-    }
-
-    db.arsip = db.arsip.filter(a => a.id !== arsipId);
-    saveDB(db);
-
-    res.json({ success: true });
+    res.json({ success: false });
 });
 
-// Fallback untuk route selain API agar mengarah ke index.html di public
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Jalankan server lokal jika bukan di mode production (Vercel)
+// Export untuk Vercel Serverless / Jalankan lokal
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server berjalan di http://localhost:${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Server lokal berjalan di port ${PORT}`));
 }
 
-// Ekspor app agar kompatibel dengan Vercel Serverless
 module.exports = app;
