@@ -246,11 +246,12 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Kotak Jumlah Arsip (Aktif & Mengacu ke Total File di Folder Arsip) -->
                     <div class="col-md-3 col-sm-6">
-                        <div class="stat-card" onclick="bukaModalUploadArsip()">
+                        <div class="stat-card" onclick="bukaMenuUnduh()" title="Klik untuk melihat seluruh arsip folder">
                             <div class="stat-card-icon bg-arsip"><i class="fa-solid fa-file-lines"></i></div>
                             <div class="stat-card-body">
-                                <div class="stat-card-title">JUMLAH ARSIP</div>
+                                <div class="stat-card-title">JUMLAH ARSIP <i class="fa-solid fa-arrow-up-right-from-square float-end" style="font-size: 10px; opacity: 0.8;"></i></div>
                                 <div class="stat-card-value" id="valJumlahArsip">0</div>
                             </div>
                         </div>
@@ -300,7 +301,7 @@
 
                     <!-- 3 Kotak Kanan -->
                     <div class="col-md-4">
-                        <!-- Kotak 1: Nama Instansi (Sekarang Interaktif / Bisa Diklik) -->
+                        <!-- Kotak 1: Nama Instansi -->
                         <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;" onclick="bukaModalDaftarInstansi()">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -369,7 +370,7 @@
         </div>
     </div>
 
-    <!-- MODAL DAFTAR NAMA INSTANSI (YANG MUNCUL SAAT KOTAK INSTANSI DIKLIK) -->
+    <!-- MODAL DAFTAR NAMA INSTANSI -->
     <div class="modal fade" id="modalDaftarInstansi" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -631,7 +632,7 @@
                 appData.files = appData.files.filter(f => f.folder !== folderDihapus);
                 appData.folders.splice(idx, 1);
                 saveStats();
-                bukaModalDaftarInstansi(); // Refresh isi modal
+                bukaModalDaftarInstansi();
             }
         }
 
