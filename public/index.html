@@ -270,7 +270,7 @@
                             <div class="stat-card-icon bg-home"><i class="fa-solid fa-house-chimney"></i></div>
                             <div class="stat-card-body">
                                 <div class="stat-card-title">STATUS HOME</div>
-                                <div class="stat-card-value" id="valStatusHome">Active</div>
+                                <div class="stat-card-value" id="valStatusHome">Kosong</div>
                             </div>
                         </div>
                     </div>
@@ -509,10 +509,7 @@
 
     <script>
         let appData = {
-            folders: [
-                { nama: "SDN KADEMANGAN 1" },
-                { nama: "SMP IT HIDAYATUL QUR'AN" }
-            ],
+            folders: [],
             files: []
         };
 
@@ -570,7 +567,7 @@
                 } else if(appData.files.length > 0) {
                     document.getElementById('valTahun').innerText = appData.files[appData.files.length - 1].tahun || "2026";
                 } else {
-                    document.getElementById('valTahun').innerText = "2026";
+                    document.getElementById('valTahun').innerText = "-";
                 }
             } else {
                 document.getElementById('valInstansi').innerText = "Belum ada instansi";
