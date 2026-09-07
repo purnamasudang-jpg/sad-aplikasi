@@ -218,7 +218,7 @@
         }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
-        #halamanDashboard, #halamanDetailFolder, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
+        #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
     </style>
 </head>
 <body>
@@ -294,7 +294,7 @@
     <div id="mainAppContainer">
         <div id="content-wrapper">
             
-            <!-- HALAMAN DASHBOARD (INFOGRAFIS PROSEDUR PENGELOLAAN ARSIP) -->
+            <!-- HALAMAN DASHBOARD (INFOGRAFIS) -->
             <div id="halamanDashboard">
                 <div class="infografis-container">
                     <div class="infografis-header-box">
@@ -303,7 +303,6 @@
                         <div class="infografis-title">PROSEDUR PENGELOLAAN ARSIP</div>
                     </div>
 
-                    <!-- STEP 1 (DATA FOLDER -> LANGSUNG KE HALAMAN KELOLA FOLDER & ARSIP) -->
                     <div class="step-row justify-start">
                         <div class="step-box box-step-1" onclick="bukaHalaman('DetailFolder')">
                             <div class="step-number num-left">1</div>
@@ -312,7 +311,6 @@
                         </div>
                     </div>
 
-                    <!-- STEP 2 -->
                     <div class="step-row justify-center" style="margin-right: -100px;">
                         <div class="step-box box-step-2" onclick="bukaHalaman('DetailFolder')">
                             <div class="step-number num-right" style="right: auto; left: -35px;">2</div>
@@ -321,7 +319,6 @@
                         </div>
                     </div>
 
-                    <!-- STEP 3 (DOKUMENTASI -> KE HALAMAN GALLERY / VISUAL) -->
                     <div class="step-row justify-start" style="margin-left: 50px;">
                         <div class="step-box box-step-3" onclick="bukaHalaman('Gallery')">
                             <div class="step-number num-left">3</div>
@@ -330,7 +327,6 @@
                         </div>
                     </div>
 
-                    <!-- STEP 4 -->
                     <div class="step-row justify-end">
                         <div class="step-box box-step-4" onclick="bukaHalaman('Dashboard')">
                             <div class="step-number num-right" style="color: #2b526d;">4</div>
@@ -339,7 +335,6 @@
                         </div>
                     </div>
 
-                    <!-- LOGO SAD DI BAWAH KIRI -->
                     <div class="d-flex align-items-center justify-content-between mt-4 pt-3 border-top border-secondary">
                         <div class="digiar-brand">
                             <span class="text-warning fw-bold">SAD</span> <span style="font-size: 15px; font-weight: 600; letter-spacing: 0.5px;">Sistem Arsip Digital</span>
@@ -351,14 +346,14 @@
                 </div>
             </div>
 
-            <!-- HALAMAN DETAIL FOLDER & PENGELOLAAN ARSIP (Sesuai Gambar Referensi) -->
+            <!-- HALAMAN DETAIL FOLDER & PENGELOLAAN ARSIP -->
             <div id="halamanDetailFolder" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold text-white m-0">Dashboard</h3>
+                    <h3 class="fw-bold text-white m-0">Dashboard Data Folder & Arsip</h3>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb m-0" style="background: transparent; font-size: 13px;">
                             <li class="breadcrumb-item"><a href="#" onclick="bukaHalaman('Dashboard')" class="text-decoration-none text-info"><i class="fa-solid fa-house"></i> Home</a></li>
-                            <li class="breadcrumb-item text-white-50 active" aria-current="page">Dashboard</li>
+                            <li class="breadcrumb-item text-white-50 active" aria-current="page">Data Folder</li>
                         </ol>
                     </nav>
                 </div>
@@ -368,7 +363,7 @@
                     <div class="col-md-3">
                         <div class="card bg-white text-dark border-0 shadow-sm p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Jumlah Folder</div>
-                            <h2 class="fw-bold mt-1 mb-0" style="color: #00c0ef;">1</h2>
+                            <h2 id="statJumlahFolder" class="fw-bold mt-1 mb-0" style="color: #00c0ef;">1</h2>
                             <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #00c0ef; width: 45px; height: 45px; border-radius: 4px; font-size: 20px;">
                                 <i class="fa-solid fa-folder"></i>
                             </div>
@@ -377,7 +372,7 @@
                     <div class="col-md-3">
                         <div class="card bg-white text-dark border-0 shadow-sm p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Jumlah Arsip</div>
-                            <h2 class="fw-bold mt-1 mb-0" style="color: #dd4b39;">2</h2>
+                            <h2 id="statJumlahArsip" class="fw-bold mt-1 mb-0" style="color: #dd4b39;">0</h2>
                             <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #dd4b39; width: 45px; height: 45px; border-radius: 4px; font-size: 20px;">
                                 <i class="fa-solid fa-file-lines"></i>
                             </div>
@@ -386,7 +381,7 @@
                     <div class="col-md-3">
                         <div class="card bg-white text-dark border-0 shadow-sm p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Total Ukuran Data</div>
-                            <h2 class="fw-bold mt-1 mb-0" style="color: #00a65a;">0.00 KB</h2>
+                            <h2 id="statUkuranData" class="fw-bold mt-1 mb-0" style="color: #00a65a;">0.00 KB</h2>
                             <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #00a65a; width: 45px; height: 45px; border-radius: 4px; font-size: 20px;">
                                 <i class="fa-solid fa-hard-drive"></i>
                             </div>
@@ -409,7 +404,7 @@
                         <div class="card bg-white text-dark border-0 shadow-sm mb-4">
                             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center" style="border-top: 3px solid #00a65a !important;">
                                 <span class="fw-bold text-dark"><i class="fa-solid fa-folder-tree text-success me-2"></i> Deretan Nama Folder Arsip</span>
-                                <button class="btn btn-success btn-sm fw-bold" onclick="alert('Fitur Buat Folder Baru')"><i class="fa-solid fa-plus me-1"></i> Buat Folder</button>
+                                <button class="btn btn-success btn-sm fw-bold" onclick="bukaModalBuatFolder()"><i class="fa-solid fa-plus me-1"></i> Buat Folder</button>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
@@ -418,17 +413,11 @@
                                             <tr>
                                                 <th class="py-3 ps-3">NAMA FOLDER</th>
                                                 <th class="py-3">JUMLAH FILE</th>
-                                                <th class="py-3 text-center" style="width: 100px;">AKSI</th>
+                                                <th class="py-3 text-center" style="width: 130px;">AKSI</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-folder text-warning me-2"></i> SMP IT HIDAYATUL QUR'AN</td>
-                                                <td>0 File</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-danger btn-sm" onclick="alert('Hapus folder')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
-                                                </td>
-                                            </tr>
+                                        <tbody id="tabelFolderBody">
+                                            <!-- Data Folder akan dimuat dinamis lewat JavaScript -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -437,30 +426,26 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <!-- Widget 1: Nama Instansi -->
                         <div class="card text-white border-0 shadow-sm mb-3" style="background-color: #f39c12; border-radius: 6px;">
                             <div class="card-body p-3 position-relative">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.8;"><i class="fa-solid fa-school me-1"></i> 1. NAMA INSTANSI</div>
                                 <h5 class="fw-bold mt-1 mb-1 text-white">SMP IT HIDAYATUL QUR'AN</h5>
                                 <div style="font-size: 11px; opacity: 0.9;">Klik untuk daftar instansi arsip</div>
-                                <div class="position-absolute" style="top: 15px; right: 15px; font-size: 16px; opacity: 0.8;"><i class="fa-solid fa-up-right-from-square"></i></div>
                             </div>
                         </div>
 
-                        <!-- Widget 2: Tahun Dokumen -->
                         <div class="card text-white border-0 shadow-sm mb-3" style="background-color: #00a65a; border-radius: 6px;">
                             <div class="card-body p-3">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.8;"><i class="fa-solid fa-calendar-days me-1"></i> 2. TAHUN DOKUMEN</div>
-                                <h3 class="fw-bold mt-1 mb-1 text-white">2025</h3>
+                                <h3 class="fw-bold mt-1 mb-1 text-white">2026</h3>
                                 <div style="font-size: 11px; opacity: 0.9;">Tahun Arsip Disimpan</div>
                             </div>
                         </div>
 
-                        <!-- Widget 3: Menu Unduh -->
                         <div class="card text-white border-0 shadow-sm mb-3" style="background-color: #dd4b39; border-radius: 6px;">
                             <div class="card-body p-3">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.8;"><i class="fa-solid fa-download me-1"></i> 3. MENU UNDUH</div>
-                                <h4 class="fw-bold mt-1 mb-1 text-white">2 File</h4>
+                                <h4 id="statMenuUnduh" class="fw-bold mt-1 mb-1 text-white">0 File</h4>
                                 <div style="font-size: 11px; opacity: 0.9;">Pusat Kumpulan File Unduhan</div>
                             </div>
                         </div>
@@ -468,7 +453,62 @@
                 </div>
             </div>
 
-            <!-- HALAMAN GALLERY / DOKUMENTASI VISUAL (Foto, Video, dll) -->
+            <!-- HALAMAN UPLOAD / KELOLA BERKAS DALAM FOLDER -->
+            <div id="halamanUploadArsip" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fw-bold text-white m-0" id="judulFolderAktif">Kelola Berkas Folder</h3>
+                        <p class="text-white-50 small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini.</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm fw-bold" onclick="bukaHalaman('DetailFolder')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar Folder</button>
+                </div>
+
+                <div class="card bg-white text-dark border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #3c8dbc !important;">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-cloud-arrow-up text-primary me-2"></i> Form Upload Berkas & Nomor Register</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small">Nama / Keterangan Dokumen</label>
+                                <input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian / No Register 001">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label>
+                                <input type="file" id="inputFileArsip" class="form-control">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-primary w-100 fw-bold" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-white text-dark border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-file-shield text-success me-2"></i> Daftar Berkas & No Register di Folder Ini</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="py-3 ps-3">NAMA BERKAS / NO REGISTER</th>
+                                        <th class="py-3">TIPE FILE</th>
+                                        <th class="py-3">UKURAN</th>
+                                        <th class="py-3 text-center" style="width: 120px;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelBerkasBody">
+                                    <!-- Daftar berkas dalam folder -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HALAMAN GALLERY / DOKUMENTASI VISUAL -->
             <div id="halamanGallery" class="box-panel p-4 bg-white text-dark rounded" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
@@ -515,10 +555,35 @@
         </div>
     </div>
 
+    <!-- MODAL BUAT FOLDER -->
+    <div class="modal fade" id="modalBuatFolder" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content text-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-folder-plus text-success me-2"></i> Buat Folder Arsip Baru</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Nama Folder / Instansi</label>
+                        <input type="text" id="inputNamaFolderBaru" class="form-control" placeholder="Contoh: SDIT AL-IKHLAS">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-success btn-sm fw-bold" onclick="simpanFolderBaru()">Simpan Folder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Data Global di LocalStorage
+        let folderAktifId = null;
+
         window.onload = () => {
             let savedAvatar = localStorage.getItem('mtechno_avatar');
             if(savedAvatar) {
@@ -529,6 +594,17 @@
             if(activeUser) {
                 let elEmail = document.getElementById('sidebarUserEmail');
                 if(elEmail) elEmail.innerText = activeUser;
+            }
+
+            // Inisialisasi Data Default jika belum ada
+            if(!localStorage.getItem('mtechno_folders')) {
+                let defaultFolders = [
+                    { id: 1, nama: "SMP IT HIDAYATUL QUR'AN" }
+                ];
+                localStorage.setItem('mtechno_folders', JSON.stringify(defaultFolders));
+            }
+            if(!localStorage.getItem('mtechno_berkas')) {
+                localStorage.setItem('mtechno_berkas', JSON.stringify([]));
             }
 
             if(localStorage.getItem('isLogin') === 'true') { 
@@ -616,7 +692,7 @@
         }
 
         function bukaHalaman(h) {
-            ['Dashboard', 'DetailFolder', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
+            ['Dashboard', 'DetailFolder', 'UploadArsip', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
                 let el = document.getElementById('halaman' + item);
                 if(el) el.style.display = (item === h) ? 'block' : 'none';
                 
@@ -629,6 +705,164 @@
                     }
                 }
             });
+
+            if(h === 'DetailFolder') {
+                muatTabelFolder();
+            }
+        }
+
+        // --- MANAJEMEN FOLDER & BERKAS ---
+        function muatTabelFolder() {
+            let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            
+            let tbody = document.getElementById('tabelFolderBody');
+            tbody.innerHTML = '';
+
+            let totalBytes = 0;
+            berkas.forEach(b => { totalBytes += (b.ukuranBytes || 1024); });
+
+            document.getElementById('statJumlahFolder').innerText = folders.length;
+            document.getElementById('statJumlahArsip').innerText = berkas.length;
+            document.getElementById('statMenuUnduh').innerText = berkas.length + " File";
+            
+            let kbSize = (totalBytes / 1024).toFixed(2);
+            document.getElementById('statUkuranData').innerText = kbSize + " KB";
+
+            if(folders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada folder arsip.</td></tr>`;
+                return;
+            }
+
+            folders.forEach(f => {
+                let jumlahFileInFolder = berkas.filter(b => b.folderId === f.id).length;
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 fw-bold text-dark" style="cursor: pointer;" onclick="bukaFolder(${f.id}, '${f.nama}')">
+                        <i class="fa-solid fa-folder text-warning me-2"></i> ${f.nama}
+                    </td>
+                    <td>${jumlahFileInFolder} File</td>
+                    <td class="text-center">
+                        <button class="btn btn-primary btn-sm me-1" onclick="bukaFolder(${f.id}, '${f.nama}')" title="Buka Folder / Upload"><i class="fa-solid fa-folder-open"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusFolder(${f.id})" title="Hapus Folder"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bukaModalBuatFolder() {
+            document.getElementById('inputNamaFolderBaru').value = '';
+            new bootstrap.Modal(document.getElementById('modalBuatFolder')).show();
+        }
+
+        function simpanFolderBaru() {
+            let nama = document.getElementById('inputNamaFolderBaru').value.trim();
+            if(!nama) {
+                alert('Nama folder wajib diisi!');
+                return;
+            }
+
+            let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
+            let newId = folders.length > 0 ? folders[folders.length - 1].id + 1 : 1;
+            folders.push({ id: newId, nama: nama });
+            localStorage.setItem('mtechno_folders', JSON.stringify(folders));
+
+            let modalEl = bootstrap.Modal.getInstance(document.getElementById('modalBuatFolder'));
+            modalEl.hide();
+            muatTabelFolder();
+        }
+
+        function hapusFolder(id) {
+            if(confirm('Yakin ingin menghapus folder ini beserta seluruh berkas di dalamnya?')) {
+                let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
+                folders = folders.filter(f => f.id !== id);
+                localStorage.setItem('mtechno_folders', JSON.stringify(folders));
+
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                berkas = berkas.filter(b => b.folderId !== id);
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+
+                muatTabelFolder();
+            }
+        }
+
+        function bukaFolder(id, namaFolder) {
+            folderAktifId = id;
+            document.getElementById('judulFolderAktif').innerText = "Kelola Berkas: " + namaFolder;
+            document.getElementById('inputNamaBerkas').value = '';
+            document.getElementById('inputFileArsip').value = '';
+            muatTabelBerkas();
+            bukaHalaman('UploadArsip');
+        }
+
+        function prosesUploadBerkas() {
+            let namaBerkas = document.getElementById('inputNamaBerkas').value.trim();
+            let fileInput = document.getElementById('inputFileArsip');
+
+            if(!namaBerkas) {
+                alert('Nama / Keterangan dokumen atau nomor register wajib diisi!');
+                return;
+            }
+            if(fileInput.files.length === 0) {
+                alert('Silakan pilih file dokumen terlebih dahulu!');
+                return;
+            }
+
+            let file = fileInput.files[0];
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+
+            let newBerkas = {
+                id: Date.now(),
+                folderId: folderAktifId,
+                nama: namaBerkas,
+                tipe: file.name.split('.').pop().toUpperCase(),
+                ukuranBytes: file.size,
+                ukuranFormatted: (file.size / 1024).toFixed(2) + " KB"
+            };
+
+            berkas.push(newBerkas);
+            localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+
+            document.getElementById('inputNamaBerkas').value = '';
+            document.getElementById('inputFileArsip').value = '';
+            muatTabelBerkas();
+            alert('Berkas / No Register berhasil di-upload!');
+        }
+
+        function muatTabelBerkas() {
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let folderBerkas = berkas.filter(b => b.folderId === folderAktifId);
+            
+            let tbody = document.getElementById('tabelBerkasBody');
+            tbody.innerHTML = '';
+
+            if(folderBerkas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Belum ada berkas atau nomor register di folder ini.</td></tr>`;
+                return;
+            }
+
+            folderBerkas.forEach(b => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-file-lines text-primary me-2"></i> ${b.nama}</td>
+                    <td><span class="badge bg-info text-dark">${b.tipe}</span></td>
+                    <td>${b.ukuranFormatted}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id})" title="Hapus Berkas"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function hapusBerkas(id) {
+            if(confirm('Hapus berkas ini?')) {
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                berkas = berkas.filter(b => b.id !== id);
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+                muatTabelBerkas();
+            }
         }
     </script>
 </body>
