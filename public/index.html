@@ -251,13 +251,13 @@
 
         <div class="sidebar-menu-label">Menu Utama</div>
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link active" href="#" onclick="bukaHalaman('Dashboard')"><div class="nav-link-left"><i class="fa-solid fa-house"></i> Dashboard</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Post')"><div class="nav-link-left"><i class="fa-solid fa-thumb-tack"></i> Post</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Portfolio')"><div class="nav-link-left"><i class="fa-solid fa-code"></i> Portfolio</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Pengguna')"><div class="nav-link-left"><i class="fa-solid fa-users"></i> Pengguna</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Gallery')"><div class="nav-link-left"><i class="fa-solid fa-image"></i> Gallery</div></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Komentar')"><div class="nav-link-left"><i class="fa-regular fa-comment"></i> Komentar</div><span class="badge-custom">2</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="bukaHalaman('Inbox')"><div class="nav-link-left"><i class="fa-regular fa-envelope"></i> Inbox</div><span class="badge-custom">6</span></a></li>
+            <li class="nav-item"><a class="nav-link active" href="#" id="menuLinkDashboard" onclick="bukaHalaman('Dashboard')"><div class="nav-link-left"><i class="fa-solid fa-house"></i> Dashboard</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPost" onclick="bukaHalaman('Post')"><div class="nav-link-left"><i class="fa-solid fa-thumb-tack"></i> Post</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPortfolio" onclick="bukaHalaman('Portfolio')"><div class="nav-link-left"><i class="fa-solid fa-code"></i> Portfolio</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkPengguna" onclick="bukaHalaman('Pengguna')"><div class="nav-link-left"><i class="fa-solid fa-users"></i> Pengguna</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkGallery" onclick="bukaHalaman('Gallery')"><div class="nav-link-left"><i class="fa-solid fa-image"></i> Gallery</div></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkKomentar" onclick="bukaHalaman('Komentar')"><div class="nav-link-left"><i class="fa-regular fa-comment"></i> Komentar</div><span class="badge-custom">2</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="menuLinkInbox" onclick="bukaHalaman('Inbox')"><div class="nav-link-left"><i class="fa-regular fa-envelope"></i> Inbox</div><span class="badge-custom">6</span></a></li>
             <li class="nav-item"><a class="nav-link" href="#" onclick="logout()"><div class="nav-link-left"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</div></a></li>
         </ul>
     </div>
@@ -302,9 +302,9 @@
                         <div class="infografis-title">PROSEDUR PENGELOLAAN ARSIP</div>
                     </div>
 
-                    <!-- STEP 1 -->
+                    <!-- STEP 1 (LANGSUNG MENUJU HALAMAN 3 / GALLERY) -->
                     <div class="step-row justify-start">
-                        <div class="step-box box-step-1" onclick="bukaModalUploadArsip()">
+                        <div class="step-box box-step-1" onclick="bukaHalaman('Gallery')">
                             <div class="step-number num-left">1</div>
                             <div class="step-icon"><i class="fa-solid fa-folder-open"></i></div>
                             <div class="step-text">DATA FOLDER</div>
@@ -355,7 +355,7 @@
             <div id="halamanPost" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Post</h4></div>
             <div id="halamanPortfolio" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Portfolio</h4></div>
             <div id="halamanPengguna" class="box-panel p-4 bg-white text-dark rounded"><h4>Manajemen Pengguna</h4></div>
-            <div id="halamanGallery" class="box-panel p-4 bg-white text-dark rounded"><h4>Galeri Foto</h4></div>
+            <div id="halamanGallery" class="box-panel p-4 bg-white text-dark rounded"><h4>Galeri Foto (Halaman 3)</h4><p class="text-muted mt-2">Halaman galeri arsip berhasil diakses melalui tombol Data Folder.</p></div>
             <div id="halamanKomentar" class="box-panel p-4 bg-white text-dark rounded"><h4>Daftar Komentar</h4></div>
             <div id="halamanInbox" class="box-panel p-4 bg-white text-dark rounded"><h4>Pesan Masuk (Inbox)</h4></div>
         </div>
@@ -364,9 +364,6 @@
     <!-- MODAL DUMMY -->
     <div class="modal fade" id="modalDaftarInstansi" tabindex="-1">
         <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">No Register</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Kelola nomor register arsip dokumen.</p></div></div></div>
-    </div>
-    <div class="modal fade" id="modalUploadArsip" tabindex="-1">
-        <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Data Folder</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Manajemen data folder penyimpanan arsip.</p></div></div></div>
     </div>
     <div class="modal fade" id="modalMenuUnduh" tabindex="-1">
         <div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header"><h5 class="modal-title">Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Galeri dokumentasi kegiatan arsip.</p></div></div></div>
@@ -476,12 +473,18 @@
             ['Dashboard', 'DetailFolder', 'Post', 'Portfolio', 'Pengguna', 'Gallery', 'Komentar', 'Inbox'].forEach(item => {
                 let el = document.getElementById('halaman' + item);
                 if(el) el.style.display = (item === h) ? 'block' : 'none';
+                
+                let linkEl = document.getElementById('menuLink' + item);
+                if(linkEl) {
+                    if(item === h) {
+                        linkEl.classList.add('active');
+                    } else {
+                        linkEl.classList.remove('active');
+                    }
+                }
             });
         }
 
-        function bukaModalUploadArsip() {
-            new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
-        }
         function bukaModalDaftarInstansi() {
             new bootstrap.Modal(document.getElementById('modalDaftarInstansi')).show();
         }
