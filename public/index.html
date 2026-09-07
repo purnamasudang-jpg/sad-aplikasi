@@ -512,40 +512,18 @@
             </div>
 
             <!-- HALAMAN GALLERY / DOKUMENTASI VISUAL -->
-            <div id="halamanGallery" class="box-panel p-4 bg-white text-dark rounded" style="display: none;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+            <div id="halamanGallery" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h4 class="fw-bold m-0"><i class="fa-solid fa-photo-film text-info me-2"></i> Dokumentasi & Galeri Visual</h4>
-                        <p class="text-muted small m-0 mt-1">Pusat unggah foto, video, dan media dokumentasi kegiatan arsip.</p>
+                        <h3 class="fw-bold text-white m-0"><i class="fa-solid fa-photo-film text-info me-2"></i> Dokumentasi & Galeri Visual</h3>
+                        <p class="text-white-50 small m-0 mt-1">Pusat unggah foto, video, dan media dokumentasi kegiatan arsip.</p>
                     </div>
-                    <button class="btn btn-primary btn-sm fw-bold" onclick="alert('Form Upload Foto/Video Visual')"><i class="fa-solid fa-upload me-1"></i> Upload Media</button>
+                    <button class="btn btn-primary btn-sm fw-bold" onclick="bukaModalUploadMedia()"><i class="fa-solid fa-upload me-1"></i> Upload Media</button>
                 </div>
-                <hr>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="card border shadow-sm">
-                            <div class="bg-secondary text-white text-center py-5 rounded-top">
-                                <i class="fa-solid fa-image fa-3x"></i>
-                            </div>
-                            <div class="card-body p-3">
-                                <h6 class="fw-bold mb-1">Dokumentasi Ruang Arsip 1</h6>
-                                <p class="text-muted small mb-2">Foto kondisi fisik ruangan arsip.</p>
-                                <span class="badge bg-success">Foto (.jpg)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card border shadow-sm">
-                            <div class="bg-secondary text-white text-center py-5 rounded-top">
-                                <i class="fa-solid fa-video fa-3x"></i>
-                            </div>
-                            <div class="card-body p-3">
-                                <h6 class="fw-bold mb-1">Video Kegiatan Input Data</h6>
-                                <p class="text-muted small mb-2">Video tata cara pengelolaan arsip.</p>
-                                <span class="badge bg-danger">Video (.mp4)</span>
-                            </div>
-                        </div>
-                    </div>
+
+                <!-- Grid Galeri Dokumentasi -->
+                <div class="row g-4" id="gridGaleriMedia">
+                    <!-- Data galeri akan dimuat dinamis -->
                 </div>
             </div>
 
@@ -580,7 +558,33 @@
         </div>
     </div>
 
-    <!-- MODAL LIHAT DOKUMEN -->
+    <!-- MODAL UPLOAD MEDIA DOKUMENTASI -->
+    <div class="modal fade" id="modalUploadMedia" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content text-dark">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-cloud-arrow-up text-primary me-2"></i> Upload Media Dokumentasi</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Judul / Keterangan Dokumentasi</label>
+                        <input type="text" id="inputJudulMedia" class="form-control" placeholder="Contoh: Dokumentasi Kegiatan Ruang Arsip">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Pilih File (Foto .jpg/.png, Video .mp4, dll)</label>
+                        <input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-primary btn-sm fw-bold" onclick="prosesUploadMedia()">Upload & Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LIHAT DOKUMEN / MEDIA -->
     <div class="modal fade" id="modalLihatDokumen" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content text-dark">
@@ -618,12 +622,19 @@
                 if(elEmail) elEmail.innerText = activeUser;
             }
 
-            // Default folder kosong agar dinamis murni sesuai input user
             if(!localStorage.getItem('mtechno_folders')) {
                 localStorage.setItem('mtechno_folders', JSON.stringify([]));
             }
             if(!localStorage.getItem('mtechno_berkas')) {
                 localStorage.setItem('mtechno_berkas', JSON.stringify([]));
+            }
+            if(!localStorage.getItem('mtechno_media')) {
+                // Inisialisasi contoh default jika galeri masih kosong
+                let defaultMedia = [
+                    { id: 1, judul: "Dokumentasi Ruang Arsip 1", ket: "Foto kondisi fisik ruangan arsip.", tipe: "JPG", fileData: "" },
+                    { id: 2, judul: "Video Kegiatan Input Data", ket: "Video tata cara pengelolaan arsip.", tipe: "MP4", fileData: "" }
+                ];
+                localStorage.setItem('mtechno_media', JSON.stringify(defaultMedia));
             }
 
             if(localStorage.getItem('isLogin') === 'true') { 
@@ -727,6 +738,8 @@
 
             if(h === 'DetailFolder') {
                 muatTabelFolder();
+            } else if(h === 'Gallery') {
+                muatGaleriMedia();
             }
         }
 
@@ -747,10 +760,8 @@
             let kbSize = (totalBytes / 1024).toFixed(2);
             document.getElementById('statUkuranData').innerText = kbSize + " KB";
 
-            // FITUR 1 OTOMATIS: Update Widget Nama Instansi dari folder yang tersedia
             let widgetInstansi = document.getElementById('widgetNamaInstansi');
             if(folders.length > 0) {
-                // Ambil folder terakhir yang dibuat atau aktif
                 widgetInstansi.innerText = folders[folders.length - 1].nama;
             } else {
                 widgetInstansi.innerText = "Belum ada folder";
@@ -761,7 +772,6 @@
                 return;
             }
 
-            // Render deretan folder ke bawah sesuai permintaan garis hitam
             folders.forEach(f => {
                 let jumlahFileInFolder = berkas.filter(b => b.folderId === f.id).length;
                 let tr = document.createElement('tr');
@@ -951,6 +961,168 @@
                 berkas = berkas.filter(b => b.id !== id);
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
                 muatTabelFolder();
+            }
+        }
+
+        // --- MANAJEMEN GALLERY / DOKUMENTASI VISUAL ---
+        function bukaModalUploadMedia() {
+            document.getElementById('inputJudulMedia').value = '';
+            document.getElementById('inputFileMedia').value = '';
+            new bootstrap.Modal(document.getElementById('modalUploadMedia')).show();
+        }
+
+        function prosesUploadMedia() {
+            let judul = document.getElementById('inputJudulMedia').value.trim();
+            let fileInput = document.getElementById('inputFileMedia');
+
+            if(!judul) {
+                alert('Judul atau keterangan dokumentasi wajib diisi!');
+                return;
+            }
+            if(fileInput.files.length === 0) {
+                alert('Silakan pilih file media (foto/video/dokumen) terlebih dahulu!');
+                return;
+            }
+
+            let file = fileInput.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                let base64Data = e.target.result;
+                let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+
+                let ekstensi = file.name.split('.').pop().toUpperCase();
+                let newMedia = {
+                    id: Date.now(),
+                    judul: judul,
+                    ket: `File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+                    tipe: ekstensi,
+                    fileData: base64Data,
+                    namaFileAsli: file.name
+                };
+
+                mediaList.push(newMedia);
+                localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+
+                let modalEl = bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia'));
+                modalEl.hide();
+                muatGaleriMedia();
+                alert('Media dokumentasi berhasil di-upload!');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function muatGaleriMedia() {
+            let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+            let grid = document.getElementById('gridGaleriMedia');
+            grid.innerHTML = '';
+
+            if(mediaList.length === 0) {
+                grid.innerHTML = `<div class="col-12 text-center text-white-50 py-4">Belum ada dokumentasi media. Silakan klik tombol "Upload Media" di atas.</div>`;
+                return;
+            }
+
+            mediaList.forEach(m => {
+                let isImage = ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP'].includes(m.tipe);
+                let isVideo = ['MP4', 'MKV', 'WEBM', 'AVI', 'MOV'].includes(m.tipe);
+                
+                let iconClass = "fa-file-lines";
+                let badgeBg = "bg-secondary";
+                if(isImage) { iconClass = "fa-image"; badgeBg = "bg-success"; }
+                else if(isVideo) { iconClass = "fa-video"; badgeBg = "bg-danger"; }
+                else if(m.tipe === 'PDF') { iconClass = "fa-file-pdf"; badgeBg = "bg-warning text-dark"; }
+
+                let previewHtml = '';
+                if(isImage && m.fileData) {
+                    previewHtml = `<div style="height: 180px; background: #000; overflow: hidden;" class="text-center"><img src="${m.fileData}" style="width: 100%; height: 100%; object-fit: cover;"></div>`;
+                } else if(isVideo && m.fileData) {
+                    previewHtml = `<div style="height: 180px; background: #000; overflow: hidden;" class="text-center d-flex align-items-center justify-content-center"><video src="${m.fileData}" style="width: 100%; height: 100%; object-fit: cover;"></video><div class="position-absolute text-white" style="font-size: 32px;"><i class="fa-solid fa-play-circle"></i></div></div>`;
+                } else {
+                    previewHtml = `<div class="bg-secondary text-white text-center py-5 rounded-top"><i class="fa-solid ${iconClass} fa-3x"></i></div>`;
+                }
+
+                let col = document.createElement('div');
+                col.className = 'col-md-4';
+                col.innerHTML = `
+                    <div class="card border shadow-sm h-100 position-relative text-dark">
+                        ${previewHtml}
+                        <div class="card-body p-3 d-flex flex-column justify-content-between">
+                            <div>
+                                <h6 class="fw-bold mb-1 text-truncate">${m.judul}</h6>
+                                <p class="text-muted small mb-2 text-truncate">${m.ket}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="badge ${badgeBg}">${m.tipe}</span>
+                                <div>
+                                    <button class="btn btn-info btn-sm text-white me-1" onclick="lihatMedia(${m.id})" title="Lihat Media"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn btn-danger btn-sm" onclick="hapusMedia(${m.id})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(col);
+            });
+        }
+
+        function lihatMedia(id) {
+            let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+            let m = mediaList.find(x => x.id === id);
+            if(!m) {
+                alert('Media tidak ditemukan!');
+                return;
+            }
+
+            document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-photo-film text-primary me-2"></i> ${m.judul}`;
+            document.getElementById('infoDetailFile').innerText = `Keterangan: ${m.ket} | Tipe: ${m.tipe}`;
+            
+            let container = document.getElementById('containerPreviewFile');
+            let btnDown = document.getElementById('btnDownloadFile');
+            
+            if(m.fileData) {
+                btnDown.href = m.fileData;
+                btnDown.style.display = 'inline-block';
+                btnDown.download = m.namaFileAsli || 'dokumentasi';
+
+                let isImage = ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP'].includes(m.tipe);
+                let isVideo = ['MP4', 'MKV', 'WEBM', 'AVI', 'MOV'].includes(m.tipe);
+
+                if(isImage) {
+                    container.innerHTML = `<img src="${m.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
+                } else if(isVideo) {
+                    container.innerHTML = `<video src="${m.fileData}" controls autoplay width="100%" height="400px" style="border-radius: 4px; background:#000;"></video>`;
+                } else if(m.tipe === 'PDF') {
+                    container.innerHTML = `<iframe src="${m.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
+                } else {
+                    container.innerHTML = `
+                        <div class="py-5 bg-light rounded border">
+                            <i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i>
+                            <h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${m.tipe.toLowerCase()}</h5>
+                            <p class="text-muted small">Silakan klik tombol Download di bawah untuk membuka file.</p>
+                        </div>
+                    `;
+                }
+            } else {
+                btnDown.style.display = 'none';
+                container.innerHTML = `
+                    <div class="py-5 bg-light rounded border">
+                        <i class="fa-solid fa-image fa-3x text-secondary mb-3"></i>
+                        <h5 class="fw-bold">${m.judul}</h5>
+                        <p class="text-muted small">Contoh bawaan galeri (file fisik belum diunggah).</p>
+                    </div>
+                `;
+            }
+
+            new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
+        }
+
+        function hapusMedia(id) {
+            if(confirm('Hapus dokumentasi media ini?')) {
+                let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+                mediaList = mediaList.filter(x => x.id !== id);
+                localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+                muatGaleriMedia();
             }
         }
     </script>
