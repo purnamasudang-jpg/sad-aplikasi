@@ -10,27 +10,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --bg-header: rgba(62, 39, 35, 0.9); 
-            --bg-sidebar: rgba(45, 30, 24, 0.88); 
-            --sidebar-hover: #4e342e; 
-            --accent-gold: #d4af37; 
-            --text-muted: #b0bec5; 
+            --bg-body: #f5f2eb; /* Krem Kayu Hangat / Alam */
+            --bg-header: #3e2723; /* Cokelat Kopi Espresso */
+            --bg-sidebar: #2d1e18; /* Cokelat Gelap Bubu */
+            --sidebar-hover: #4e342e; /* Cokelat Sedang */
+            --accent-gold: #d4af37; /* Emas Anyaman Bubu */
+            --text-muted: #b0bec5;
+            --nature-green: #2d5a27; /* Hijau Alam Indah */
         }
 
         body { 
-            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            /* Background utama menggunakan gambar kopi & panorama alam dengan lapisan gelap agar teks kontras */
-            background: linear-gradient(rgba(30, 20, 15, 0.65), rgba(20, 35, 18, 0.65)), 
-                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff; 
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            background: var(--bg-body); 
+            color: #2c2c2c; 
             margin: 0; 
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Top Header Tema Kopi */
         .main-header {
             background-color: var(--bg-header);
-            backdrop-filter: blur(8px);
             color: white;
             height: 56px;
             display: flex;
@@ -38,25 +38,33 @@
             align-items: center;
             padding: 0 24px;
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 1050;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             border-bottom: 2px solid var(--accent-gold);
         }
-        .main-header .header-right { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .main-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
 
+        /* Sidebar Tema Bubu & Kopi */
         #sidebar {
             width: 240px;
             min-height: calc(100vh - 56px);
             background-color: var(--bg-sidebar);
-            backdrop-filter: blur(10px);
             color: var(--text-muted);
             position: fixed;
-            top: 56px; left: 0;
+            top: 56px;
+            left: 0;
             z-index: 1000;
             padding-top: 16px;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.3);
-            border-right: 1px solid rgba(212,175,55,0.3);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+            border-right: 1px solid rgba(212,175,55,0.2);
         }
         .sidebar-menu-label {
             font-size: 11px;
@@ -90,55 +98,43 @@
             padding: 30px;
         }
 
-        /* Kartu dengan efek semi-transparan (glassmorphism) */
-        .card-glass {
-            background: rgba(255, 255, 255, 0.92) !important;
-            backdrop-filter: blur(8px);
-            border-radius: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
-        }
-
         /* Authentication Layout */
         .auth-wrapper {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(62,39,35,0.9), rgba(45,90,39,0.9)), 
-                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1920&auto=format&fit=crop') center/cover;
+            background: linear-gradient(135deg, #3e2723, #2d5a27);
         }
         .auth-box {
             width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             border-top: 4px solid var(--accent-gold);
             color: #2c2c2c;
         }
         .auth-box h3 { text-align: center; margin-bottom: 25px; font-size: 22px; font-weight: 700; color: #3e2723; }
         .form-group-custom { margin-bottom: 20px; }
         .form-group-custom label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px; color: #3e2723; }
-        .form-group-custom input { width: 100%; padding: 11px 14px; border: 1px solid #d7ccc8; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+        .form-group-custom input { width: 100%; padding: 11px 14px; border: 1px solid #d7ccc8; border-radius: 6px; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
         .form-group-custom input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 0 3px rgba(212,175,55,0.2); }
-        .btn-block-custom { width: 100%; background: #3e2723; color: white; border: none; padding: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .btn-block-custom { width: 100%; background: #3e2723; color: white; border: none; padding: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
         .btn-block-custom:hover { background: #5c4033; }
 
-        /* Infografis Prosedur */
+        /* Infografis Prosedur Nuansa Alam & Kopi */
         .infografis-container {
             position: relative;
-            background: rgba(45, 90, 39, 0.78);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(145deg, #2d5a27, #3e2723);
             border-radius: 12px;
             padding: 45px 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            border: 1px solid rgba(212,175,55,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(212,175,55,0.4);
             overflow: hidden;
         }
         .infografis-header-box { text-align: center; margin-bottom: 45px; }
-        .infografis-sad { font-size: 42px; font-weight: 900; letter-spacing: 5px; color: var(--accent-gold); margin: 0; }
+        .infografis-sad { font-size: 42px; font-weight: 900; letter-spacing: 5px; color: var(--accent-gold); text-shadow: 0 2px 6px rgba(0,0,0,0.4); margin: 0; }
         .infografis-subsad { font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #d7ccc8; margin-bottom: 14px; }
         .infografis-title { font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; font-size: 18px; color: #ffffff; background: rgba(0, 0, 0, 0.3); display: inline-block; padding: 8px 28px; border-radius: 30px; border: 1px solid rgba(212,175,55,0.3); }
         
@@ -147,23 +143,35 @@
         .step-row.justify-start { justify-content: flex-start; }
         .step-row.justify-center { justify-content: center; }
 
-        .step-box { width: 500px; border-radius: 30px; padding: 18px 28px; display: flex; align-items: center; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,0.25); color: #fff; cursor: pointer; z-index: 2; }
-        .box-step-1 { background-color: rgba(92, 64, 51, 0.9); border: 1px solid var(--accent-gold); }
-        .box-step-2 { background-color: rgba(45, 90, 39, 0.9); border: 1px solid var(--accent-gold); }
-        .box-step-3 { background-color: rgba(141, 110, 99, 0.9); border: 1px solid var(--accent-gold); }
-        .box-step-4 { background-color: rgba(255, 255, 255, 0.95); color: #3e2723; border: 1px solid var(--accent-gold); }
-        .step-number { position: absolute; font-size: 30px; font-style: italic; font-weight: 900; color: var(--accent-gold); z-index: 3; }
+        .step-box { width: 500px; border-radius: 30px; padding: 18px 28px; display: flex; align-items: center; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,0.25); color: #fff; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; z-index: 2; }
+        .step-box:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.35); }
+
+        .box-step-1 { background-color: #5c4033; border: 1px solid var(--accent-gold); }
+        .box-step-2 { background-color: #2d5a27; border: 1px solid var(--accent-gold); }
+        .box-step-3 { background-color: #8d6e63; border: 1px solid var(--accent-gold); }
+        .box-step-4 { background-color: #ffffff; color: #3e2723; border: 1px solid var(--accent-gold); }
+
+        .step-number { position: absolute; font-size: 30px; font-style: italic; font-weight: 900; color: var(--accent-gold); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); z-index: 3; }
         .num-left { left: -32px; top: -12px; }
         .num-right { right: -32px; top: -12px; }
+
         .step-icon { font-size: 34px; min-width: 55px; text-align: center; margin-right: 20px; color: var(--accent-gold); }
         .box-step-4 .step-icon { color: #3e2723; }
         .step-text { font-size: 15px; font-weight: 700; letter-spacing: 0.4px; line-height: 1.4; }
+        .digiar-brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; letter-spacing: 1px; color: #fff; margin-top: 10px; }
 
-        /* Table Styling */
+        /* Card & Table Styling */
+        .card { border-radius: 8px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; }
         .table { margin-bottom: 0; color: #2c2c2c; }
-        .table th { font-weight: 700; font-size: 12px; letter-spacing: 0.5px; color: #3e2723; background-color: rgba(239, 235, 233, 0.9) !important; border-bottom: 2px solid #d7ccc8; }
+        .table th { font-weight: 700; font-size: 12px; letter-spacing: 0.5px; color: #3e2723; background-color: #efebe9 !important; border-bottom: 2px solid #d7ccc8; }
         .table td { vertical-align: middle; font-size: 14px; padding: 12px 16px; border-color: #e0dcd5; }
-        .table-hover tbody tr:hover { background-color: rgba(245, 242, 235, 0.8); }
+        .table-hover tbody tr:hover { background-color: #f5f2eb; }
+
+        /* Modal */
+        .modal-content { border-radius: 10px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .modal-header { border-bottom: 1px solid #d7ccc8; padding: 18px 24px; background-color: #f5f2eb; }
+        .modal-body { padding: 24px; }
+        .modal-footer { border-top: 1px solid #d7ccc8; padding: 16px 24px; background-color: #f5f2eb; }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
         #halamanDashboard, #halamanDetailFolder, #halamanUploadArsip, #halamanActivityLog, #halamanPortfolio, #halamanPengguna, #halamanGallery { display: none; }
@@ -210,6 +218,10 @@
             <div class="form-group-custom"><label>Password</label><input type="password" id="login_pass" placeholder="Masukkan password"></div>
             <button class="btn-block-custom mb-3" onclick="login()">Sign In</button>
             <p id="loginMsg" style="color: #d93838; font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+            <div class="text-center" style="font-size: 13px;">
+                <span class="text-muted">Belum punya akun?</span> 
+                <a href="#" onclick="tampilRegister()" style="color: #3e2723; font-weight: 600; text-decoration: none;">Daftar Akun</a>
+            </div>
         </div>
     </div>
 
@@ -271,11 +283,11 @@
                     </div>
 
                     <!-- FOOTER / HAK CIPTA -->
-                    <div class="d-flex align-items-center justify-content-between mt-4 pt-3 border-top" style="border-color: rgba(212,175,55,0.4) !important;">
-                        <div style="font-weight: 900; font-size: 22px; color: #fff;"><span style="color: var(--accent-gold);">SAD</span> Sistem Arsip Digital</div>
+                    <div class="d-flex align-items-center justify-content-between mt-4 pt-3 border-top" style="border-color: rgba(212,175,55,0.3) !important;">
+                        <div class="digiar-brand"><span style="color: var(--accent-gold);" class="fw-bold">SAD</span> <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.5px; color: #d7ccc8;">Sistem Arsip Digital</span></div>
                         <div class="text-end">
                             <div class="text-light small">Sistem Pengelolaan Arsip Digital &copy; 2026 - Asep Sudang Purnawan</div>
-                            <div class="small" style="font-size: 11px; font-weight: 600; color: var(--accent-gold);">Developed by Asep Sudang Purnawan</div>
+                            <div class="small" style="font-size: 11px; font-weight: 600; letter-spacing: 0.3px; color: var(--accent-gold);">Developed by Asep Sudang Purnawan</div>
                         </div>
                     </div>
                 </div>
@@ -284,56 +296,56 @@
             <!-- HALAMAN DETAIL FOLDER -->
             <div id="halamanDetailFolder" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold m-0 text-white" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Dashboard Data Folder & Arsip</h3>
+                    <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;">Dashboard Data Folder & Arsip</h3>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb m-0" style="background: transparent; font-size: 13px;">
-                            <li class="breadcrumb-item"><a href="#" onclick="bukaHalaman('Dashboard')" class="text-decoration-none text-warning"><i class="fa-solid fa-house"></i> Home</a></li>
-                            <li class="breadcrumb-item text-light active">Data Folder</li>
+                            <li class="breadcrumb-item"><a href="#" onclick="bukaHalaman('Dashboard')" class="text-decoration-none" style="color: #2d5a27;"><i class="fa-solid fa-house"></i> Home</a></li>
+                            <li class="breadcrumb-item text-muted active">Data Folder</li>
                         </ol>
                     </nav>
                 </div>
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <div class="card card-glass p-3 position-relative overflow-hidden">
+                        <div class="card bg-white text-dark p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Jumlah Folder</div>
                             <h2 id="statJumlahFolder" class="fw-bold mt-1 mb-0" style="color: #5c4033;">1</h2>
-                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #5c4033; width: 44px; height: 44px; border-radius: 6px;"><i class="fa-solid fa-folder"></i></div>
+                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #5c4033; width: 44px; height: 44px; border-radius: 6px; font-size: 18px;"><i class="fa-solid fa-folder"></i></div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card card-glass p-3 position-relative overflow-hidden">
+                        <div class="card bg-white text-dark p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Jumlah Arsip</div>
                             <h2 id="statJumlahArsip" class="fw-bold mt-1 mb-0" style="color: #2d5a27;">0</h2>
-                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #2d5a27; width: 44px; height: 44px; border-radius: 6px;"><i class="fa-solid fa-file-lines"></i></div>
+                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #2d5a27; width: 44px; height: 44px; border-radius: 6px; font-size: 18px;"><i class="fa-solid fa-file-lines"></i></div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card card-glass p-3 position-relative overflow-hidden">
+                        <div class="card bg-white text-dark p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Total Ukuran Data</div>
                             <h2 id="statUkuranData" class="fw-bold mt-1 mb-0" style="color: #8d6e63;">0.00 KB</h2>
-                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #8d6e63; width: 44px; height: 44px; border-radius: 6px;"><i class="fa-solid fa-hard-drive"></i></div>
+                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #8d6e63; width: 44px; height: 44px; border-radius: 6px; font-size: 18px;"><i class="fa-solid fa-hard-drive"></i></div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card card-glass p-3 position-relative overflow-hidden">
+                        <div class="card bg-white text-dark p-3 position-relative overflow-hidden">
                             <div class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Status Home</div>
-                            <h2 class="fw-bold mt-1 mb-0" style="color: #b8860b; font-size: 22px; padding-top: 4px;">Active</h2>
-                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #d4af37; width: 44px; height: 44px; border-radius: 6px;"><i class="fa-solid fa-house"></i></div>
+                            <h2 class="fw-bold mt-1 mb-0" style="color: #d4af37; font-size: 22px; padding-top: 4px;">Active</h2>
+                            <div class="position-absolute text-white d-flex align-items-center justify-content-center" style="right: 15px; top: 15px; background: #d4af37; width: 44px; height: 44px; border-radius: 6px; font-size: 18px;"><i class="fa-solid fa-house"></i></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-lg-8">
-                        <div class="card card-glass mb-4">
-                            <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center" style="border-top: 3px solid #2d5a27 !important;">
+                        <div class="card bg-white text-dark mb-4">
+                            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center" style="border-top: 3px solid #2d5a27 !important;">
                                 <span class="fw-bold text-dark"><i class="fa-solid fa-folder-tree text-success me-2"></i> Deretan Nama Folder Arsip</span>
                                 <button class="btn btn-success btn-sm fw-bold px-3" style="background-color: #2d5a27; border: none;" onclick="bukaModalBuatFolder()"><i class="fa-solid fa-plus me-1"></i> Buat Folder</button>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0" style="background: transparent;">
+                                    <table class="table table-hover align-middle mb-0">
                                         <thead>
                                             <tr>
                                                 <th class="py-3 ps-3">NAMA FOLDER</th>
@@ -347,23 +359,22 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-4">
-                        <div class="card text-white mb-3" style="background-color: rgba(141, 110, 99, 0.9); backdrop-filter: blur(5px); border-radius: 8px; border: 1px solid rgba(212,175,55,0.4);">
+                        <div class="card text-white mb-3" style="background-color: #8d6e63; border-radius: 8px;">
                             <div class="card-body p-3">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.9;"><i class="fa-solid fa-school me-1"></i> 1. NAMA INSTANSI</div>
                                 <h5 id="widgetNamaInstansi" class="fw-bold mt-1 mb-1 text-white text-truncate">Belum ada folder</h5>
                                 <div style="font-size: 11px; opacity: 0.9;">Otomatis dari folder arsip aktif</div>
                             </div>
                         </div>
-                        <div class="card text-white mb-3" style="background-color: rgba(45, 90, 39, 0.9); backdrop-filter: blur(5px); border-radius: 8px; border: 1px solid rgba(212,175,55,0.4);">
+                        <div class="card text-white mb-3" style="background-color: #2d5a27; border-radius: 8px;">
                             <div class="card-body p-3">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.9;"><i class="fa-solid fa-calendar-days me-1"></i> 2. TAHUN DOKUMEN</div>
                                 <h3 class="fw-bold mt-1 mb-1 text-white">2026</h3>
                                 <div style="font-size: 11px; opacity: 0.9;">Tahun Arsip Disimpan</div>
                             </div>
                         </div>
-                        <div class="card text-white mb-3" style="background-color: rgba(92, 64, 51, 0.9); backdrop-filter: blur(5px); border-radius: 8px; border: 1px solid rgba(212,175,55,0.4);">
+                        <div class="card text-white mb-3" style="background-color: #5c4033; border-radius: 8px;">
                             <div class="card-body p-3">
                                 <div class="small fw-bold" style="font-size: 11px; opacity: 0.9;"><i class="fa-solid fa-download me-1"></i> 3. MENU UNDUH</div>
                                 <h4 id="statMenuUnduh" class="fw-bold mt-1 mb-1 text-white">0 File</h4>
@@ -378,28 +389,38 @@
             <div id="halamanUploadArsip" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h3 class="fw-bold m-0 text-white" id="judulFolderAktif" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Kelola Berkas Folder</h3>
-                        <p class="text-light small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini.</p>
+                        <h3 class="fw-bold m-0" id="judulFolderAktif" style="font-size: 22px; color: #3e2723;">Kelola Berkas Folder</h3>
+                        <p class="text-muted small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini.</p>
                     </div>
                     <button class="btn btn-secondary btn-sm fw-bold px-3" onclick="bukaHalaman('DetailFolder')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</button>
                 </div>
-                <div class="card card-glass mb-4">
-                    <div class="card-header bg-transparent border-bottom py-3" style="border-top: 3px solid #3e2723 !important;">
+
+                <div class="card bg-white text-dark mb-4">
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #3e2723 !important;">
                         <span class="fw-bold text-dark"><i class="fa-solid fa-cloud-arrow-up text-secondary me-2"></i> Form Upload Berkas & Nomor Register</span>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-4"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian"></div>
-                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File</label><input type="file" id="inputFileArsip" class="form-control"></div>
+                            <div class="col-md-4"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian / No Register 001"></div>
+                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" id="inputFileArsip" class="form-control"></div>
                             <div class="col-md-3 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button></div>
                         </div>
                     </div>
                 </div>
-                <div class="card card-glass">
+
+                <div class="card bg-white text-dark">
+                    <div class="card-header bg-white border-bottom py-3"><span class="fw-bold text-dark"><i class="fa-solid fa-file-shield text-success me-2"></i> Daftar Berkas & No Register di Folder Ini</span></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0" style="background: transparent;">
-                                <thead><tr><th class="py-3 ps-3">NAMA BERKAS</th><th class="py-3">TIPE</th><th class="py-3">UKURAN</th><th class="py-3 text-center">AKSI</th></tr></thead>
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 ps-3">NAMA BERKAS / NO REGISTER</th>
+                                        <th class="py-3">TIPE FILE</th>
+                                        <th class="py-3">UKURAN</th>
+                                        <th class="py-3 text-center" style="width: 180px;">AKSI</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="tabelBerkasBody"></tbody>
                             </table>
                         </div>
@@ -410,14 +431,26 @@
             <!-- HALAMAN LOG AKTIVITAS -->
             <div id="halamanActivityLog" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold m-0 text-white" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Log Aktivitas Sistem</h3>
-                    <button class="btn btn-outline-light btn-sm fw-bold px-3" onclick="bersihkanLog()"><i class="fa-solid fa-trash me-1"></i> Bersihkan Log</button>
+                    <div>
+                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Log Aktivitas Sistem</h3>
+                        <p class="text-muted small m-0 mt-1">Riwayat aktivitas, audit trail, dan rekam jejak operasional sistem arsip digital.</p>
+                    </div>
+                    <button class="btn btn-outline-dark btn-sm fw-bold px-3" onclick="bersihkanLog()"><i class="fa-solid fa-trash me-1"></i> Bersihkan Log</button>
                 </div>
-                <div class="card card-glass">
+
+                <div class="card bg-white text-dark">
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #d4af37 !important;"><span class="fw-bold text-dark"><i class="fa-solid fa-list-check text-warning me-2"></i> Daftar Riwayat Aktivitas</span></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0" style="background: transparent;">
-                                <thead><tr><th class="py-3 ps-3">WAKTU</th><th>PENGGUNA</th><th>AKSI</th><th>KETERANGAN</th></tr></thead>
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 ps-3" style="width: 170px;">WAKTU</th>
+                                        <th class="py-3" style="width: 150px;">PENGGUNA</th>
+                                        <th class="py-3" style="width: 140px;">AKSI</th>
+                                        <th class="py-3">KETERANGAN AKTIVITAS</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="tabelLogBody"></tbody>
                             </table>
                         </div>
@@ -425,26 +458,41 @@
                 </div>
             </div>
 
-            <!-- HALAMAN PORTFOLIO -->
+            <!-- HALAMAN MANAJEMEN PORTFOLIO -->
             <div id="halamanPortfolio" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold m-0 text-white" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-code text-warning me-2"></i> Manajemen Portfolio</h3>
+                    <div>
+                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-code text-warning me-2"></i> Manajemen Portfolio & Proyek</h3>
+                        <p class="text-muted small m-0 mt-1">Kelola etalase karya, tautan aplikasi web, atau dokumentasi program pengembangan.</p>
+                    </div>
                     <button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="bukaModalTambahPortfolio()"><i class="fa-solid fa-plus me-1"></i> Tambah Portfolio</button>
                 </div>
+
                 <div class="row g-4" id="gridPortfolio"></div>
             </div>
 
             <!-- HALAMAN PENGGUNA -->
             <div id="halamanPengguna" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold m-0 text-white" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-users text-success me-2"></i> Manajemen Pengguna</h3>
+                    <div>
+                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-users text-success me-2"></i> Manajemen Pengguna & Hak Akses</h3>
+                        <p class="text-muted small m-0 mt-1">Kelola daftar akun yang memiliki otorisasi mengakses sistem arsip digital.</p>
+                    </div>
                     <button class="btn btn-sm fw-bold text-white px-3" style="background-color: #5c4033;" onclick="bukaModalTambahUser()"><i class="fa-solid fa-user-plus me-1"></i> Tambah Pengguna</button>
                 </div>
-                <div class="card card-glass">
+
+                <div class="card bg-white text-dark">
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #5c4033 !important;"><span class="fw-bold text-dark"><i class="fa-solid fa-address-book text-success me-2"></i> Daftar Akun Terdaftar</span></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0" style="background: transparent;">
-                                <thead><tr><th class="py-3 ps-3">USERNAME</th><th>PERAN</th><th class="text-center">AKSI</th></tr></thead>
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 ps-3">USERNAME / EMAIL</th>
+                                        <th class="py-3">HAK AKSES / PERAN</th>
+                                        <th class="py-3 text-center" style="width: 130px;">AKSI</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="tabelPenggunaBody"></tbody>
                             </table>
                         </div>
@@ -455,7 +503,10 @@
             <!-- HALAMAN GALLERY -->
             <div id="halamanGallery" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold m-0 text-white" style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-photo-film text-success me-2"></i> Galeri & Dokumentasi</h3>
+                    <div>
+                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-photo-film text-success me-2"></i> Dokumentasi & Galeri Visual</h3>
+                        <p class="text-muted small m-0 mt-1">Pusat unggah foto, video, dan media dokumentasi kegiatan arsip.</p>
+                    </div>
                     <button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="bukaModalUploadMedia()"><i class="fa-solid fa-upload me-1"></i> Upload Media</button>
                 </div>
                 <div class="row g-4" id="gridGaleriMedia"></div>
@@ -464,113 +515,194 @@
         </div>
     </div>
 
-    <!-- MODAL-MODAL PENDUKUNG -->
+    <!-- MODAL BUAT FOLDER -->
     <div class="modal fade" id="modalBuatFolder" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content text-dark">
-                <div class="modal-header"><h5 class="modal-title fw-bold fs-6">Buat Folder Arsip Baru</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body"><div class="mb-3"><label class="form-label fw-bold small">Nama Folder / Instansi</label><input type="text" id="inputNamaFolderBaru" class="form-control"></div></div>
-                <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-success btn-sm fw-bold" style="background-color: #2d5a27;" onclick="simpanFolderBaru()">Simpan</button></div>
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-folder-plus text-success me-2"></i> Buat Folder Arsip Baru</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body"><div class="mb-3"><label class="form-label fw-bold small">Nama Folder / Instansi</label><input type="text" id="inputNamaFolderBaru" class="form-control" placeholder="Contoh: SDIT AL-IKHLAS"></div></div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-success btn-sm fw-bold px-3" style="background-color: #2d5a27;" onclick="simpanFolderBaru()">Simpan Folder</button></div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL TAMBAH PORTFOLIO -->
     <div class="modal fade" id="modalTambahPortfolio" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content text-dark">
-                <div class="modal-header"><h5 class="modal-title fw-bold fs-6">Tambah Proyek Portfolio</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-code text-warning me-2"></i> Tambah Proyek Portfolio</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <div class="mb-3"><label class="form-label fw-bold small">Judul</label><input type="text" id="inputPortJudul" class="form-control"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Deskripsi</label><textarea id="inputPortDesc" class="form-control" rows="3"></textarea></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Link URL</label><input type="text" id="inputPortLink" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Judul Proyek / Aplikasi</label><input type="text" id="inputPortJudul" class="form-control" placeholder="Contoh: Sudang Tools / Portal Sekolah"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Deskripsi Singkat</label><textarea id="inputPortDesc" class="form-control" rows="3" placeholder="Jelaskan secara singkat kegunaan atau fitur proyek ini..."></textarea></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Tautan / Link Proyek (URL)</label><input type="text" id="inputPortLink" class="form-control" placeholder="https://github.com/username/project"></div>
                 </div>
-                <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white" style="background-color: #2d5a27;" onclick="simpanPortfolioBaru()">Simpan</button></div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="simpanPortfolioBaru()">Simpan Portfolio</button></div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL TAMBAH PENGGUNA -->
     <div class="modal fade" id="modalTambahUser" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content text-dark">
-                <div class="modal-header"><h5 class="modal-title fw-bold fs-6">Tambah Pengguna</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-user-plus text-success me-2"></i> Tambah Akun Pengguna Baru</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <div class="mb-3"><label class="form-label fw-bold small">Username</label><input type="text" id="inputUserBaruEmail" class="form-control"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Password</label><input type="password" id="inputUserBaruPass" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Username / Email</label><input type="text" id="inputUserBaruEmail" class="form-control" placeholder="Contoh: staf@mtechno.com"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Password</label><input type="password" id="inputUserBaruPass" class="form-control" placeholder="Buat password"></div>
                 </div>
-                <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white" style="background-color: #5c4033;" onclick="simpanUserBaru()">Simpan</button></div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #5c4033;" onclick="simpanUserBaru()">Simpan Pengguna</button></div>
             </div>
         </div>
     </div>
 
+    <!-- MODAL UPLOAD MEDIA DOKUMENTASI -->
     <div class="modal fade" id="modalUploadMedia" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content text-dark">
-                <div class="modal-header"><h5 class="modal-title fw-bold fs-6">Upload Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-cloud-arrow-up text-success me-2"></i> Upload Media Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <div class="mb-3"><label class="form-label fw-bold small">Judul</label><input type="text" id="inputJudulMedia" class="form-control"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">File</label><input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Judul / Keterangan Dokumentasi</label><input type="text" id="inputJudulMedia" class="form-control" placeholder="Contoh: Dokumentasi Kegiatan Ruang Arsip"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Pilih File (Foto/Video/Dokumen)</label><input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx"></div>
                 </div>
-                <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white" style="background-color: #2d5a27;" onclick="prosesUploadMedia()">Upload</button></div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="prosesUploadMedia()">Upload & Simpan</button></div>
             </div>
         </div>
     </div>
 
-    <!-- JS Scripts -->
+    <!-- MODAL LIHAT DOKUMEN / MEDIA -->
+    <div class="modal fade" id="modalLihatDokumen" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content text-dark">
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-6" id="modalJudulDokumen"><i class="fa-solid fa-file-lines text-primary me-2"></i> Pratinjau Dokumen</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body text-center p-4">
+                    <div id="containerPreviewFile" class="mb-3"></div>
+                    <div class="text-muted small" id="infoDetailFile"></div>
+                </div>
+                <div class="modal-footer">
+                    <a id="btnDownloadFile" href="#" class="btn btn-sm fw-bold px-3 text-white" style="background-color: #2d5a27;" download><i class="fa-solid fa-download me-1"></i> Download File</a>
+                    <button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         let folderAktifId = null;
+
         window.onload = () => {
             let savedAvatar = localStorage.getItem('mtechno_avatar');
-            if(savedAvatar) document.getElementById('sidebarUserAvatar').src = savedAvatar;
+            if(savedAvatar) {
+                let avatarImg = document.getElementById('sidebarUserAvatar');
+                if(avatarImg) avatarImg.src = savedAvatar;
+            }
             let activeUser = localStorage.getItem('currentUserEmail');
-            if(activeUser) document.getElementById('sidebarUserEmail').innerText = activeUser;
+            if(activeUser) {
+                let elEmail = document.getElementById('sidebarUserEmail');
+                if(elEmail) elEmail.innerText = activeUser;
+            }
 
             if(!localStorage.getItem('mtechno_folders')) localStorage.setItem('mtechno_folders', JSON.stringify([]));
             if(!localStorage.getItem('mtechno_berkas')) localStorage.setItem('mtechno_berkas', JSON.stringify([]));
             if(!localStorage.getItem('mtechno_media')) localStorage.setItem('mtechno_media', JSON.stringify([]));
-            if(!localStorage.getItem('mtechno_portfolio')) localStorage.setItem('mtechno_portfolio', JSON.stringify([{ id: 1, judul: "Sistem Arsip Digital", desc: "Aplikasi pengelola arsip.", link: "#" }]));
-            if(!localStorage.getItem('mtechno_users')) localStorage.setItem('mtechno_users', JSON.stringify([{ username: "purnamasudang@gmail.com", password: "123", role: "Administrator" }]));
-            if(!localStorage.getItem('mtechno_logs')) localStorage.setItem('mtechno_logs', JSON.stringify([{ waktu: formatTanggal(new Date()), user: "System", aksi: "INIT", ket: "Sistem diinisialisasi." }]));
+            if(!localStorage.getItem('mtechno_portfolio')) {
+                localStorage.setItem('mtechno_portfolio', JSON.stringify([
+                    { id: 1, judul: "Sistem Arsip Digital (SAD)", desc: "Aplikasi pengelola arsip digital dan register dokumen berbasis web.", link: "#" }
+                ]));
+            }
+            if(!localStorage.getItem('mtechno_users')) {
+                localStorage.setItem('mtechno_users', JSON.stringify([
+                    { username: "purnamasudang@gmail.com", password: "123", role: "Administrator" }
+                ]));
+            }
+            if(!localStorage.getItem('mtechno_logs')) {
+                localStorage.setItem('mtechno_logs', JSON.stringify([
+                    { waktu: formatTanggal(new Date()), user: "System", aksi: "INITIALIZE", ket: "Sistem Arsip Digital berhasil diinisialisasi." }
+                ]));
+            }
 
             if(localStorage.getItem('isLogin') === 'true') { showApp(); } else { tampilLogin(); }
         };
 
         function formatTanggal(date) {
             let d = new Date(date);
-            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            let tgl = String(d.getDate()).padStart(2, '0');
+            let bln = String(d.getMonth() + 1).padStart(2, '0');
+            let thn = d.getFullYear();
+            let jam = String(d.getHours()).padStart(2, '0');
+            let mnt = String(d.getMinutes()).padStart(2, '0');
+            let dtk = String(d.getSeconds()).padStart(2, '0');
+            return `${tgl}/${bln}/${thn} ${jam}:${mnt}:${dtk}`;
         }
-        function gantiFotoProfil(e) {
-            let file = e.target.files[0];
-            if(file) {
+
+        function catatLog(aksi, ket) {
+            let logs = JSON.parse(localStorage.getItem('mtechno_logs') || '[]');
+            let user = localStorage.getItem('currentUserEmail') || 'Administrator';
+            logs.unshift({ waktu: formatTanggal(new Date()), user: user, aksi: aksi, ket: ket });
+            if(logs.length > 100) logs.pop();
+            localStorage.setItem('mtechno_logs', JSON.stringify(logs));
+        }
+
+        function gantiFotoProfil(event) {
+            let file = event.target.files[0];
+            if (file) {
                 let reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('sidebarUserAvatar').src = evt.target.result;
-                    localStorage.setItem('mtechno_avatar', evt.target.result);
+                reader.onload = function(e) {
+                    let avatarImg = document.getElementById('sidebarUserAvatar');
+                    if(avatarImg) avatarImg.src = e.target.result;
+                    localStorage.setItem('mtechno_avatar', e.target.result);
+                    catatLog("UPDATE PROFIL", "Mengganti foto profil akun.");
                 }
                 reader.readAsDataURL(file);
             }
         }
-        function tampilLogin() { document.getElementById('loginSection').style.display = 'flex'; document.getElementById('registerSection').style.display = 'none'; }
+
+        function tampilLogin() {
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('registerSection').style.display = 'none';
+        }
+
+        function tampilRegister() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'flex';
+        }
+
         function registerAkun() {
             let u = document.getElementById('reg_user').value.trim();
             let p = document.getElementById('reg_pass').value.trim();
-            if(!u || !p) return;
+            let msg = document.getElementById('regMsg');
+
+            if(!u || !p) { msg.style.color = '#d93838'; msg.innerText = "Email dan password wajib diisi!"; return; }
+
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
             users.push({ username: u, password: p, role: "Operator" });
             localStorage.setItem('mtechno_users', JSON.stringify(users));
-            tampilLogin();
+            catatLog("REGISTER", `Mendaftarkan akun baru: ${u}`);
+
+            msg.style.color = '#2d5a27';
+            msg.innerText = "Registrasi berhasil! Silakan login.";
+            setTimeout(() => { tampilLogin(); }, 1200);
         }
+
         function login() {
             let u = document.getElementById('login_user').value.trim();
             let p = document.getElementById('login_pass').value.trim();
+            let msg = document.getElementById('loginMsg');
+
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
-            let valid = users.find(x => x.username === u && x.password === p);
-            if(valid) {
+            let validUser = users.find(x => x.username === u && x.password === p);
+            if(validUser) {
                 localStorage.setItem('isLogin', 'true');
-                localStorage.setItem('currentUserEmail', valid.username);
+                localStorage.setItem('currentUserEmail', validUser.username);
+                catatLog("LOGIN", `Pengguna ${validUser.username} masuk ke sistem.`);
                 showApp();
-            } else { document.getElementById('loginMsg').innerText = "Salah password/username!"; }
+            } else {
+                msg.innerText = "Username atau password salah!";
+            }
         }
+
         function showApp() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('registerSection').style.display = 'none';
@@ -579,87 +711,444 @@
             document.getElementById('mainAppContainer').style.display = 'block';
             bukaHalaman('Dashboard');
         }
-        function logout() { localStorage.removeItem('isLogin'); location.reload(); }
+
+        function logout() {
+            catatLog("LOGOUT", "Pengguna keluar dari sistem.");
+            localStorage.removeItem('isLogin');
+            location.reload();
+        }
+
         function bukaHalaman(h) {
             ['Dashboard', 'DetailFolder', 'UploadArsip', 'ActivityLog', 'Portfolio', 'Pengguna', 'Gallery'].forEach(item => {
-                document.getElementById('halaman' + item).style.display = (item === h) ? 'block' : 'none';
-                let link = document.getElementById('menuLink' + item);
-                if(link) link.classList.toggle('active', item === h);
+                let el = document.getElementById('halaman' + item);
+                if(el) el.style.display = (item === h) ? 'block' : 'none';
+                
+                let linkEl = document.getElementById('menuLink' + item);
+                if(linkEl) {
+                    if(item === h) linkEl.classList.add('active');
+                    else linkEl.classList.remove('active');
+                }
             });
+
             if(h === 'DetailFolder') muatTabelFolder();
             else if(h === 'ActivityLog') muatTabelLog();
             else if(h === 'Pengguna') muatTabelPengguna();
             else if(h === 'Gallery') muatGaleriMedia();
             else if(h === 'Portfolio') muatGridPortfolio();
         }
+
         function muatGridPortfolio() {
-            let p = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+            let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
             let grid = document.getElementById('gridPortfolio');
-            grid.innerHTML = p.length === 0 ? '<div class="col-12 text-center text-light">Kosong</div>' : '';
-            p.forEach(x => {
-                grid.innerHTML += `<div class="col-md-4"><div class="card card-glass p-3"><h5 class="fw-bold">${x.judul}</h5><p class="small text-muted">${x.desc}</p></div></div>`;
+            grid.innerHTML = '';
+
+            if(portfolios.length === 0) {
+                grid.innerHTML = `<div class="col-12 text-center text-muted py-4">Belum ada portfolio proyek tersimpan.</div>`;
+                return;
+            }
+
+            portfolios.forEach(item => {
+                let col = document.createElement('div');
+                col.className = 'col-md-4';
+                col.innerHTML = `
+                    <div class="card bg-white text-dark border-0 shadow-sm h-100">
+                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa-solid fa-laptop-code text-success fs-4 me-2"></i>
+                                    <h5 class="fw-bold mb-0 text-truncate" style="font-size: 16px;">${item.judul}</h5>
+                                </div>
+                                <p class="text-muted small mb-3" style="min-height: 40px; font-size: 13px;">${item.desc || 'Tidak ada deskripsi.'}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <a href="${item.link || '#'}" target="_blank" class="btn btn-sm btn-outline-success fw-bold px-3"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Kunjungi</a>
+                                <button class="btn btn-sm btn-danger" onclick="hapusPortfolio(${item.id}, '${item.judul}')" title="Hapus Portfolio"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(col);
             });
         }
+
+        function bukaModalTambahPortfolio() {
+            document.getElementById('inputPortJudul').value = '';
+            document.getElementById('inputPortDesc').value = '';
+            document.getElementById('inputPortLink').value = '';
+            new bootstrap.Modal(document.getElementById('modalTambahPortfolio')).show();
+        }
+
+        function simpanPortfolioBaru() {
+            let judul = document.getElementById('inputPortJudul').value.trim();
+            let desc = document.getElementById('inputPortDesc').value.trim();
+            let link = document.getElementById('inputPortLink').value.trim();
+
+            if(!judul) { alert('Judul proyek wajib diisi!'); return; }
+
+            let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+            let newId = portfolios.length > 0 ? portfolios[portfolios.length - 1].id + 1 : 1;
+            portfolios.push({ id: newId, judul: judul, desc: desc, link: link || '#' });
+            localStorage.setItem('mtechno_portfolio', JSON.stringify(portfolios));
+
+            catatLog("TAMBAH PORTFOLIO", `Menambahkan proyek portfolio: "${judul}"`);
+
+            bootstrap.Modal.getInstance(document.getElementById('modalTambahPortfolio')).hide();
+            muatGridPortfolio();
+        }
+
+        function hapusPortfolio(id, judul) {
+            if(confirm(`Yakin ingin menghapus portfolio "${judul}"?`)) {
+                let portfolios = JSON.parse(localStorage.getItem('mtechno_portfolio') || '[]');
+                portfolios = portfolios.filter(x => x.id !== id);
+                localStorage.setItem('mtechno_portfolio', JSON.stringify(portfolios));
+                catatLog("HAPUS PORTFOLIO", `Menghapus portfolio: "${judul}"`);
+                muatGridPortfolio();
+            }
+        }
+
         function muatTabelPengguna() {
             let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
             let tbody = document.getElementById('tabelPenggunaBody');
             tbody.innerHTML = '';
-            users.forEach(u => {
-                tbody.innerHTML += `<tr><td class="ps-3 fw-bold">${u.username}</td><td><span class="badge bg-success">${u.role}</span></td><td class="text-center">-</td></tr>`;
+
+            if(users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada akun pengguna terdaftar.</td></tr>`;
+                return;
+            }
+
+            users.forEach((usr, idx) => {
+                let roleBadge = usr.role === 'Administrator' ? 'bg-danger' : 'bg-success';
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-user-circle text-secondary me-2"></i> ${usr.username}</td>
+                    <td><span class="badge ${roleBadge}">${usr.role || 'Operator'}</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="hapusUser(${idx}, '${usr.username}')" title="Hapus Akun"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
+
+        function bukaModalTambahUser() {
+            document.getElementById('inputUserBaruEmail').value = '';
+            document.getElementById('inputUserBaruPass').value = '';
+            new bootstrap.Modal(document.getElementById('modalTambahUser')).show();
+        }
+
+        function simpanUserBaru() {
+            let u = document.getElementById('inputUserBaruEmail').value.trim();
+            let p = document.getElementById('inputUserBaruPass').value.trim();
+
+            if(!u || !p) { alert('Username dan password wajib diisi!'); return; }
+
+            let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
+            users.push({ username: u, password: p, role: "Operator" });
+            localStorage.setItem('mtechno_users', JSON.stringify(users));
+
+            catatLog("TAMBAH USER", `Menambahkan akun pengguna baru: ${u}`);
+
+            bootstrap.Modal.getInstance(document.getElementById('modalTambahUser')).hide();
+            muatTabelPengguna();
+        }
+
+        function hapusUser(index, username) {
+            let currentUser = localStorage.getItem('currentUserEmail');
+            if(username === currentUser) {
+                alert('Anda tidak dapat menghapus akun yang sedang Anda gunakan saat ini!');
+                return;
+            }
+            if(confirm(`Yakin ingin menghapus akses akun "${username}"?`)) {
+                let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
+                users.splice(index, 1);
+                localStorage.setItem('mtechno_users', JSON.stringify(users));
+                catatLog("HAPUS USER", `Menghapus akun pengguna: ${username}`);
+                muatTabelPengguna();
+            }
+        }
+
         function muatTabelFolder() {
             let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
             let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let tbody = document.getElementById('tabelFolderBody');
+            tbody.innerHTML = '';
+
+            let totalBytes = 0;
+            berkas.forEach(b => { totalBytes += (b.ukuranBytes || 1024); });
+
             document.getElementById('statJumlahFolder').innerText = folders.length;
             document.getElementById('statJumlahArsip').innerText = berkas.length;
             document.getElementById('statMenuUnduh').innerText = berkas.length + " File";
-            let totalBytes = 0; berkas.forEach(b => totalBytes += (b.ukuranBytes || 1024));
             document.getElementById('statUkuranData').innerText = (totalBytes / 1024).toFixed(2) + " KB";
-            document.getElementById('widgetNamaInstansi').innerText = folders.length > 0 ? folders[folders.length - 1].nama : "Belum ada folder";
-            
-            let tbody = document.getElementById('tabelFolderBody');
-            tbody.innerHTML = folders.length === 0 ? `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada folder.</td></tr>` : '';
+
+            let widgetInstansi = document.getElementById('widgetNamaInstansi');
+            if(folders.length > 0) widgetInstansi.innerText = folders[folders.length - 1].nama;
+            else widgetInstansi.innerText = "Belum ada folder";
+
+            if(folders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada folder arsip. Silakan klik tombol "Buat Folder" di atas.</td></tr>`;
+                return;
+            }
+
             folders.forEach(f => {
-                let count = berkas.filter(b => b.folderId === f.id).length;
-                tbody.innerHTML += `<tr><td class="ps-3 fw-bold" style="cursor:pointer;" onclick="bukaFolder(${f.id}, '${f.nama}')"><i class="fa-solid fa-folder text-warning me-2"></i> ${f.nama}</td><td>${count} File</td><td class="text-center"><button class="btn btn-sm text-white" style="background-color:#2d5a27;" onclick="bukaFolder(${f.id}, '${f.nama}')"><i class="fa-solid fa-folder-open"></i></button></td></tr>`;
+                let jumlahFileInFolder = berkas.filter(b => b.folderId === f.id).length;
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 fw-bold text-dark" style="cursor: pointer;" onclick="bukaFolder(${f.id}, '${f.nama}')"><i class="fa-solid fa-folder text-warning me-2"></i> ${f.nama}</td>
+                    <td>${jumlahFileInFolder} File</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="bukaFolder(${f.id}, '${f.nama}')" title="Buka Folder"><i class="fa-solid fa-folder-open"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusFolder(${f.id}, '${f.nama}')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
-        function bukaModalBuatFolder() { new bootstrap.Modal(document.getElementById('modalBuatFolder')).show(); }
+
+        function bukaModalBuatFolder() {
+            document.getElementById('inputNamaFolderBaru').value = '';
+            new bootstrap.Modal(document.getElementById('modalBuatFolder')).show();
+        }
+
         function simpanFolderBaru() {
             let nama = document.getElementById('inputNamaFolderBaru').value.trim();
-            if(!nama) return;
-            let f = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
-            f.push({ id: Date.now(), nama: nama });
-            localStorage.setItem('mtechno_folders', JSON.stringify(f));
+            if(!nama) { alert('Nama folder wajib diisi!'); return; }
+
+            let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
+            let newId = folders.length > 0 ? folders[folders.length - 1].id + 1 : 1;
+            folders.push({ id: newId, nama: nama });
+            localStorage.setItem('mtechno_folders', JSON.stringify(folders));
+            catatLog("BUAT FOLDER", `Membuat folder arsip baru: "${nama}"`);
+
             bootstrap.Modal.getInstance(document.getElementById('modalBuatFolder')).hide();
             muatTabelFolder();
         }
-        function bukaFolder(id, nama) { folderAktifId = id; document.getElementById('judulFolderAktif').innerText = "Kelola Folder: " + nama; muatTabelBerkas(); bukaHalaman('UploadArsip'); }
+
+        function hapusFolder(id, namaFolder) {
+            if(confirm(`Yakin ingin menghapus folder "${namaFolder}"?`)) {
+                let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
+                folders = folders.filter(f => f.id !== id);
+                localStorage.setItem('mtechno_folders', JSON.stringify(folders));
+
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                berkas = berkas.filter(b => b.folderId !== id);
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+
+                catatLog("HAPUS FOLDER", `Menghapus folder arsip: "${namaFolder}"`);
+                muatTabelFolder();
+            }
+        }
+
+        function bukaFolder(id, namaFolder) {
+            folderAktifId = id;
+            document.getElementById('judulFolderAktif').innerText = "Kelola Berkas: " + namaFolder;
+            document.getElementById('inputNamaBerkas').value = '';
+            document.getElementById('inputFileArsip').value = '';
+            muatTabelBerkas();
+            bukaHalaman('UploadArsip');
+        }
+
         function prosesUploadBerkas() {
-            let nama = document.getElementById('inputNamaBerkas').value.trim();
+            let namaBerkas = document.getElementById('inputNamaBerkas').value.trim();
             let fileInput = document.getElementById('inputFileArsip');
-            if(!nama || fileInput.files.length === 0) return;
+
+            if(!namaBerkas) { alert('Nama / Keterangan dokumen wajib diisi!'); return; }
+            if(fileInput.files.length === 0) { alert('Pilih file dokumen terlebih dahulu!'); return; }
+
             let file = fileInput.files[0];
             let reader = new FileReader();
+
             reader.onload = function(e) {
-                let b = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
-                b.push({ id: Date.now(), folderId: folderAktifId, nama: nama, namaFileAsli: file.name, tipe: file.name.split('.').pop().toUpperCase(), ukuranBytes: file.size, fileData: e.target.result });
-                localStorage.setItem('mtechno_berkas', JSON.stringify(b));
+                let base64Data = e.target.result;
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                berkas.push({
+                    id: Date.now(), folderId: folderAktifId, nama: namaBerkas,
+                    namaFileAsli: file.name, tipe: file.name.split('.').pop().toUpperCase(),
+                    ukuranBytes: file.size, ukuranFormatted: (file.size / 1024).toFixed(2) + " KB", fileData: base64Data
+                });
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+                catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name})`);
+
+                document.getElementById('inputNamaBerkas').value = '';
+                document.getElementById('inputFileArsip').value = '';
                 muatTabelBerkas();
             };
             reader.readAsDataURL(file);
         }
+
         function muatTabelBerkas() {
-            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]').filter(b => b.folderId === folderAktifId);
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let folderBerkas = berkas.filter(b => b.folderId === folderAktifId);
             let tbody = document.getElementById('tabelBerkasBody');
-            tbody.innerHTML = berkas.length === 0 ? `<tr><td colspan="4" class="text-center text-muted">Belum ada berkas.</td></tr>` : '';
-            berkas.forEach(b => {
-                tbody.innerHTML += `<tr><td class="ps-3 fw-bold">${b.nama}</td><td>${b.tipe}</td><td>${(b.ukuranBytes/1024).toFixed(2)} KB</td><td class="text-center">-</td></tr>`;
+            tbody.innerHTML = '';
+
+            if(folderBerkas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Belum ada berkas di folder ini.</td></tr>`;
+                return;
+            }
+
+            folderBerkas.forEach(b => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 fw-bold">
+                        <a href="javascript:void(0);" onclick="lihatDokumen(${b.id})" class="text-decoration-none d-flex align-items-center" style="color: #2d5a27;"><i class="fa-solid fa-file-lines me-2"></i> <span>${b.nama}</span></a>
+                        <small class="text-muted d-block" style="font-size: 11px;">File: ${b.namaFileAsli}</small>
+                    </td>
+                    <td><span class="badge" style="background-color: #5c4033;">${b.tipe}</span></td>
+                    <td>${b.ukuranFormatted}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="lihatDokumen(${b.id})" title="Lihat"><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id}, '${b.nama}')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
-        function muatTabelLog() {}
-        function muatGaleriMedia() {}
+
+        function lihatDokumen(id) {
+            let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+            let b = berkas.find(x => x.id === id);
+            if(!b) return;
+
+            catatLog("LIHAT BERKAS", `Melihat pratinjau dokumen: "${b.nama}"`);
+            document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-file-lines text-success me-2"></i> ${b.nama}`;
+            document.getElementById('infoDetailFile').innerText = `Nama File: ${b.namaFileAsli} | Ukuran: ${b.ukuranFormatted} | Tipe: ${b.tipe}`;
+            
+            let container = document.getElementById('containerPreviewFile');
+            let btnDown = document.getElementById('btnDownloadFile');
+            btnDown.href = b.fileData;
+            btnDown.style.display = 'inline-block';
+            btnDown.download = b.namaFileAsli;
+
+            if(['JPG', 'JPEG', 'PNG', 'GIF'].includes(b.tipe)) {
+                container.innerHTML = `<img src="${b.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
+            } else if(b.tipe === 'PDF') {
+                container.innerHTML = `<iframe src="${b.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
+            } else {
+                container.innerHTML = `<div class="py-5 bg-light rounded border"><i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i><h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5></div>`;
+            }
+            new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
+        }
+
+        function hapusBerkas(id, namaBerkas) {
+            if(confirm(`Hapus berkas "${namaBerkas}"?`)) {
+                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                berkas = berkas.filter(b => b.id !== id);
+                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+                catatLog("HAPUS BERKAS", `Menghapus berkas: "${namaBerkas}"`);
+                muatTabelFolder();
+            }
+        }
+
+        function muatTabelLog() {
+            let logs = JSON.parse(localStorage.getItem('mtechno_logs') || '[]');
+            let tbody = document.getElementById('tabelLogBody');
+            tbody.innerHTML = '';
+            if(logs.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Belum ada riwayat aktivitas.</td></tr>`; return; }
+
+            logs.forEach(l => {
+                let badgeColor = "bg-secondary";
+                if(l.aksi.includes("BUAT") || l.aksi.includes("UPLOAD") || l.aksi.includes("TAMBAH")) badgeColor = "bg-success";
+                else if(l.aksi.includes("HAPUS")) badgeColor = "bg-danger";
+                else if(l.aksi.includes("LOGIN") || l.aksi.includes("REGISTER")) badgeColor = "bg-dark";
+                else if(l.aksi.includes("LIHAT")) badgeColor = "bg-info text-dark";
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-3 text-muted small fw-bold">${l.waktu}</td>
+                    <td><span class="text-dark small"><i class="fa-solid fa-user-circle text-secondary me-1"></i> ${l.user}</span></td>
+                    <td><span class="badge ${badgeColor}">${l.aksi}</span></td>
+                    <td class="text-dark">${l.ket}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bersihkanLog() {
+            if(confirm('Yakin ingin membersihkan seluruh riwayat log aktivitas?')) {
+                localStorage.setItem('mtechno_logs', JSON.stringify([]));
+                catatLog("BERSIHKAN LOG", "Administrator membersihkan riwayat log aktivitas.");
+                muatTabelLog();
+            }
+        }
+
+        function bukaModalUploadMedia() {
+            document.getElementById('inputJudulMedia').value = '';
+            document.getElementById('inputFileMedia').value = '';
+            new bootstrap.Modal(document.getElementById('modalUploadMedia')).show();
+        }
+
+        function prosesUploadMedia() {
+            let judul = document.getElementById('inputJudulMedia').value.trim();
+            let fileInput = document.getElementById('inputFileMedia');
+            if(!judul || fileInput.files.length === 0) { alert('Judul dan file media wajib diisi!'); return; }
+
+            let file = fileInput.files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+                mediaList.push({
+                    id: Date.now(), judul: judul, ket: `File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+                    tipe: file.name.split('.').pop().toUpperCase(), fileData: e.target.result, namaFileAsli: file.name
+                });
+                localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+                catatLog("UPLOAD MEDIA", `Mengunggah dokumentasi: "${judul}"`);
+                bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia')).hide();
+                muatGaleriMedia();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function muatGaleriMedia() {
+            let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+            let grid = document.getElementById('gridGaleriMedia');
+            grid.innerHTML = '';
+            if(mediaList.length === 0) { grid.innerHTML = `<div class="col-12 text-center text-muted py-4">Belum ada dokumentasi media.</div>`; return; }
+
+            mediaList.forEach(m => {
+                let isImage = ['JPG', 'JPEG', 'PNG', 'GIF'].includes(m.tipe);
+                let previewHtml = isImage ? `<div style="height: 180px; background: #000; overflow: hidden;"><img src="${m.fileData}" style="width: 100%; height: 100%; object-fit: cover;"></div>` : `<div class="bg-secondary text-white text-center py-5 rounded-top"><i class="fa-solid fa-file-lines fa-3x"></i></div>`;
+                let col = document.createElement('div');
+                col.className = 'col-md-4';
+                col.innerHTML = `
+                    <div class="card border shadow-sm h-100 text-dark">
+                        ${previewHtml}
+                        <div class="card-body p-3 d-flex flex-column justify-content-between">
+                            <div><h6 class="fw-bold mb-1 text-truncate" style="font-size: 15px;">${m.judul}</h6><p class="text-muted small mb-2 text-truncate">${m.ket}</p></div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="badge" style="background-color: #2d5a27;">${m.tipe}</span>
+                                <div><button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="lihatMedia(${m.id})"><i class="fa-solid fa-eye"></i></button><button class="btn btn-danger btn-sm" onclick="hapusMedia(${m.id}, '${m.judul}')"><i class="fa-solid fa-trash-can"></i></button></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(col);
+            });
+        }
+
+        function lihatMedia(id) {
+            let m = JSON.parse(localStorage.getItem('mtechno_media') || '[]').find(x => x.id === id);
+            if(!m) return;
+            catatLog("LIHAT MEDIA", `Melihat pratinjau galeri: "${m.judul}"`);
+            document.getElementById('modalJudulDokumen').innerHTML = `<i class="fa-solid fa-photo-film text-success me-2"></i> ${m.judul}`;
+            document.getElementById('infoDetailFile').innerText = `Keterangan: ${m.ket} | Tipe: ${m.tipe}`;
+            let container = document.getElementById('containerPreviewFile');
+            let btnDown = document.getElementById('btnDownloadFile');
+            btnDown.href = m.fileData;
+            btnDown.style.display = 'inline-block';
+            btnDown.download = m.namaFileAsli;
+            container.innerHTML = `<img src="${m.fileData}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">`;
+            new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
+        }
+
+        function hapusMedia(id, judulMedia) {
+            if(confirm(`Hapus dokumentasi "${judulMedia}"?`)) {
+                let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]').filter(x => x.id !== id);
+                localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+                catatLog("HAPUS MEDIA", `Menghapus galeri: "${judulMedia}"`);
+                muatGaleriMedia();
+            }
+        }
     </script>
 </body>
 </html>
