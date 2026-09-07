@@ -132,7 +132,6 @@
         .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
         .stat-card-icon { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; }
         .bg-folder { background-color: #00c0ef; }
-        .bg-arsip { background-color: #dd4b39; }
         .bg-storage { background-color: #00a65a; }
         .bg-home { background-color: #f39c12; }
 
@@ -236,8 +235,9 @@
 
             <!-- HALAMAN DASHBOARD -->
             <div id="halamanDashboard">
+                <!-- 3 Kotak Atas (Jumlah Arsip telah dihapus, menggunakan col-md-4 agar pas 3 kotak) -->
                 <div class="row">
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-4 col-sm-6">
                         <div class="stat-card" onclick="tambahFolderInteraktif()">
                             <div class="stat-card-icon bg-folder"><i class="fa-solid fa-folder-open"></i></div>
                             <div class="stat-card-body">
@@ -246,17 +246,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Kotak Jumlah Arsip (Aktif & Mengacu ke Total File di Folder Arsip) -->
-                    <div class="col-md-3 col-sm-6">
-                        <div class="stat-card" onclick="bukaMenuUnduh()" title="Klik untuk melihat seluruh arsip folder">
-                            <div class="stat-card-icon bg-arsip"><i class="fa-solid fa-file-lines"></i></div>
-                            <div class="stat-card-body">
-                                <div class="stat-card-title">JUMLAH ARSIP <i class="fa-solid fa-arrow-up-right-from-square float-end" style="font-size: 10px; opacity: 0.8;"></i></div>
-                                <div class="stat-card-value" id="valJumlahArsip">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-4 col-sm-6">
                         <div class="stat-card">
                             <div class="stat-card-icon bg-storage"><i class="fa-solid fa-hard-drive"></i></div>
                             <div class="stat-card-body">
@@ -265,7 +255,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-4 col-sm-6">
                         <div class="stat-card" onclick="bukaHalaman('Dashboard')">
                             <div class="stat-card-icon bg-home"><i class="fa-solid fa-house-chimney"></i></div>
                             <div class="stat-card-body">
@@ -540,7 +530,6 @@
             let totalArsip = appData.files.length;
             
             document.getElementById('valJumlahFolder').innerText = totalFolder;
-            document.getElementById('valJumlahArsip').innerText = totalArsip.toLocaleString('id-ID');
             
             let totalBytes = appData.files.reduce((acc, curr) => acc + (curr.size || 0), 0);
             let ukuranStr = "0.00 KB";
