@@ -242,7 +242,7 @@
                             <div class="stat-card-icon bg-folder"><i class="fa-solid fa-folder-open"></i></div>
                             <div class="stat-card-body">
                                 <div class="stat-card-title">JUMLAH FOLDER</div>
-                                <div class="stat-card-value" id="valJumlahFolder">48</div>
+                                <div class="stat-card-value" id="valJumlahFolder">0</div>
                             </div>
                         </div>
                     </div>
@@ -251,7 +251,7 @@
                             <div class="stat-card-icon bg-arsip"><i class="fa-solid fa-file-lines"></i></div>
                             <div class="stat-card-body">
                                 <div class="stat-card-title">JUMLAH ARSIP</div>
-                                <div class="stat-card-value" id="valJumlahArsip">1,240</div>
+                                <div class="stat-card-value" id="valJumlahArsip">0</div>
                             </div>
                         </div>
                     </div>
@@ -260,7 +260,7 @@
                             <div class="stat-card-icon bg-storage"><i class="fa-solid fa-hard-drive"></i></div>
                             <div class="stat-card-body">
                                 <div class="stat-card-title">TOTAL UKURAN DATA</div>
-                                <div class="stat-card-value" id="valUkuranData">14.8 GB</div>
+                                <div class="stat-card-value" id="valUkuranData">0.00 KB</div>
                             </div>
                         </div>
                     </div>
@@ -269,7 +269,7 @@
                             <div class="stat-card-icon bg-home"><i class="fa-solid fa-house-chimney"></i></div>
                             <div class="stat-card-body">
                                 <div class="stat-card-title">STATUS HOME</div>
-                                <div class="stat-card-value">Active</div>
+                                <div class="stat-card-value" id="valStatusHome">Active</div>
                             </div>
                         </div>
                     </div>
@@ -304,7 +304,7 @@
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">1. NAMA INSTANSI</div>
-                                <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 13px; font-weight: 600;">SDN 1 / SMPN 2 (Umum)</div>
+                                <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 13px; font-weight: 600;">Belum ada instansi</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Instansi Arsip Terbaru</div>
                             </div>
                         </div>
@@ -313,7 +313,7 @@
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-calendar-days"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">2. TAHUN DOKUMEN</div>
-                                <div class="stat-card-value" id="valTahun" style="color: white;">2026</div>
+                                <div class="stat-card-value" id="valTahun" style="color: white;">-</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Tahun Arsip Disimpan</div>
                             </div>
                         </div>
@@ -322,7 +322,7 @@
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-download"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">3. MENU UNDUH</div>
-                                <div class="stat-card-value" id="valJumlahUnduh" style="color: white;">2 File</div>
+                                <div class="stat-card-value" id="valJumlahUnduh" style="color: white;">0 File</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Pusat Kumpulan File Unduhan</div>
                             </div>
                         </div>
@@ -366,7 +366,7 @@
         </div>
     </div>
 
-    <!-- MODAL UPLOAD ARSIP UMUM -->
+    <!-- MODAL UPLOAD ARsip UMUM -->
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -376,11 +376,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Nama Instansi (No. 1)</label>
+                        <label class="form-label">Nama Instansi</label>
                         <input type="text" id="inputNamaInstansi" class="form-control" placeholder="Contoh: SMPN 1 Bandung">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tahun Dokumen (No. 2)</label>
+                        <label class="form-label">Tahun Dokumen</label>
                         <input type="number" id="inputTahunArsip" class="form-control" value="2026">
                     </div>
                     <div class="mb-3">
@@ -475,24 +475,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Default data dimulai kosong agar bisa diatur murni dinamis
         let appData = {
-            arsipCount: 1240,
-            totalBytes: 14.8 * 1024 * 1024 * 1024,
-            terakhirInstansi: "SMPN 1 / SDN (Umum)",
-            terakhirTahun: "2026",
-            folders: [
-                { nama: "Arsip Kepegawaian", jumlah: 15 },
-                { nama: "Data Sekolah SD", jumlah: 20 },
-                { nama: "Data Sekolah SMP", jumlah: 13 },
-                { nama: "SDN KADEMANGAN 1", jumlah: 0 },
-                { nama: "SDNKADE", jumlah: 0 }
-            ],
-            files: [
-                { nama: "Laporan_Data_SDN_2026.pdf", tipe: "PDF", folder: "Arsip Kepegawaian", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "" },
-                { nama: "Rekap_Nilai_Siswa.xlsx", tipe: "EXCEL", folder: "Data Sekolah SD", instansi: "SMPN 2 Cimahi", tahun: "2025", dataUrl: "" },
-                { nama: "Surat_Keputusan.docx", tipe: "DOC", folder: "Data Sekolah SMP", instansi: "SDN Sukamaju", tahun: "2026", dataUrl: "" },
-                { nama: "Foto_Gedung_Sekolah.jpg", tipe: "JPG", folder: "Arsip Kepegawaian", instansi: "SDN 1 Bandung", tahun: "2026", dataUrl: "https://picsum.photos/600/400" }
-            ]
+            folders: [],
+            files: []
         };
 
         let currentActiveFolder = "";
@@ -504,7 +490,9 @@
 
         function loadSavedStats() {
             let saved = localStorage.getItem('mtechno_appdata');
-            if(saved) appData = JSON.parse(saved);
+            if(saved) {
+                appData = JSON.parse(saved);
+            }
             updateStatUI();
             renderFolders();
         }
@@ -516,35 +504,69 @@
         }
 
         function updateStatUI() {
-            document.getElementById('valJumlahFolder').innerText = appData.folders.length;
-            document.getElementById('valJumlahArsip').innerText = appData.arsipCount.toLocaleString('id-ID');
-            document.getElementById('valInstansi').innerText = appData.terakhirInstansi;
-            document.getElementById('valTahun').innerText = appData.terakhirTahun;
-            document.getElementById('valJumlahUnduh').innerText = appData.files.length + " File";
+            // Nomor 1: Statistik Atas
+            let totalFolder = appData.folders.length;
+            let totalArsip = appData.files.length;
             
-            let gb = appData.totalBytes / (1024 * 1024 * 1024);
-            document.getElementById('valUkuranData').innerText = gb.toFixed(2) + ' GB';
+            document.getElementById('valJumlahFolder').innerText = totalFolder;
+            document.getElementById('valJumlahArsip').innerText = totalArsip.toLocaleString('id-ID');
+            
+            // Hitung total ukuran byte secara riil dari file yang tersimpan
+            let totalBytes = appData.files.reduce((acc, curr) => acc + (curr.size || 0), 0);
+            let ukuranStr = "0.00 KB";
+            if(totalBytes > 0) {
+                if(totalBytes >= 1024 * 1024 * 1024) {
+                    ukuranStr = (totalBytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+                } else if(totalBytes >= 1024 * 1024) {
+                    ukuranStr = (totalBytes / (1024 * 1024)).toFixed(2) + " MB";
+                } else {
+                    ukuranStr = (totalBytes / 1024).toFixed(2) + " KB";
+                }
+            }
+            document.getElementById('valUkuranData').innerText = ukuranStr;
+            document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
+
+            // Nomor 2: Kotak Informasi Kanan
+            if(totalArsip > 0) {
+                // Ambil file terakhir yang diunggah
+                let fileTerakhir = appData.files[appData.files.length - 1];
+                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || "Tanpa Instansi";
+                document.getElementById('valTahun').innerText = fileTerakhir.tahun || "2026";
+            } else {
+                document.getElementById('valInstansi').innerText = "Belum ada instansi";
+                document.getElementById('valTahun').innerText = "-";
+            }
+            document.getElementById('valJumlahUnduh').innerText = totalArsip + " File";
         }
 
         function renderFolders() {
             let html = '';
-            appData.folders.forEach((f, idx) => {
-                let realCount = appData.files.filter(file => file.folder === f.nama).length;
-                f.jumlah = realCount > 0 ? realCount : f.jumlah;
-
-                html += `<tr class="folder-clickable">
-                    <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2 fs-5 align-middle"></i> <strong class="text-dark">${f.nama}</strong></td>
-                    <td onclick="bukaDetailFolder('${f.nama}')"><span class="text-secondary fw-semibold">${f.jumlah} File</span></td>
-                    <td class="text-center"><button class="btn btn-sm btn-outline-danger border-0" title="Hapus Folder" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>`;
-            });
+            if(appData.folders.length === 0) {
+                html = `<tr><td colspan="3" class="text-center text-muted py-4">Belum ada folder arsip. Silakan klik tombol "Buat Folder".</td></tr>`;
+            } else {
+                appData.folders.forEach((f, idx) => {
+                    let realCount = appData.files.filter(file => file.folder === f.nama).length;
+                    
+                    html += `<tr class="folder-clickable">
+                        <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2 fs-5 align-middle"></i> <strong class="text-dark">${f.nama}</strong></td>
+                        <td onclick="bukaDetailFolder('${f.nama}')"><span class="text-secondary fw-semibold">${realCount} File</span></td>
+                        <td class="text-center"><button class="btn btn-sm btn-outline-danger border-0" title="Hapus Folder" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>`;
+                });
+            }
             document.getElementById('tabelFolderBody').innerHTML = html;
         }
 
         function tambahFolderInteraktif() {
             let namaFolder = prompt("Masukkan nama folder baru:");
             if(namaFolder && namaFolder.trim() !== "") {
-                appData.folders.push({ nama: namaFolder.trim(), jumlah: 0 });
+                let namaClean = namaFolder.trim();
+                // Cek duplikasi
+                if(appData.folders.some(f => f.nama.toLowerCase() === namaClean.toLowerCase())) {
+                    alert("Nama folder sudah ada!");
+                    return;
+                }
+                appData.folders.push({ nama: namaClean });
                 saveStats();
                 alert("Folder berhasil ditambahkan!");
             }
@@ -552,7 +574,10 @@
 
         function hapusFolder(event, idx) {
             event.stopPropagation();
-            if(confirm("Hapus folder ini?")) {
+            let folderDihapus = appData.folders[idx].nama;
+            if(confirm("Hapus folder '" + folderDihapus + "' beserta seluruh file di dalamnya?")) {
+                // Hapus juga file yang ada di dalam folder tersebut agar tersinkronisasi murni
+                appData.files = appData.files.filter(f => f.folder !== folderDihapus);
                 appData.folders.splice(idx, 1);
                 saveStats();
             }
@@ -577,7 +602,7 @@
             if(filterFiles.length === 0) {
                 html = `<tr><td colspan="5" class="text-center text-muted py-5">Belum ada file di dalam folder ini. Silakan unggah file.</td></tr>`;
             } else {
-                filterFiles.forEach((f, idx) => {
+                filterFiles.forEach((f) => {
                     let badgeColor = 'bg-secondary';
                     if(f.tipe === 'PDF') badgeColor = 'bg-danger';
                     else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
@@ -601,6 +626,10 @@
         }
 
         function bukaModalUploadKeFolder() {
+            if(appData.folders.length === 0) {
+                alert("Buat folder terlebih dahulu sebelum mengunggah file!");
+                return;
+            }
             document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke: " + currentActiveFolder;
             new bootstrap.Modal(document.getElementById('modalUploadKeFolder')).show();
         }
@@ -612,11 +641,8 @@
 
             if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
 
-            appData.terakhirInstansi = instansi;
-            appData.terakhirTahun = tahun || "2026";
-            appData.arsipCount += 1;
-
             if(fileInput.files.length > 0) {
+                let processed = 0;
                 for(let i=0; i<fileInput.files.length; i++) {
                     let file = fileInput.files[i];
                     let ekstensi = file.name.split('.').pop().toUpperCase();
@@ -628,12 +654,15 @@
                             tipe: ekstensi,
                             folder: currentActiveFolder,
                             instansi: instansi,
-                            tahun: tahun,
+                            tahun: tahun || "2026",
+                            size: file.size,
                             dataUrl: e.target.result
                         });
-                        appData.totalBytes += file.size;
-                        saveStats();
-                        renderFileDalamFolder();
+                        processed++;
+                        if(processed === fileInput.files.length) {
+                            saveStats();
+                            renderFileDalamFolder();
+                        }
                     }
                     reader.readAsDataURL(file);
                 }
@@ -643,7 +672,8 @@
                     tipe: "PDF",
                     folder: currentActiveFolder,
                     instansi: instansi,
-                    tahun: tahun,
+                    tahun: tahun || "2026",
+                    size: 154200, // Dummy size
                     dataUrl: ""
                 });
                 saveStats();
@@ -657,13 +687,16 @@
         function hapusFileDariFolder(namaFile) {
             if(confirm("Hapus file " + namaFile + "?")) {
                 appData.files = appData.files.filter(f => f.nama !== namaFile);
-                appData.arsipCount = Math.max(0, appData.arsipCount - 1);
                 saveStats();
                 renderFileDalamFolder();
             }
         }
 
         function bukaModalUploadArsip() {
+            if(appData.folders.length === 0) {
+                alert("Harap buat folder arsip terlebih dahulu di tabel sebelah kiri!");
+                return;
+            }
             new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
         }
 
@@ -673,13 +706,10 @@
             let fileInput = document.getElementById('inputFileArsip');
 
             if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
-
-            appData.terakhirInstansi = instansi;
-            appData.terakhirTahun = tahun || "2026";
-            appData.arsipCount += 1;
-            let defaultFolder = appData.folders.length > 0 ? appData.folders[0].nama : "Arsip Umum";
+            let defaultFolder = appData.folders[0].nama; // Masuk otomatis ke folder pertama yang tersedia
 
             if(fileInput.files.length > 0) {
+                let processed = 0;
                 for(let i=0; i<fileInput.files.length; i++) {
                     let file = fileInput.files[i];
                     let ekstensi = file.name.split('.').pop().toUpperCase();
@@ -691,11 +721,14 @@
                             tipe: ekstensi,
                             folder: defaultFolder,
                             instansi: instansi,
-                            tahun: tahun,
+                            tahun: tahun || "2026",
+                            size: file.size,
                             dataUrl: e.target.result
                         });
-                        appData.totalBytes += file.size;
-                        saveStats();
+                        processed++;
+                        if(processed === fileInput.files.length) {
+                            saveStats();
+                        }
                     }
                     reader.readAsDataURL(file);
                 }
@@ -705,37 +738,42 @@
                     tipe: "PDF",
                     folder: defaultFolder,
                     instansi: instansi,
-                    tahun: tahun,
+                    tahun: tahun || "2026",
+                    size: 154200,
                     dataUrl: ""
                 });
                 saveStats();
             }
 
             bootstrap.Modal.getInstance(document.getElementById('modalUploadArsip')).hide();
-            alert("Arsip berhasil diunggah!");
+            alert("Arsip berhasil diunggah dan dicatat!");
         }
 
         function bukaMenuUnduh() {
             let html = '';
-            appData.files.forEach((f) => {
-                let badgeColor = 'bg-secondary';
-                if(f.tipe === 'PDF') badgeColor = 'bg-danger';
-                else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
-                else if(['XLS', 'XLSX', 'EXCEL'].includes(f.tipe)) badgeColor = 'bg-primary';
-                else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
+            if(appData.files.length === 0) {
+                html = `<tr><td colspan="6" class="text-center text-muted py-4">Belum ada file arsip yang tersedia untuk diunduh.</td></tr>`;
+            } else {
+                appData.files.forEach((f) => {
+                    let badgeColor = 'bg-secondary';
+                    if(f.tipe === 'PDF') badgeColor = 'bg-danger';
+                    else if(['JPG', 'PNG', 'JPEG'].includes(f.tipe)) badgeColor = 'bg-success';
+                    else if(['XLS', 'XLSX', 'EXCEL'].includes(f.tipe)) badgeColor = 'bg-primary';
+                    else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
 
-                html += `<tr>
-                    <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
-                    <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
-                    <td><span class="badge bg-secondary">${f.folder || 'Umum'}</span></td>
-                    <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
-                    <td>${f.tahun}</td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
-                        <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
-                    </td>
-                </tr>`;
-            });
+                    html += `<tr>
+                        <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
+                        <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
+                        <td><span class="badge bg-secondary">${f.folder || 'Umum'}</span></td>
+                        <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
+                        <td>${f.tahun}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
+                            <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            }
             document.getElementById('tabelUnduhBody').innerHTML = html;
             new bootstrap.Modal(document.getElementById('modalMenuUnduh')).show();
         }
