@@ -20,17 +20,17 @@
         .main-header {
             background-color: #3c8dbc;
             color: white;
-            height: 50px;
+            height: 52px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 15px;
+            padding: 0 20px;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1050;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
         .main-header .header-right {
             display: flex;
@@ -45,14 +45,20 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .user-panel-header:hover {
+            background: rgba(255,255,255,0.1);
         }
         .user-panel-header img {
             width: 32px;
             height: 32px;
-            border-radius: 4px;
+            border-radius: 50%;
             background: #fff;
             object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         #sidebar {
@@ -61,17 +67,19 @@
             background-color: #222d32;
             color: #b8c7ce;
             position: fixed;
-            top: 50px;
+            top: 52px;
             left: 0;
             z-index: 1000;
-            padding-top: 10px;
+            padding-top: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
         }
         .sidebar-menu-label {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             padding: 10px 15px 5px 15px;
             color: #4b646f;
             font-weight: bold;
+            letter-spacing: 0.5px;
         }
         #sidebar .nav-link {
             color: #b8c7ce;
@@ -82,7 +90,7 @@
             text-decoration: none;
             font-size: 14px;
             border-left: 3px solid transparent;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
         #sidebar .nav-link:hover, #sidebar .nav-link.active {
             color: #ffffff;
@@ -90,78 +98,82 @@
             border-left-color: #3c8dbc;
         }
         .nav-link-left { display: flex; align-items: center; gap: 12px; }
-        .badge-custom { background-color: #00a65a; color: white; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .badge-custom { background-color: #00a65a; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
 
         #content-wrapper {
             margin-left: 230px;
-            margin-top: 50px;
-            padding: 15px 20px;
+            margin-top: 52px;
+            padding: 20px 25px;
         }
 
         .content-header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            background: transparent;
         }
-        .content-header-bar h1 { font-size: 24px; font-weight: normal; margin: 0; color: #333; }
+        .content-header-bar h1 { font-size: 24px; font-weight: 500; margin: 0; color: #2c3b41; }
         .breadcrumb-custom { background: transparent; padding: 0; margin: 0; font-size: 13px; }
         .breadcrumb-custom a { color: #3c8dbc; text-decoration: none; }
 
         .stat-card {
             background: white;
-            border-radius: 2px;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            border: 1px solid #d2d6de;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            overflow: hidden;
+            transition: all 0.25s ease;
         }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .stat-card-icon { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .stat-card-icon { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; }
         .bg-folder { background-color: #00c0ef; }
         .bg-arsip { background-color: #dd4b39; }
         .bg-storage { background-color: #00a65a; }
         .bg-home { background-color: #f39c12; }
 
-        .stat-card-body { padding: 10px 15px; width: 100%; }
-        .stat-card-title { font-size: 12px; text-transform: uppercase; font-weight: bold; color: #666; margin-bottom: 2px; }
-        .stat-card-value { font-size: 18px; font-weight: bold; color: #333; }
+        .stat-card-body { padding: 12px 18px; width: 100%; }
+        .stat-card-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #718096; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .stat-card-value { font-size: 20px; font-weight: 700; color: #2d3748; }
 
         .box-panel {
             background: #ffffff;
-            border-top: 3px solid #d2d6de;
-            border-radius: 3px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 15px;
+            border-top: 3px solid #cbd5e1;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            padding: 20px;
             margin-bottom: 20px;
         }
         .box-panel-success { border-top-color: #00a65a; }
-        .folder-clickable { cursor: pointer; transition: background 0.15s ease; }
-        .folder-clickable:hover { background-color: #f4f6f9 !important; }
+        .folder-clickable { cursor: pointer; transition: background-color 0.15s ease; }
+        .folder-clickable:hover { background-color: #f8fafc !important; }
 
         .auth-wrapper {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #d2d6de;
+            background: #222d32;
         }
         .auth-box {
-            width: 360px;
+            width: 380px;
             background: white;
-            padding: 30px;
-            border-radius: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-top: 3px solid #3c8dbc;
+            padding: 35px;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-top: 4px solid #3c8dbc;
         }
-        .auth-box h3 { text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: bold; color: #333; }
-        .form-group-custom { margin-bottom: 15px; }
-        .form-group-custom label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; color: #444; }
-        .form-group-custom input, .form-group-custom select { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
-        .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .auth-box h3 { text-align: center; margin-bottom: 25px; font-size: 22px; font-weight: bold; color: #2d3748; }
+        .form-group-custom { margin-bottom: 18px; }
+        .form-group-custom label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #4a5568; }
+        .form-group-custom input, .form-group-custom select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s; }
+        .form-group-custom input:focus { border-color: #3c8dbc; outline: none; box-shadow: 0 0 0 3px rgba(60,141,188,0.15); }
+        .btn-block-custom { width: 100%; background: #3c8dbc; color: white; border: none; padding: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        .btn-block-custom:hover { background: #357ca5; }
 
         #loginSection, #registerSection, #mainAppContainer { display: none; }
         #halamanDashboard, #halamanDetailFolder, #halamanPost, #halamanPortfolio, #halamanPengguna, #halamanGallery, #halamanKomentar, #halamanInbox { display: none; }
@@ -175,13 +187,13 @@
             <i class="fa-solid fa-bars" style="cursor: pointer; font-size: 18px;" title="Toggle Sidebar"></i>
         </div>
         <div class="header-right">
-            <div><i class="fa-regular fa-envelope"></i> <span class="badge bg-danger" style="font-size: 9px; vertical-align: top;">3</span></div>
+            <div><i class="fa-regular fa-envelope" style="font-size: 16px; cursor: pointer;"></i> <span class="badge bg-danger" style="font-size: 9px; vertical-align: top;">3</span></div>
             <div class="user-panel-header" onclick="document.getElementById('inputFotoProfil').click()" title="Ganti foto profil">
                 <img id="headerUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar">
                 <span id="headerUsernameText">purnamasudang@gmail.com</span>
             </div>
             <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
-            <span onclick="logout()" style="cursor: pointer;" title="Sign Out"><i class="fa-solid fa-power-off"></i></span>
+            <span onclick="logout()" style="cursor: pointer; font-size: 16px;" title="Sign Out"><i class="fa-solid fa-power-off"></i></span>
         </div>
     </div>
 
@@ -204,10 +216,10 @@
     <div id="loginSection" class="auth-wrapper">
         <div class="auth-box">
             <h3><b>M-TECHNO</b> Login</h3>
-            <div class="form-group-custom"><label>Username</label><input type="text" id="login_user" placeholder="Username"></div>
-            <div class="form-group-custom"><label>Password</label><input type="password" id="login_pass" placeholder="Password"></div>
+            <div class="form-group-custom"><label>Username</label><input type="text" id="login_user" placeholder="Masukkan username"></div>
+            <div class="form-group-custom"><label>Password</label><input type="password" id="login_pass" placeholder="Masukkan password"></div>
             <button class="btn-block-custom" onclick="login()">Sign In</button>
-            <p id="loginMsg" style="color: red; font-size: 12px; text-align: center; margin-top: 5px;"></p>
+            <p id="loginMsg" style="color: red; font-size: 12px; text-align: center; margin-top: 10px;"></p>
         </div>
     </div>
 
@@ -218,7 +230,7 @@
                 <h1 id="pageTitleHeading">Dashboard</h1>
                 <ol class="breadcrumb breadcrumb-custom">
                     <li><a href="#" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-home"></i> Home</a></li>
-                    <li id="breadcrumbActive" style="color: #777; display: inline-block; margin-left: 5px;"> / Dashboard</li>
+                    <li id="breadcrumbActive" style="color: #64748b; display: inline-block; margin-left: 5px;"> / Dashboard</li>
                 </ol>
             </div>
 
@@ -264,20 +276,20 @@
                 </div>
 
                 <div class="row">
-                    <!-- Lingkaran Besar: Deretan Nama Folder -->
+                    <!-- Deretan Nama Folder Arsip -->
                     <div class="col-md-8">
                         <div class="box-panel box-panel-success">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h4 style="font-size: 16px; font-weight: bold; margin: 0; color: #333;"><i class="fa-solid fa-folder-tree"></i> Deretan Nama Folder Arsip</h4>
-                                <button class="btn btn-sm btn-primary" onclick="tambahFolderInteraktif()"><i class="fa-solid fa-plus"></i> Buat Folder</button>
+                                <h4 style="font-size: 16px; font-weight: 600; margin: 0; color: #1e293b;"><i class="fa-solid fa-folder-tree text-success me-2"></i> Deretan Nama Folder Arsip</h4>
+                                <button class="btn btn-sm btn-success px-3" onclick="tambahFolderInteraktif()"><i class="fa-solid fa-plus me-1"></i> Buat Folder</button>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover" style="font-size: 14px; margin-bottom: 0;">
-                                    <thead class="table-light">
+                                <table class="table table-hover align-middle" style="font-size: 14px; margin-bottom: 0;">
+                                    <thead class="table-light text-uppercase fs-7 text-secondary">
                                         <tr>
                                             <th>Nama Folder</th>
                                             <th>Jumlah File</th>
-                                            <th>Aksi</th>
+                                            <th style="width: 80px; text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabelFolderBody"></tbody>
@@ -288,27 +300,27 @@
 
                     <!-- 3 Kotak Kanan -->
                     <div class="col-md-4">
-                        <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 10px;">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1);"><i class="fa-solid fa-school"></i></div>
-                            <div class="stat-card-body" style="width: 100%;">
+                        <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;">
+                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
+                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">1. NAMA INSTANSI</div>
-                                <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 14px;">SDN 1 / SMPN 2 (Umum)</div>
+                                <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 13px; font-weight: 600;">SDN 1 / SMPN 2 (Umum)</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Instansi Arsip Terbaru</div>
                             </div>
                         </div>
 
-                        <div class="stat-card" style="border-top: none; background: #00a65a; color: white; margin-bottom: 10px;">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1);"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div class="stat-card-body" style="width: 100%;">
+                        <div class="stat-card" style="border-top: none; background: #00a65a; color: white; margin-bottom: 15px;">
+                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-calendar-days"></i></div>
+                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">2. TAHUN DOKUMEN</div>
                                 <div class="stat-card-value" id="valTahun" style="color: white;">2026</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Tahun Arsip Disimpan</div>
                             </div>
                         </div>
 
-                        <div class="stat-card" style="border-top: none; background: #dd4b39; color: white; margin-bottom: 10px; cursor: pointer;" onclick="bukaMenuUnduh()">
-                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1);"><i class="fa-solid fa-download"></i></div>
-                            <div class="stat-card-body" style="width: 100%;">
+                        <div class="stat-card" style="border-top: none; background: #dd4b39; color: white; margin-bottom: 15px; cursor: pointer;" onclick="bukaMenuUnduh()">
+                            <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-download"></i></div>
+                            <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
                                 <div class="stat-card-title" style="color: white;">3. MENU UNDUH</div>
                                 <div class="stat-card-value" id="valJumlahUnduh" style="color: white;">2 File</div>
                                 <div style="font-size: 11px; opacity: 0.9;">Pusat Kumpulan File Unduhan</div>
@@ -318,25 +330,25 @@
                 </div>
             </div>
 
-            <!-- HALAMAN DETAIL FOLDER (KETIKA FOLDER DIKLIK) -->
+            <!-- HALAMAN DETAIL FOLDER -->
             <div id="halamanDetailFolder">
                 <div class="box-panel box-panel-success">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div>
-                            <button class="btn btn-sm btn-secondary me-2" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
-                            <h4 id="judulFolderDetail" style="font-size: 18px; font-weight: bold; display: inline-block; margin: 0; color: #333;"><i class="fa-solid fa-folder-open text-warning me-2"></i> Nama Folder</h4>
+                            <button class="btn btn-sm btn-outline-secondary me-2 px-3" onclick="bukaHalaman('Dashboard')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</button>
+                            <h4 id="judulFolderDetail" style="font-size: 17px; font-weight: 600; display: inline-block; margin: 0; color: #1e293b;"><i class="fa-solid fa-folder-open text-warning me-2"></i> Nama Folder</h4>
                         </div>
-                        <button class="btn btn-sm btn-success" onclick="bukaModalUploadKeFolder()"><i class="fa-solid fa-cloud-arrow-up"></i> Unggah File ke Folder Ini</button>
+                        <button class="btn btn-sm btn-success px-3" onclick="bukaModalUploadKeFolder()"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Unggah File ke Folder Ini</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle" style="font-size: 13px; margin-bottom: 0;">
-                            <thead class="table-light">
+                        <table class="table table-hover align-middle" style="font-size: 13px; margin-bottom: 0;">
+                            <thead class="table-light text-uppercase fs-7 text-secondary">
                                 <tr>
                                     <th>Nama File</th>
                                     <th>Jenis Dokumen</th>
                                     <th>Instansi</th>
                                     <th>Tahun</th>
-                                    <th>Aksi</th>
+                                    <th style="width: 160px; text-align: center;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelFileFolderBody"></tbody>
@@ -354,31 +366,31 @@
         </div>
     </div>
 
-    <!-- MODAL UPLOAD ARSIR UMUM -->
+    <!-- MODAL UPLOAD ARSIP UMUM -->
     <div class="modal fade" id="modalUploadArsip" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Unggah Arsip & Catat Instansi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title"><i class="fa-solid fa-file-arrow-up me-2"></i> Unggah Arsip & Catat Instansi</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nama Instansi (No. 1)</label>
+                        <label class="form-label">Nama Instansi (No. 1)</label>
                         <input type="text" id="inputNamaInstansi" class="form-control" placeholder="Contoh: SMPN 1 Bandung">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tahun Dokumen (No. 2)</label>
+                        <label class="form-label">Tahun Dokumen (No. 2)</label>
                         <input type="number" id="inputTahunArsip" class="form-control" value="2026">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Pilih File Dokumen (PDF, PNG, JPG, DOC, Excel, dll.)</label>
+                        <label class="form-label">Pilih File Dokumen (PDF, PNG, JPG, DOC, Excel, dll.)</label>
                         <input type="file" id="inputFileArsip" class="form-control" multiple>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" onclick="simpanArsipBaru()">Simpan & Catat</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary btn-sm px-3" onclick="simpanArsipBaru()">Simpan & Catat</button>
                 </div>
             </div>
         </div>
@@ -389,26 +401,26 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="judulModalUploadFolder">Unggah File ke Folder</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="judulModalUploadFolder"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Unggah File ke Folder</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nama Instansi</label>
+                        <label class="form-label">Nama Instansi</label>
                         <input type="text" id="inputInstansiFolder" class="form-control" placeholder="Contoh: SDN 1 Bandung">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tahun Dokumen</label>
+                        <label class="form-label">Tahun Dokumen</label>
                         <input type="number" id="inputTahunFolder" class="form-control" value="2026">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Pilih File Dokumen</label>
+                        <label class="form-label">Pilih File Dokumen</label>
                         <input type="file" id="inputFileFolderAktif" class="form-control" multiple>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-success" onclick="simpanFileKeFolderAktif()">Unggah File</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success btn-sm px-3" onclick="simpanFileKeFolderAktif()">Unggah File</button>
                 </div>
             </div>
         </div>
@@ -419,21 +431,21 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-download"></i> Pusat Menu Unduh Dokumen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title"><i class="fa-solid fa-download me-2"></i> Pusat Menu Unduh Dokumen</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted">Daftar seluruh file arsip lengkap dengan jenis dokumen, tombol pratinjau (lihat), dan unduh:</p>
+                    <p class="text-muted small mb-3">Daftar seluruh file arsip lengkap dengan jenis dokumen, tombol pratinjau (lihat), dan unduh:</p>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle" style="font-size: 13px;">
-                            <thead class="table-light">
+                        <table class="table table-hover align-middle" style="font-size: 13px;">
+                            <thead class="table-light text-uppercase fs-7 text-secondary">
                                 <tr>
                                     <th>Nama File</th>
                                     <th>Jenis Dokumen</th>
                                     <th>Folder</th>
                                     <th>Instansi</th>
                                     <th>Tahun</th>
-                                    <th>Aksi (Lihat & Unduh)</th>
+                                    <th style="width: 170px; text-align: center;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelUnduhBody"></tbody>
@@ -449,10 +461,10 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="judulPratinjau">Pratinjau Dokumen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="judulPratinjau"><i class="fa-solid fa-eye me-2"></i> Pratinjau Dokumen</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body text-center" id="kontenPratinjau" style="min-height: 300px; display: flex; align-items: center; justify-content: center; background: #f4f6f9;">
+                <div class="modal-body text-center" id="kontenPratinjau" style="min-height: 350px; display: flex; align-items: center; justify-content: center; background: #f8fafc;">
                     <!-- Konten pratinjau muncul di sini -->
                 </div>
             </div>
@@ -517,14 +529,13 @@
         function renderFolders() {
             let html = '';
             appData.folders.forEach((f, idx) => {
-                // Hitung jumlah file real dari array files berdasarkan nama folder
                 let realCount = appData.files.filter(file => file.folder === f.nama).length;
                 f.jumlah = realCount > 0 ? realCount : f.jumlah;
 
                 html += `<tr class="folder-clickable">
-                    <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2"></i> <strong>${f.nama}</strong></td>
-                    <td onclick="bukaDetailFolder('${f.nama}')">${f.jumlah} File</td>
-                    <td><button class="btn btn-sm btn-danger" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
+                    <td onclick="bukaDetailFolder('${f.nama}')"><i class="fa-solid fa-folder text-warning me-2 fs-5 align-middle"></i> <strong class="text-dark">${f.nama}</strong></td>
+                    <td onclick="bukaDetailFolder('${f.nama}')"><span class="text-secondary fw-semibold">${f.jumlah} File</span></td>
+                    <td class="text-center"><button class="btn btn-sm btn-outline-danger border-0" title="Hapus Folder" onclick="hapusFolder(event, ${idx})"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>`;
             });
             document.getElementById('tabelFolderBody').innerHTML = html;
@@ -551,7 +562,6 @@
             currentActiveFolder = namaFolder;
             document.getElementById('judulFolderDetail').innerHTML = `<i class="fa-solid fa-folder-open text-warning me-2"></i> ${namaFolder}`;
             
-            // Sembunyikan dashboard, tampilkan halaman detail folder
             document.getElementById('halamanDashboard').style.display = 'none';
             document.getElementById('halamanDetailFolder').style.display = 'block';
             document.getElementById('pageTitleHeading').innerText = "Folder: " + namaFolder;
@@ -565,7 +575,7 @@
             let html = '';
 
             if(filterFiles.length === 0) {
-                html = `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada file di dalam folder ini. Silakan unggah file.</td></tr>`;
+                html = `<tr><td colspan="5" class="text-center text-muted py-5">Belum ada file di dalam folder ini. Silakan unggah file.</td></tr>`;
             } else {
                 filterFiles.forEach((f, idx) => {
                     let badgeColor = 'bg-secondary';
@@ -575,14 +585,14 @@
                     else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
 
                     html += `<tr>
-                        <td><i class="fa-solid fa-file me-2"></i> ${f.nama}</td>
+                        <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
                         <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
                         <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
                         <td>${f.tahun}</td>
-                        <td>
-                            <button class="btn btn-sm btn-info text-white me-1" onclick='bukaPratinjau(${JSON.stringify(f)})'><i class="fa-solid fa-eye"></i> Lihat</button>
-                            <button class="btn btn-sm btn-success me-1" onclick="unduhFile('${f.nama}')"><i class="fa-solid fa-download"></i> Unduh</button>
-                            <button class="btn btn-sm btn-danger" onclick="hapusFileDariFolder('${f.nama}')"><i class="fa-solid fa-trash"></i></button>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
+                            <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
+                            <button class="btn btn-sm btn-danger px-2 py-1" onclick="hapusFileDariFolder('${f.nama}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
                 });
@@ -715,14 +725,14 @@
                 else if(['DOC', 'DOCX'].includes(f.tipe)) badgeColor = 'bg-info text-dark';
 
                 html += `<tr>
-                    <td><i class="fa-solid fa-file me-2"></i> ${f.nama}</td>
+                    <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
                     <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
                     <td><span class="badge bg-secondary">${f.folder || 'Umum'}</span></td>
                     <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
                     <td>${f.tahun}</td>
-                    <td>
-                        <button class="btn btn-sm btn-info text-white me-1" onclick='bukaPratinjau(${JSON.stringify(f)})'><i class="fa-solid fa-eye"></i> Lihat</button>
-                        <button class="btn btn-sm btn-success" onclick="unduhFile('${f.nama}')"><i class="fa-solid fa-download"></i> Unduh</button>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn btn-sm btn-success px-2 py-1" onclick="unduhFile('${f.nama}')" title="Unduh"><i class="fa-solid fa-download"></i></button>
                     </td>
                 </tr>`;
             });
@@ -731,18 +741,18 @@
         }
 
         function bukaPratinjau(fileObj) {
-            document.getElementById('judulPratinjau').innerText = "Pratinjau: " + fileObj.nama;
+            document.getElementById('judulPratinjau').innerHTML = `<i class="fa-solid fa-eye me-2"></i> Pratinjau: ${fileObj.nama}`;
             let kontainer = document.getElementById('kontenPratinjau');
             
             if(['JPG', 'JPEG', 'PNG'].includes(fileObj.tipe) && fileObj.dataUrl) {
-                kontainer.innerHTML = `<img src="${fileObj.dataUrl}" class="img-fluid rounded" style="max-height: 400px;" alt="Pratinjau Gambar">`;
+                kontainer.innerHTML = `<img src="${fileObj.dataUrl}" class="img-fluid rounded shadow-sm" style="max-height: 400px;" alt="Pratinjau Gambar">`;
             } else if(fileObj.tipe === 'PDF' && fileObj.dataUrl) {
-                kontainer.innerHTML = `<iframe src="${fileObj.dataUrl}" width="100%" height="400px" style="border:none;"></iframe>`;
+                kontainer.innerHTML = `<iframe src="${fileObj.dataUrl}" width="100%" height="400px" style="border:none;" class="rounded"></iframe>`;
             } else {
                 kontainer.innerHTML = `<div class="text-center p-5">
                     <i class="fa-solid fa-file-lines fa-4x text-secondary mb-3"></i>
                     <h5>Pratinjau langsung tidak tersedia untuk format .${fileObj.tipe.toLowerCase()}</h5>
-                    <p class="text-muted">Silakan klik tombol unduh untuk melihat isi dokumen secara penuh di perangkat Anda.</p>
+                    <p class="text-muted small">Silakan klik tombol unduh untuk melihat isi dokumen secara penuh di perangkat Anda.</p>
                 </div>`;
             }
             new bootstrap.Modal(document.getElementById('modalPratinjau')).show();
@@ -759,6 +769,8 @@
             if(document.getElementById('login_user').value.trim()) {
                 localStorage.setItem('isLogin', 'true');
                 showApp();
+            } else {
+                document.getElementById('loginMsg').innerText = "Masukkan username terlebih dahulu!";
             }
         }
         function showApp() {
