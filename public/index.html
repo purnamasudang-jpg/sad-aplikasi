@@ -376,8 +376,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Nama Instansi</label>
-                        <input type="text" id="inputNamaInstansi" class="form-control" placeholder="Contoh: SDN KADEMANGAN 1">
+                        <label class="form-label">Nama Instansi / Folder Tujuan</label>
+                        <select id="selectInstansiFolder" class="form-select">
+                            <!-- Diisi dinamis dari folder -->
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tahun Dokumen</label>
@@ -405,10 +407,6 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Instansi</label>
-                        <input type="text" id="inputInstansiFolder" class="form-control" placeholder="Contoh: SDN KADEMANGAN 1">
-                    </div>
                     <div class="mb-3">
                         <label class="form-label">Tahun Dokumen</label>
                         <input type="number" id="inputTahunFolder" class="form-control" value="2026">
@@ -442,8 +440,7 @@
                                 <tr>
                                     <th>Nama File</th>
                                     <th>Jenis Dokumen</th>
-                                    <th>Folder</th>
-                                    <th>Instansi</th>
+                                    <th>Folder / Instansi</th>
                                     <th>Tahun</th>
                                     <th style="width: 170px; text-align: center;">Aksi</th>
                                 </tr>
@@ -475,7 +472,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Data default awal bersih/kosong atau menyesuaikan kebutuhan dinamis
         let appData = {
             folders: [
                 { nama: "SDN KADEMANGAN 1" },
@@ -527,18 +523,21 @@
             document.getElementById('valUkuranData').innerText = ukuranStr;
             document.getElementById('valStatusHome').innerText = totalFolder > 0 || totalArsip > 0 ? "Active" : "Kosong";
 
-            // SINKRONISASI DINAMIS KOTAK KANAN (NAMA INSTANSI & TAHUN)
-            if(totalArsip > 0) {
-                let fileTerakhir = appData.files[appData.files.length - 1];
-                document.getElementById('valInstansi').innerText = fileTerakhir.instansi || appData.folders[appData.folders.length - 1].nama;
-                document.getElementById('valTahun').innerText = fileTerakhir.tahun || "2026";
-            } else if(totalFolder > 0) {
-                // Jika belum ada file tapi folder ada, ambil nama folder terakhir yang dibuat
-                let folderTerakhir = appData.folders[appData.folders.length - 1];
-                document.getElementById('valInstansi').innerText = folderTerakhir.nama;
-                document.getElementById('valTahun').innerText = "2026";
+            // SINKRONISASI NAMA INSTANSI & TAHUN DARI FOLDER TERBARU
+            if(totalFolder > 0) {
+                let folderTerbaru = appData.folders[appData.folders.length - 1];
+                document.getElementById('valInstansi').innerText = folderTerbaru.nama;
+                
+                // Cari tahun dari file di folder tersebut, kalau tidak ada default 2026
+                let fileDiFolder = appData.files.filter(f => f.folder === folderTerbaru.nama);
+                if(fileDiFolder.length > 0) {
+                    document.getElementById('valTahun').innerText = fileDiFolder[fileDiFolder.length - 1].tahun || "2026";
+                } else if(appData.files.length > 0) {
+                    document.getElementById('valTahun').innerText = appData.files[appData.files.length - 1].tahun || "2026";
+                } else {
+                    document.getElementById('valTahun').innerText = "2026";
+                }
             } else {
-                // Jika kosong murni (folder & file 0)
                 document.getElementById('valInstansi').innerText = "Belum ada instansi";
                 document.getElementById('valTahun').innerText = "-";
             }
@@ -564,16 +563,16 @@
         }
 
         function tambahFolderInteraktif() {
-            let namaFolder = prompt("Masukkan nama folder baru:");
+            let namaFolder = prompt("Masukkan nama folder / instansi baru:");
             if(namaFolder && namaFolder.trim() !== "") {
-                let namaClean = namaFolder.trim();
-                if(appData.folders.some(f => f.nama.toLowerCase() === namaClean.toLowerCase())) {
-                    alert("Nama folder sudah ada!");
+                let namaClean = namaFolder.trim().toUpperCase();
+                if(appData.folders.some(f => f.nama.toUpperCase() === namaClean)) {
+                    alert("Nama folder/instansi sudah ada!");
                     return;
                 }
                 appData.folders.push({ nama: namaClean });
                 saveStats();
-                alert("Folder berhasil ditambahkan!");
+                alert("Folder instansi berhasil ditambahkan!");
             }
         }
 
@@ -616,7 +615,7 @@
                     html += `<tr>
                         <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
                         <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
-                        <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
+                        <td><span class="badge bg-warning text-dark">${f.folder}</span></td>
                         <td>${f.tahun}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
@@ -634,17 +633,13 @@
                 alert("Buat folder terlebih dahulu sebelum mengunggah file!");
                 return;
             }
-            document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke: " + currentActiveFolder;
-            document.getElementById('inputInstansiFolder').value = currentActiveFolder;
+            document.getElementById('judulModalUploadFolder').innerText = "Unggah File ke Folder: " + currentActiveFolder;
             new bootstrap.Modal(document.getElementById('modalUploadKeFolder')).show();
         }
 
         function simpanFileKeFolderAktif() {
-            let instansi = document.getElementById('inputInstansiFolder').value.trim();
             let tahun = document.getElementById('inputTahunFolder').value.trim();
             let fileInput = document.getElementById('inputFileFolderAktif');
-
-            if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
 
             if(fileInput.files.length > 0) {
                 let processed = 0;
@@ -658,7 +653,6 @@
                             nama: file.name,
                             tipe: ekstensi,
                             folder: currentActiveFolder,
-                            instansi: instansi,
                             tahun: tahun || "2026",
                             size: file.size,
                             dataUrl: e.target.result
@@ -673,10 +667,9 @@
                 }
             } else {
                 appData.files.push({
-                    nama: "Dokumen_" + instansi.replace(/\s+/g, '_') + ".pdf",
+                    nama: "Dokumen_" + currentActiveFolder.replace(/\s+/g, '_') + ".pdf",
                     tipe: "PDF",
                     folder: currentActiveFolder,
-                    instansi: instansi,
                     tahun: tahun || "2026",
                     size: 154200,
                     dataUrl: ""
@@ -702,17 +695,23 @@
                 alert("Harap buat folder arsip terlebih dahulu di tabel sebelah kiri!");
                 return;
             }
-            document.getElementById('inputNamaInstansi').value = appData.folders[appData.folders.length - 1].nama;
+            
+            // Isi pilihan dropdown dari deretan folder arsip
+            let selectHtml = '';
+            appData.folders.forEach(f => {
+                selectHtml += `<option value="${f.nama}">${f.nama}</option>`;
+            });
+            document.getElementById('selectInstansiFolder').innerHTML = selectHtml;
+            
             new bootstrap.Modal(document.getElementById('modalUploadArsip')).show();
         }
 
         function simpanArsipBaru() {
-            let instansi = document.getElementById('inputNamaInstansi').value.trim();
+            let folderTujuan = document.getElementById('selectInstansiFolder').value;
             let tahun = document.getElementById('inputTahunArsip').value.trim();
             let fileInput = document.getElementById('inputFileArsip');
 
-            if(!instansi) { alert("Nama instansi wajib diisi!"); return; }
-            let defaultFolder = appData.folders[appData.folders.length - 1].nama;
+            if(!folderTujuan) { alert("Pilih folder instansi tujuan!"); return; }
 
             if(fileInput.files.length > 0) {
                 let processed = 0;
@@ -725,8 +724,7 @@
                         appData.files.push({
                             nama: file.name,
                             tipe: ekstensi,
-                            folder: defaultFolder,
-                            instansi: instansi,
+                            folder: folderTujuan,
                             tahun: tahun || "2026",
                             size: file.size,
                             dataUrl: e.target.result
@@ -740,10 +738,9 @@
                 }
             } else {
                 appData.files.push({
-                    nama: "Dokumen_" + instansi.replace(/\s+/g, '_') + ".pdf",
+                    nama: "Dokumen_" + folderTujuan.replace(/\s+/g, '_') + ".pdf",
                     tipe: "PDF",
-                    folder: defaultFolder,
-                    instansi: instansi,
+                    folder: folderTujuan,
                     tahun: tahun || "2026",
                     size: 154200,
                     dataUrl: ""
@@ -752,13 +749,13 @@
             }
 
             bootstrap.Modal.getInstance(document.getElementById('modalUploadArsip')).hide();
-            alert("Arsip berhasil diunggah dan dicatat!");
+            alert("Arsip berhasil diunggah ke folder " + folderTujuan + "!");
         }
 
         function bukaMenuUnduh() {
             let html = '';
             if(appData.files.length === 0) {
-                html = `<tr><td colspan="6" class="text-center text-muted py-4">Belum ada file arsip yang tersedia untuk diunduh.</td></tr>`;
+                html = `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada file arsip yang tersedia untuk diunduh.</td></tr>`;
             } else {
                 appData.files.forEach((f) => {
                     let badgeColor = 'bg-secondary';
@@ -770,8 +767,7 @@
                     html += `<tr>
                         <td><i class="fa-solid fa-file-lines text-muted me-2"></i> ${f.nama}</td>
                         <td><span class="badge ${badgeColor}">${f.tipe}</span></td>
-                        <td><span class="badge bg-secondary">${f.folder || 'Umum'}</span></td>
-                        <td><span class="badge bg-warning text-dark">${f.instansi}</span></td>
+                        <td><span class="badge bg-warning text-dark">${f.folder}</span></td>
                         <td>${f.tahun}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-info text-white px-2 py-1" onclick='bukaPratinjau(${JSON.stringify(f)})' title="Lihat"><i class="fa-solid fa-eye"></i></button>
