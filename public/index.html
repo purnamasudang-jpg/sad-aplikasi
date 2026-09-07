@@ -300,15 +300,17 @@
 
                     <!-- 3 Kotak Kanan -->
                     <div class="col-md-4">
-                        <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;">
+                        <!-- Kotak 1: Nama Instansi (Sekarang Interaktif / Bisa Diklik) -->
+                        <div class="stat-card" style="border-top: none; background: #f39c12; color: white; margin-bottom: 15px;" onclick="bukaModalDaftarInstansi()">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-school"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
-                                <div class="stat-card-title" style="color: white;">1. NAMA INSTANSI</div>
+                                <div class="stat-card-title" style="color: white;">1. NAMA INSTANSI <i class="fa-solid fa-arrow-up-right-from-square float-end" style="font-size: 11px; opacity: 0.8;" title="Klik untuk lihat semua instansi"></i></div>
                                 <div class="stat-card-value" id="valInstansi" style="color: white; font-size: 13px; font-weight: 600;">Belum ada instansi</div>
-                                <div style="font-size: 11px; opacity: 0.9;">Instansi Arsip Terbaru</div>
+                                <div style="font-size: 11px; opacity: 0.9;">Klik untuk daftar instansi arsip</div>
                             </div>
                         </div>
 
+                        <!-- Kotak 2: Tahun Dokumen -->
                         <div class="stat-card" style="border-top: none; background: #00a65a; color: white; margin-bottom: 15px;">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-calendar-days"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -318,6 +320,7 @@
                             </div>
                         </div>
 
+                        <!-- Kotak 3: Menu Unduh -->
                         <div class="stat-card" style="border-top: none; background: #dd4b39; color: white; margin-bottom: 15px; cursor: pointer;" onclick="bukaMenuUnduh()">
                             <div class="stat-card-icon" style="background: rgba(0,0,0,0.1); width: 75px; height: 75px;"><i class="fa-solid fa-download"></i></div>
                             <div class="stat-card-body" style="width: 100%; padding: 10px 15px;">
@@ -363,6 +366,38 @@
             <div id="halamanGallery" class="box-panel"><h4>Galeri Foto</h4></div>
             <div id="halamanKomentar" class="box-panel"><h4>Daftar Komentar</h4></div>
             <div id="halamanInbox" class="box-panel"><h4>Pesan Masuk (Inbox)</h4></div>
+        </div>
+    </div>
+
+    <!-- MODAL DAFTAR NAMA INSTANSI (YANG MUNCUL SAAT KOTAK INSTANSI DIKLIK) -->
+    <div class="modal fade" id="modalDaftarInstansi" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-school me-2"></i> Deretan Nama Instansi & Folder Arsip</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">Berikut adalah daftar seluruh instansi yang bersumber dari folder arsip. Klik tombol <strong>Buka Folder</strong> untuk mengelola file di dalamnya:</p>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" style="font-size: 13px;">
+                            <thead class="table-light text-uppercase fs-7 text-secondary">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Instansi / Folder</th>
+                                    <th>Jumlah File</th>
+                                    <th style="width: 150px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelModalInstansiBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-success btn-sm px-3" onclick="bootstrap.Modal.getInstance(document.getElementById('modalDaftarInstansi')).hide(); tambahFolderInteraktif();"><i class="fa-solid fa-plus me-1"></i> Tambah Instansi Baru</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -528,7 +563,6 @@
                 let folderTerbaru = appData.folders[appData.folders.length - 1];
                 document.getElementById('valInstansi').innerText = folderTerbaru.nama;
                 
-                // Cari tahun dari file di folder tersebut, kalau tidak ada default 2026
                 let fileDiFolder = appData.files.filter(f => f.folder === folderTerbaru.nama);
                 if(fileDiFolder.length > 0) {
                     document.getElementById('valTahun').innerText = fileDiFolder[fileDiFolder.length - 1].tahun || "2026";
@@ -560,6 +594,45 @@
                 });
             }
             document.getElementById('tabelFolderBody').innerHTML = html;
+        }
+
+        // FUNGSI MEMBUKA MODAL DERETAN NAMA INSTANSI
+        function bukaModalDaftarInstansi() {
+            let html = '';
+            if(appData.folders.length === 0) {
+                html = `<tr><td colspan="4" class="text-center text-muted py-4">Belum ada instansi atau folder arsip yang terdaftar.</td></tr>`;
+            } else {
+                appData.folders.forEach((f, idx) => {
+                    let realCount = appData.files.filter(file => file.folder === f.nama).length;
+                    html += `<tr>
+                        <td>${idx + 1}</td>
+                        <td><i class="fa-solid fa-school text-warning me-2"></i> <strong>${f.nama}</strong></td>
+                        <td><span class="badge bg-success">${realCount} File</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-primary px-2 py-1 me-1" onclick="pilihInstansiDariModal('${f.nama}')" title="Buka Folder"><i class="fa-solid fa-folder-open me-1"></i> Buka</button>
+                            <button class="btn btn-sm btn-danger px-2 py-1" onclick="hapusInstansiDariModal(event, ${idx})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            }
+            document.getElementById('tabelModalInstansiBody').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('modalDaftarInstansi')).show();
+        }
+
+        function pilihInstansiDariModal(namaInstansi) {
+            bootstrap.Modal.getInstance(document.getElementById('modalDaftarInstansi')).hide();
+            bukaDetailFolder(namaInstansi);
+        }
+
+        function hapusInstansiDariModal(event, idx) {
+            event.stopPropagation();
+            let folderDihapus = appData.folders[idx].nama;
+            if(confirm("Hapus instansi / folder '" + folderDihapus + "' beserta seluruh file di dalamnya?")) {
+                appData.files = appData.files.filter(f => f.folder !== folderDihapus);
+                appData.folders.splice(idx, 1);
+                saveStats();
+                bukaModalDaftarInstansi(); // Refresh isi modal
+            }
         }
 
         function tambahFolderInteraktif() {
@@ -696,7 +769,6 @@
                 return;
             }
             
-            // Isi pilihan dropdown dari deretan folder arsip
             let selectHtml = '';
             appData.folders.forEach(f => {
                 selectHtml += `<option value="${f.nama}">${f.nama}</option>`;
