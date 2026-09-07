@@ -3,189 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard SAD</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        button { background: #28a745; color: white; border: none; cursor: pointer; }
-        button:hover { background: #218838; }
-        .folder { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #fff; }
-        .arsip { background: #f9f9f9; padding: 8px; margin: 5px 0; border-left: 3px solid #007bff; }
-        #loginForm, #dashboard { display: none; }
-    </style>
+    <title>Dashboard - Web Kendali</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h2>Sistem Arsip Digital - SAD</h2>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="menu-utama-title">MENU UTAMA</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-thumbtack"></i> Post</a></li>
+                <li><a href="#"><i class="fas fa-code"></i> Portfolio</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> Pengguna</a></li>
+                <li><a href="#"><i class="fas fa-images"></i> Gallery</a></li>
+                <li><a href="#"><i class="fas fa-comments"></i> Komentar <span class="badge green">2</span></a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Inbox <span class="badge green">6</span></a></li>
+            </ul>
 
-    <!-- FORM LOGIN -->
-    <div id="loginForm">
-        <h3>Login</h3>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <p id="loginMsg" style="color:red;"></p>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="dashboard">
-        <button onclick="logout()" style="background:red; float:right; width:auto; padding: 5px 15px;">Logout</button>
-        <h3>Dashboard</h3>
-        
-        <h4>Buat Folder Baru</h4>
-        <input type="text" id="nama_folder" placeholder="Nama Folder (Contoh: Surat Masuk 2026)">
-        <button onclick="buatFolder()">Buat Folder</button>
-
-        <hr>
-        <h4>Daftar Folder</h4>
-        <div id="listFolder"></div>
-    </div>
-
-</div>
-
-<script>
-const API_URL = ''; 
-
-// CEK APA SUDAH LOGIN
-window.onload = () => {
-    let userId = localStorage.getItem('userId');
-    if(!userId){
-        userId = '1'; // Default fallback agar langsung masuk
-        localStorage.setItem('userId', userId);
-    }
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    loadFolders();
-}
-
-// 1. FUNGSI LOGIN
-async function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    const res = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    
-    if(data.success){
-        localStorage.setItem('userId', data.user.id);
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        loadFolders();
-    } else {
-        document.getElementById('loginMsg').innerText = data.error;
-    }
-}
-
-// 2. LOGOUT
-function logout(){
-    localStorage.removeItem('userId');
-    location.reload();
-}
-
-// 3. LOAD FOLDER
-async function loadFolders() {
-    const userId = localStorage.getItem('userId') || '1';
-    const res = await fetch(`${API_URL}/api/folders`, {
-        headers: { 'user-id': userId }
-    });
-    const data = await res.json();
-    if(data.success){
-        let html = '';
-        if(data.data.length === 0) {
-            html = '<p>Belum ada folder arsip. Buat folder baru di atas.</p>';
-        }
-        data.data.forEach(folder => {
-            html += `
-            <div class="folder">
-                <h4>📁 ${folder.nama_folder}</h4>
-                <input type="text" id="nama_dok_${folder.id}" placeholder="Nama Dokumen">
-                <input type="file" id="file_dok_${folder.id}">
-                <button onclick="uploadArsip(${folder.id})">Unggah ke Arsip</button>
-                <button onclick="loadArsip(${folder.id})" style="background:#007bff;">Lihat Arsip</button>
-                <div id="arsip_${folder.id}" style="margin-top:10px;"></div>
+            <!-- BAGIAN PROFIL YANG DIPINDAHKAN DARI KANAN ATAS KE SINI -->
+            <div class="sidebar-user-section">
+                <div class="user-email-info">
+                    <i class="fas fa-envelope"></i> <span>3</span>
+                </div>
+                <div class="user-profile-row">
+                    <div class="user-avatar-icon"><i class="fas fa-user-circle"></i></div>
+                    <span class="user-email-text">purnamasudang@gmail.com</span>
+                </div>
+                <a href="index.html" class="sidebar-signout-btn"><i class="fas fa-power-off"></i> Sign Out</a>
             </div>
-            `;
-        });
-        document.getElementById('listFolder').innerHTML = html;
-    }
-}
+        </aside>
 
-// 4. BUAT FOLDER
-async function buatFolder(){
-    const userId = localStorage.getItem('userId') || '1';
-    const nama = document.getElementById('nama_folder').value;
-    if(!nama) return alert('Nama folder wajib diisi');
-    
-    const res = await fetch(`${API_URL}/api/folders`, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'user-id': userId 
-        },
-        body: JSON.stringify({ nama_folder: nama })
-    });
-    const data = await res.json();
-    if(data.success) {
-        document.getElementById('nama_folder').value = '';
-        loadFolders();
-    }
-}
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- TOP NAVBAR (Bagian kanan atas sudah dikosongkan/dibersihkan) -->
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+                </div>
+                <div class="nav-right">
+                    <!-- Bagian profil, email & tombol power sudah dipindah ke sidebar bawah -->
+                </div>
+            </header>
 
-// 5. UPLOAD ARSIP
-async function uploadArsip(folderId) {
-    const userId = localStorage.getItem('userId') || '1';
-    localStorage.setItem('userId', userId);
+            <!-- DASHBOARD CONTENT -->
+            <div class="dashboard-body">
+                <div class="breadcrumb-container">
+                    <h1 class="page-title">Dashboard</h1>
+                    <span class="breadcrumb-path"><i class="fas fa-home"></i> Home / Dashboard</span>
+                </div>
 
-    const nama_dokumen = document.getElementById(`nama_dok_${folderId}`).value;
-    const fileInput = document.getElementById(`file_dok_${folderId}`);
+                <div class="stats-row">
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fas fa-folder"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">JUMLAH FOLDER</span>
+                            <span class="stat-value">1</span>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-database"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">TOTAL UKURAN DATA</span>
+                            <span class="stat-value">667.99 KB</span>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon"><i class="fas fa-home"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">STATUS HOME</span>
+                            <span class="stat-value">Active</span>
+                        </div>
+                    </div>
+                </div>
 
-    if(!nama_dokumen) return alert('Nama dokumen wajib diisi');
+                <div class="content-grid">
+                    <div class="left-section">
+                        <div class="folder-card-container">
+                            <div class="folder-card-header">
+                                <span><i class="fas fa-folder-open"></i> Deretan Nama Folder Arsip</span>
+                                <button class="btn-buat-folder"><i class="fas fa-plus"></i> Buat Folder</button>
+                            </div>
+                            <table class="folder-table">
+                               <thead>
+                                   <tr>
+                                       <th>NAMA FOLDER</th>
+                                       <th>JUMLAH FILE</th>
+                                       <th>AKSI</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   <tr>
+                                       <td><i class="fas fa-folder" style="color: #f1c40f; margin-right: 8px;"></i> SDN KADEMANGAN 1</td>
+                                       <td>1 File</td>
+                                       <td><button class="btn-delete"><i class="fas fa-trash-alt"></i></button></td>
+                                   </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-    const formData = new FormData();
-    formData.append('judul_arsip', nama_dokumen);
-    if (fileInput && fileInput.files[0]) {
-        formData.append('berkas', fileInput.files[0]);
-    }
-
-    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip?userId=${userId}`, {
-        method: 'POST',
-        body: formData 
-    });
-    
-    const data = await res.json();
-    if(data.success){
-        alert('Upload berhasil!');
-        document.getElementById(`nama_dok_${folderId}`).value = '';
-        fileInput.value = '';
-        loadArsip(folderId);
-    } else {
-        alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
-    }
-}
-
-// 6. LIHAT ARSIP
-async function loadArsip(folderId){
-    const userId = localStorage.getItem('userId') || '1';
-    const res = await fetch(`${API_URL}/api/folders/${folderId}/arsip`, {
-        headers: { 'user-id': userId }
-    });
-    const data = await res.json();
-    if(data.success){
-        let html = '<h5>Daftar Dokumen:</h5>';
-        if(data.data.length === 0) {
-            html += '<p style="font-size: 13px; color: #666;">Belum ada dokumen di folder ini.</p>';
-        }
-        data.data.forEach(a => {
-            html += `<div class="arsip"><b>${a.nama_dokumen}</b> ${a.file_url ? `- <a href="/uploads/${a.file_url}" target="_blank">Lihat File</a>` : ''}</div>`;
-        });
-        document.getElementById(`arsip_${folderId}`).innerHTML = html;
-    }
-}
-</script>
+                    <div class="right-section">
+                        <div class="info-card-orange">
+                            <div class="card-num">1. NAMA INSTANSI</div>
+                            <div class="card-title">SDN KADEMANGAN 1</div>
+                            <div class="card-desc">Klik untuk daftar instansi arsip</div>
+                            <i class="fas fa-external-link-alt card-ext-icon"></i>
+                        </div>
+                        <div class="info-card-green">
+                            <div class="card-num">2. TAHUN DOKUMEN</div>
+                            <div class="card-title">2026</div>
+                            <div class="card-desc">Tahun Arsip Disimpan</div>
+                        </div>
+                        <div class="info-card-red">
+                            <div class="card-num">3. MENU UNDUH</div>
+                            <div class="card-title">3 File</div>
+                            <div class="card-desc">Pusat Kumpulan File Unduh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
