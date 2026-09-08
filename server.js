@@ -152,6 +152,16 @@ app.delete('/api/arsip/:id', (req, res) => {
     res.json({ success: true });
 });
 
+// API untuk melihat rekap data aktivitas dan total klik (bisa diakses publik)
+app.get('/api/rekap-aktivitas', (req, res) => {
+    let totalKlik = inMemoryDB.aktivitas.length;
+    res.json({
+        success: true,
+        total_aktivitas_klik: totalKlik,
+        riwayat_aktivitas: inMemoryDB.aktivitas
+    });
+});
+
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => console.log(`Server lokal berjalan di port ${PORT}`));
