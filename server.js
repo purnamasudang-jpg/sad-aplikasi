@@ -14,7 +14,6 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
-// File Database Persisten Lokal / Vercel Temporary Dir
 const dbFile = path.join('/tmp', 'database.json');
 
 function loadDB() {
@@ -142,6 +141,32 @@ app.get('/api/arsip', (req, res) => {
     res.json({ success: true, data: userArsip });
 });
 
+// API Pencarian Arsip / Dokumen Lama
+app.get('/api/arsip/cari', (req, res) => {
+    const userId = parseInt(req.headers['user-id']);
+    const keyword = (req.query.q || '').toLowerCase();
+    
+    let db = loadDB();
+    const userArsip = db.data.filter(d => d.user_id === userId);
+    
+    if (!keyword) {
+        return res.json({ success: true, data: userArsip });
+    }
+
+    const hasilPencarian = userArsip.filter(d => {
+        return (
+            (d.judul_arsip && d.judul_arsip.toLowerCase().includes(keyword)) ||
+            (d.nomor_surat && d.nomor_surat.toLowerCase().includes(keyword)) ||
+            (d.instansi_asal && d.instansi_asal.toLowerCase().includes(keyword)) ||
+            (d.keterangan && d.keterangan.toLowerCase().includes(keyword)) ||
+            (d.lokasi_fisik && d.lokasi_fisik.toLowerCase().includes(keyword))
+        );
+    });
+
+    catatAktivitas(`Pencarian Dokumen: "${keyword}"`, userId);
+    res.json({ success: true, data: hasilPencarian });
+});
+
 app.post('/api/arsip', upload.single('berkas'), (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
@@ -185,7 +210,7 @@ app.delete('/api/arsip/:id', (req, res) => {
     res.json({ success: true });
 });
 
-// API untuk melihat rekap data aktivitas dan total klik (bisa diakses publik)
+// API Rekap Aktivitas
 app.get('/api/rekap-aktivitas', (req, res) => {
     let db = loadDB();
     let totalKlik = (db.aktivitas || []).length;
