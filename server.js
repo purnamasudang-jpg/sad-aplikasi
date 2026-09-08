@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
@@ -8,27 +9,45 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Menggunakan memory storage agar aman di serverless Vercel
 const upload = multer({ 
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
-// Database sementara dalam memori (untuk Vercel serverless)
-let inMemoryDB = {
-    users: [],
-    folders: [],
-    data: [],
-    aktivitas: []
-};
+// File Database Persisten Lokal / Vercel Temporary Dir
+const dbFile = path.join('/tmp', 'database.json');
+
+function loadDB() {
+    try {
+        if (fs.existsSync(dbFile)) {
+            const data = fs.readFileSync(dbFile, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch(e) {}
+    return {
+        users: [],
+        folders: [],
+        data: [],
+        aktivitas: []
+    };
+}
+
+function saveDB(dbData) {
+    try {
+        fs.writeFileSync(dbFile, JSON.stringify(dbData, null, 2));
+    } catch(e) {}
+}
 
 function catatAktivitas(namaAktivitas, userId = 'public') {
-    inMemoryDB.aktivitas.push({
+    let db = loadDB();
+    if (!db.aktivitas) db.aktivitas = [];
+    db.aktivitas.push({
         id: Date.now() + Math.random(),
         aktivitas: namaAktivitas,
         user_id: userId,
         waktu: new Date().toISOString()
     });
+    saveDB(db);
 }
 
 // API Register
@@ -37,7 +56,8 @@ app.post('/api/register', (req, res) => {
     if(!username || !password) {
         return res.status(400).json({ success: false, error: 'Username dan password wajib diisi' });
     }
-    const existing = inMemoryDB.users.find(u => u.username === username);
+    let db = loadDB();
+    const existing = db.users.find(u => u.username === username);
     if(existing) {
         return res.status(400).json({ success: false, error: 'Username sudah terdaftar' });
     }
@@ -47,7 +67,8 @@ app.post('/api/register', (req, res) => {
         password,
         kuota_klik: 10
     };
-    inMemoryDB.users.push(newUser);
+    db.users.push(newUser);
+    saveDB(db);
     catatAktivitas('Register Akun Baru', newUser.id);
     res.json({ success: true, message: 'Registrasi berhasil! Silakan login.' });
 });
@@ -55,7 +76,8 @@ app.post('/api/register', (req, res) => {
 // API Login
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-    const user = inMemoryDB.users.find(u => u.username === username && u.password === password);
+    let db = loadDB();
+    const user = db.users.find(u => u.username === username && u.password === password);
     if(user) {
         catatAktivitas('Login Berhasil', user.id);
         res.json({ success: true, user: { id: user.id, username: user.username } });
@@ -67,7 +89,8 @@ app.post('/api/login', (req, res) => {
 // API Info User & Kuota
 app.get('/api/user-info/:id', (req, res) => {
     const userId = parseInt(req.params.id);
-    const user = inMemoryDB.users.find(u => u.id === userId);
+    let db = loadDB();
+    const user = db.users.find(u => u.id === userId);
     if(user) {
         res.json({ id: user.id, username: user.username, kuota_klik: user.kuota_klik || 0 });
     } else {
@@ -78,7 +101,8 @@ app.get('/api/user-info/:id', (req, res) => {
 // API Folders
 app.get('/api/folders', (req, res) => {
     const userId = parseInt(req.headers['user-id']);
-    const userFolders = inMemoryDB.folders.filter(f => f.user_id === userId);
+    let db = loadDB();
+    const userFolders = db.folders.filter(f => f.user_id === userId);
     catatAktivitas('Buka / Lihat Daftar Folder', userId);
     res.json({ success: true, data: userFolders });
 });
@@ -88,27 +112,32 @@ app.post('/api/folders', (req, res) => {
     const { nama_folder } = req.body;
     if(!nama_folder) return res.status(400).json({ error: 'Nama folder wajib diisi' });
 
+    let db = loadDB();
     const newFolder = {
         id: Date.now(),
         user_id: userId,
         nama_folder
     };
-    inMemoryDB.folders.push(newFolder);
+    db.folders.push(newFolder);
+    saveDB(db);
     catatAktivitas('Buat Folder Baru', userId);
     res.json({ success: true, data: newFolder });
 });
 
 app.delete('/api/folders/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    inMemoryDB.folders = inMemoryDB.folders.filter(f => f.id !== id);
-    inMemoryDB.data = inMemoryDB.data.filter(d => d.folder_id !== id);
+    let db = loadDB();
+    db.folders = db.folders.filter(f => f.id !== id);
+    db.data = db.data.filter(d => d.folder_id !== id);
+    saveDB(db);
     res.json({ success: true });
 });
 
 // API Arsip / Dokumen
 app.get('/api/arsip', (req, res) => {
     const userId = parseInt(req.headers['user-id']);
-    const userArsip = inMemoryDB.data.filter(d => d.user_id === userId);
+    let db = loadDB();
+    const userArsip = db.data.filter(d => d.user_id === userId);
     catatAktivitas('Buka Daftar Arsip Dokumen', userId);
     res.json({ success: true, data: userArsip });
 });
@@ -117,7 +146,8 @@ app.post('/api/arsip', upload.single('berkas'), (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
 
-    let user = inMemoryDB.users.find(u => u.id === userId);
+    let db = loadDB();
+    let user = db.users.find(u => u.id === userId);
 
     if (!judul_arsip || !folder_id) {
         return res.status(400).json({ error: 'Judul arsip dan folder wajib diisi' });
@@ -136,29 +166,33 @@ app.post('/api/arsip', upload.single('berkas'), (req, res) => {
         file_path: req.file ? req.file.originalname : null
     };
 
-    inMemoryDB.data.push(newArsip);
+    db.data.push(newArsip);
     
     if (user) {
         user.kuota_klik = Math.max(0, (user.kuota_klik || 10) - 1);
     }
     
+    saveDB(db);
     catatAktivitas('Upload / Buat Dokumen Arsip', userId);
     res.json({ success: true, data: newArsip });
 });
 
 app.delete('/api/arsip/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    inMemoryDB.data = inMemoryDB.data.filter(d => d.id !== id);
+    let db = loadDB();
+    db.data = db.data.filter(d => d.id !== id);
+    saveDB(db);
     res.json({ success: true });
 });
 
 // API untuk melihat rekap data aktivitas dan total klik (bisa diakses publik)
 app.get('/api/rekap-aktivitas', (req, res) => {
-    let totalKlik = inMemoryDB.aktivitas.length;
+    let db = loadDB();
+    let totalKlik = (db.aktivitas || []).length;
     res.json({
         success: true,
         total_aktivitas_klik: totalKlik,
-        riwayat_aktivitas: inMemoryDB.aktivitas
+        riwayat_aktivitas: db.aktivitas || []
     });
 });
 
