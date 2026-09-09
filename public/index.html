@@ -208,7 +208,7 @@
                 <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" style="font-size: 12px; font-weight: 600;">user@mtechno.com</span>
                 <span class="status text-success" style="font-size: 10px;"><i class="fa fa-circle text-success me-1"></i> Online</span>
             </div>
-            <input type="file" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
+            <input type="file" name="berkas" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
             <div class="ms-auto"><span onclick="logout()" style="cursor: pointer; font-size: 15px;" class="text-warning" title="Sign Out"><i class="fa-solid fa-power-off"></i></span></div>
         </div>
 
@@ -415,7 +415,7 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian / No Register 001"></div>
-                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" id="inputFileArsip" class="form-control"></div>
+                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" name="berkas" id="inputFileArsip" class="form-control"></div>
                             <div class="col-md-3 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button></div>
                         </div>
                     </div>
@@ -575,7 +575,7 @@
                 <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-cloud-arrow-up text-success me-2"></i> Upload Media Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-3"><label class="form-label fw-bold small">Judul / Keterangan Dokumentasi</label><input type="text" id="inputJudulMedia" class="form-control" placeholder="Contoh: Dokumentasi Kegiatan Ruang Arsip"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Pilih File (Foto/Video/Dokumen)</label><input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Pilih File (Foto/Video/Dokumen)</label><input type="file" name="berkas" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx"></div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="prosesUploadMedia()">Upload & Simpan</button></div>
             </div>
