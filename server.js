@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { supabase } = require('./supabase');
 
 const app = express();
 
@@ -14,211 +14,276 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
-const dbFile = path.join('/tmp', 'database.json');
-
-function loadDB() {
+async function catatAktivitas(namaAktivitas, userId = 'public') {
     try {
-        if (fs.existsSync(dbFile)) {
-            const data = fs.readFileSync(dbFile, 'utf8');
-            return JSON.parse(data);
-        }
-    } catch(e) {}
-    return {
-        users: [],
-        folders: [],
-        data: [],
-        aktivitas: []
-    };
-}
-
-function saveDB(dbData) {
-    try {
-        fs.writeFileSync(dbFile, JSON.stringify(dbData, null, 2));
-    } catch(e) {}
-}
-
-function catatAktivitas(namaAktivitas, userId = 'public') {
-    let db = loadDB();
-    if (!db.aktivitas) db.aktivitas = [];
-    db.aktivitas.push({
-        id: Date.now() + Math.random(),
-        aktivitas: namaAktivitas,
-        user_id: userId,
-        waktu: new Date().toISOString()
-    });
-    saveDB(db);
+        await supabase.from('aktivitas').insert([{
+            aktivitas: namaAktivitas,
+            user_id: String(userId),
+            waktu: new Date().toISOString()
+        }]);
+    } catch (e) {
+        console.error('Gagal mencatat aktivitas:', e);
+    }
 }
 
 // API Register
-app.post('/api/register', (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
     if(!username || !password) {
         return res.status(400).json({ success: false, error: 'Username dan password wajib diisi' });
     }
-    let db = loadDB();
-    const existing = db.users.find(u => u.username === username);
-    if(existing) {
-        return res.status(400).json({ success: false, error: 'Username sudah terdaftar' });
+
+    try {
+        const { data: existing } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username)
+            .single();
+
+        if(existing) {
+            return res.status(400).json({ success: false, error: 'Username sudah terdaftar' });
+        }
+
+        const { data: newUser, error } = await supabase
+            .from('users')
+            .insert([{ username, password, kuota_klik: 10 }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        await catatAktivitas('Register Akun Baru', newUser.id);
+        res.json({ success: true, message: 'Registrasi berhasil! Silakan login.' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-    const newUser = {
-        id: Date.now(),
-        username,
-        password,
-        kuota_klik: 10
-    };
-    db.users.push(newUser);
-    saveDB(db);
-    catatAktivitas('Register Akun Baru', newUser.id);
-    res.json({ success: true, message: 'Registrasi berhasil! Silakan login.' });
 });
 
 // API Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
-    let db = loadDB();
-    const user = db.users.find(u => u.username === username && u.password === password);
-    if(user) {
-        catatAktivitas('Login Berhasil', user.id);
-        res.json({ success: true, user: { id: user.id, username: user.username } });
-    } else {
+    try {
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username)
+            .eq('password', password)
+            .single();
+
+        if(user) {
+            await catatAktivitas('Login Berhasil', user.id);
+            res.json({ success: true, user: { id: user.id, username: user.username } });
+        } else {
+            res.status(401).json({ success: false, error: 'Username atau password salah' });
+        }
+    } catch (err) {
         res.status(401).json({ success: false, error: 'Username atau password salah' });
     }
 });
 
 // API Info User & Kuota
-app.get('/api/user-info/:id', (req, res) => {
+app.get('/api/user-info/:id', async (req, res) => {
     const userId = parseInt(req.params.id);
-    let db = loadDB();
-    const user = db.users.find(u => u.id === userId);
-    if(user) {
-        res.json({ id: user.id, username: user.username, kuota_klik: user.kuota_klik || 0 });
-    } else {
+    try {
+        const { data: user } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if(user) {
+            res.json({ id: user.id, username: user.username, kuota_klik: user.kuota_klik || 0 });
+        } else {
+            res.status(404).json({ error: 'User tidak ditemukan' });
+        }
+    } catch (err) {
         res.status(404).json({ error: 'User tidak ditemukan' });
     }
 });
 
 // API Folders
-app.get('/api/folders', (req, res) => {
+app.get('/api/folders', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
-    let db = loadDB();
-    const userFolders = db.folders.filter(f => f.user_id === userId);
-    catatAktivitas('Buka / Lihat Daftar Folder', userId);
-    res.json({ success: true, data: userFolders });
+    try {
+        const { data: folders, error } = await supabase
+            .from('folders')
+            .select('*')
+            .eq('user_id', userId);
+
+        if (error) throw error;
+        await catatAktivitas('Buka / Lihat Daftar Folder', userId);
+        res.json({ success: true, data: folders });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
-app.post('/api/folders', (req, res) => {
+app.post('/api/folders', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const { nama_folder } = req.body;
     if(!nama_folder) return res.status(400).json({ error: 'Nama folder wajib diisi' });
 
-    let db = loadDB();
-    const newFolder = {
-        id: Date.now(),
-        user_id: userId,
-        nama_folder
-    };
-    db.folders.push(newFolder);
-    saveDB(db);
-    catatAktivitas('Buat Folder Baru', userId);
-    res.json({ success: true, data: newFolder });
+    try {
+        const { data: newFolder, error } = await supabase
+            .from('folders')
+            .insert([{ user_id: userId, nama_folder }])
+            .select()
+            .single();
+
+        if (error) throw error;
+        await catatAktivitas('Buat Folder Baru', userId);
+        res.json({ success: true, data: newFolder });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
-app.delete('/api/folders/:id', (req, res) => {
+app.delete('/api/folders/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    let db = loadDB();
-    db.folders = db.folders.filter(f => f.id !== id);
-    db.data = db.data.filter(d => d.folder_id !== id);
-    saveDB(db);
-    res.json({ success: true });
+    try {
+        await supabase.from('arsip_dokumen').delete().eq('folder_id', id);
+        await supabase.from('folders').delete().eq('id', id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 // API Arsip / Dokumen
-app.get('/api/arsip', (req, res) => {
+app.get('/api/arsip', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
-    let db = loadDB();
-    const userArsip = db.data.filter(d => d.user_id === userId);
-    catatAktivitas('Buka Daftar Arsip Dokumen', userId);
-    res.json({ success: true, data: userArsip });
+    try {
+        const { data: arsip, error } = await supabase
+            .from('arsip_dokumen')
+            .select('*')
+            .eq('user_id', userId);
+
+        if (error) throw error;
+        await catatAktivitas('Buka Daftar Arsip Dokumen', userId);
+        res.json({ success: true, data: arsip });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
-// API Pencarian Arsip / Dokumen Lama
-app.get('/api/arsip/cari', (req, res) => {
+// API Pencarian Arsip / Dokumen
+app.get('/api/arsip/cari', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const keyword = (req.query.q || '').toLowerCase();
     
-    let db = loadDB();
-    const userArsip = db.data.filter(d => d.user_id === userId);
-    
-    if (!keyword) {
-        return res.json({ success: true, data: userArsip });
+    try {
+        const { data: userArsip, error } = await supabase
+            .from('arsip_dokumen')
+            .select('*')
+            .eq('user_id', userId);
+
+        if (error) throw error;
+
+        if (!keyword) {
+            return res.json({ success: true, data: userArsip });
+        }
+
+        const hasilPencarian = userArsip.filter(d => {
+            return (
+                (d.judul_arsip && d.judul_arsip.toLowerCase().includes(keyword)) ||
+                (d.nomor_surat && d.nomor_surat.toLowerCase().includes(keyword)) ||
+                (d.instansi_asal && d.instansi_asal.toLowerCase().includes(keyword)) ||
+                (d.keterangan && d.keterangan.toLowerCase().includes(keyword)) ||
+                (d.lokasi_fisik && d.lokasi_fisik.toLowerCase().includes(keyword))
+            );
+        });
+
+        await catatAktivitas(`Pencarian Dokumen: "${keyword}"`, userId);
+        res.json({ success: true, data: hasilPencarian });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-
-    const hasilPencarian = userArsip.filter(d => {
-        return (
-            (d.judul_arsip && d.judul_arsip.toLowerCase().includes(keyword)) ||
-            (d.nomor_surat && d.nomor_surat.toLowerCase().includes(keyword)) ||
-            (d.instansi_asal && d.instansi_asal.toLowerCase().includes(keyword)) ||
-            (d.keterangan && d.keterangan.toLowerCase().includes(keyword)) ||
-            (d.lokasi_fisik && d.lokasi_fisik.toLowerCase().includes(keyword))
-        );
-    });
-
-    catatAktivitas(`Pencarian Dokumen: "${keyword}"`, userId);
-    res.json({ success: true, data: hasilPencarian });
 });
 
-app.post('/api/arsip', upload.single('berkas'), (req, res) => {
+app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
-
-    let db = loadDB();
-    let user = db.users.find(u => u.id === userId);
 
     if (!judul_arsip || !folder_id) {
         return res.status(400).json({ error: 'Judul arsip dan folder wajib diisi' });
     }
 
-    const newArsip = {
-        id: Date.now(),
-        user_id: userId,
-        folder_id: parseInt(folder_id),
-        judul_arsip,
-        nomor_surat,
-        instansi_asal,
-        tanggal_dokumen,
-        lokasi_fisik,
-        keterangan,
-        file_path: req.file ? req.file.originalname : null
-    };
+    try {
+        let filePath = null;
+        if (req.file) {
+            const fileName = `${Date.now()}-${req.file.originalname}`;
+            const { data: storageData, error: storageError } = await supabase.storage
+                .from('arsip-files')
+                .upload(fileName, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: false
+                });
 
-    db.data.push(newArsip);
-    
-    if (user) {
-        user.kuota_klik = Math.max(0, (user.kuota_klik || 10) - 1);
+            if (!storageError) {
+                const { data: publicUrlData } = supabase.storage
+                    .from('arsip-files')
+                    .getPublicUrl(fileName);
+                filePath = publicUrlData.publicUrl;
+            }
+        }
+
+        const { data: newArsip, error } = await supabase
+            .from('arsip_dokumen')
+            .insert([{
+                user_id: userId,
+                folder_id: parseInt(folder_id),
+                judul_arsip,
+                nomor_surat,
+                instansi_asal,
+                tanggal_dokumen,
+                lokasi_fisik,
+                keterangan,
+                file_path: filePath
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        // Kurangi kuota klik user
+        const { data: user } = await supabase.from('users').select('kuota_klik').eq('id', userId).single();
+        if (user) {
+            await supabase.from('users')
+                .update({ kuota_klik: Math.max(0, (user.kuota_klik || 10) - 1) })
+                .eq('id', userId);
+        }
+
+        await catatAktivitas('Upload / Buat Dokumen Arsip', userId);
+        res.json({ success: true, data: newArsip });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-    
-    saveDB(db);
-    catatAktivitas('Upload / Buat Dokumen Arsip', userId);
-    res.json({ success: true, data: newArsip });
 });
 
-app.delete('/api/arsip/:id', (req, res) => {
+app.delete('/api/arsip/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    let db = loadDB();
-    db.data = db.data.filter(d => d.id !== id);
-    saveDB(db);
-    res.json({ success: true });
+    try {
+        await supabase.from('arsip_dokumen').delete().eq('id', id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 // API Rekap Aktivitas
-app.get('/api/rekap-aktivitas', (req, res) => {
-    let db = loadDB();
-    let totalKlik = (db.aktivitas || []).length;
-    res.json({
-        success: true,
-        total_aktivitas_klik: totalKlik,
-        riwayat_aktivitas: db.aktivitas || []
-    });
+app.get('/api/rekap-aktivitas', async (req, res) => {
+    try {
+        const { data: aktivitas, error } = await supabase.from('aktivitas').select('*');
+        if (error) throw error;
+        
+        res.json({
+            success: true,
+            total_aktivitas_klik: aktivitas.length,
+            riwayat_aktivitas: aktivitas
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 if (process.env.NODE_ENV !== 'production') {
