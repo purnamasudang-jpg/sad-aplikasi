@@ -213,7 +213,7 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
         if (req.file) {
             const fileName = `${Date.now()}-${req.file.originalname}`;
             const { data: storageData, error: storageError } = await supabase.storage
-                .from('arsip-files')
+                .from('sad-storage')
                 .upload(fileName, req.file.buffer, {
                     contentType: req.file.mimetype,
                     upsert: false
@@ -221,7 +221,7 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
 
             if (!storageError) {
                 const { data: publicUrlData } = supabase.storage
-                    .from('arsip-files')
+                    .from('sad-storage')
                     .getPublicUrl(fileName);
                 filePath = publicUrlData.publicUrl;
             }
