@@ -1,4 +1,4 @@
-const FOLDER_URL = '/api/folders';
+﻿const FOLDER_URL = '/api/folders';
 
 let currentUser = JSON.parse(localStorage.getItem('sad_user')) || null;
 let currentFolder = null;
@@ -133,7 +133,7 @@ function renderFolderGrid(folders) {
             padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s;
         `;
         card.innerHTML = `
-            <div style="font-size: 40px; margin-bottom: 5px;">📁</div>
+            <div style="font-size: 40px; margin-bottom: 5px;">ðŸ“</div>
             <strong style="color: #2d3748; display: block; word-break: break-word;">${folder.nama_folder}</strong>
             <button onclick="event.stopPropagation(); deleteFolder(${folder.id})" style="margin-top: 10px; background: #e53e3e; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">Hapus</button>
         `;
@@ -173,7 +173,7 @@ if (folderForm) {
 
 async function openFolder(folder) {
     currentFolder = folder;
-    document.getElementById('currentFolderName').textContent = `📁 ${folder.nama_folder}`;
+    document.getElementById('currentFolderName').textContent = `ðŸ“ ${folder.nama_folder}`;
     document.getElementById('folder_id_hidden').value = folder.id;
 
     document.getElementById('uploadBox').style.display = 'none';
