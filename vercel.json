@@ -1,14 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "index.js": {
+    "server.js": {
       "maxDuration": 10
     }
   },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "server.js"
     }
   ]
 }
