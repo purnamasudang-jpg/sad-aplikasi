@@ -1,12 +1,14 @@
 {
-  "name": "sad-aplikasi",
-  "version": "1.0.0",
-  "engines": {
-    "node": "24.x"
+  "version": 2,
+  "functions": {
+    "server.js": {
+      "maxDuration": 10
+    }
   },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
-    "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1"
-  }
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ]
 }
