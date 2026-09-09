@@ -18,7 +18,6 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="/_vercel/insights/script.js"></script>
     <style>
         :root {
             --bg-body: #f5f2eb; /* Krem Kayu Hangat / Alam */
@@ -401,7 +400,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h3 class="fw-bold m-0" id="judulFolderAktif" style="font-size: 22px; color: #3e2723;">Kelola Berkas Folder</h3>
-                        <p class="text-muted small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini (Supabase Cloud Storage).</p>
+                        <p class="text-muted small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini.</p>
                     </div>
                     <button class="btn btn-secondary btn-sm fw-bold px-3" onclick="bukaHalaman('DetailFolder')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</button>
                 </div>
@@ -413,10 +412,9 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian / No Register 001"></div>
-                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (Bisa ukuran besar)</label><input type="file" id="inputFileArsip" class="form-control"></div>
-                            <div class="col-md-3 d-flex align-items-end"><button id="btnUploadBerkas" class="btn w-100 fw-bold py-2 text-white" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button></div>
+                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" id="inputFileArsip" class="form-control"></div>
+                            <div class="col-md-3 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button></div>
                         </div>
-                        <div id="uploadStatusMsg" class="mt-3"></div>
                     </div>
                 </div>
 
@@ -591,7 +589,7 @@
                     <div class="text-muted small" id="infoDetailFile"></div>
                 </div>
                 <div class="modal-footer">
-                    <a id="btnDownloadFile" href="#" class="btn btn-sm fw-bold px-3 text-white" style="background-color: #2d5a27;" target="_blank" download><i class="fa-solid fa-download me-1"></i> Download File</a>
+                    <a id="btnDownloadFile" href="#" class="btn btn-sm fw-bold px-3 text-white" style="background-color: #2d5a27;" download><i class="fa-solid fa-download me-1"></i> Download File</a>
                     <button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
@@ -602,19 +600,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // === KONFIGURASI SUPABASE STORAGE ===
-        // Masukkan URL dan Anon Key dari project Supabase Anda di sini
-        const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const SUPABASE_BUCKET = 'arsip-dokumen'; // Nama Bucket public di Supabase Storage Anda
-
-        let supabaseClient = null;
-        try {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch(e) {
-            console.error("Gagal menginisialisasi Supabase client:", e);
-        }
-
         let folderAktifId = null;
 
         window.onload = () => {
@@ -904,7 +889,7 @@
             document.getElementById('statJumlahFolder').innerText = folders.length;
             document.getElementById('statJumlahArsip').innerText = berkas.length;
             document.getElementById('statMenuUnduh').innerText = berkas.length + " File";
-            document.getElementById('statUkuranData').innerText = (totalBytes / (1024 * 1024)).toFixed(2) + " MB";
+            document.getElementById('statUkuranData').innerText = (totalBytes / 1024).toFixed(2) + " KB";
 
             let widgetInstansi = document.getElementById('widgetNamaInstansi');
             if(folders.length > 0) widgetInstansi.innerText = folders[folders.length - 1].nama;
@@ -950,7 +935,7 @@
         }
 
         function hapusFolder(id, namaFolder) {
-            if(confirm(`Yakin ingin menghapus folder "${namaFolder}" beserta isinya?`)) {
+            if(confirm(`Yakin ingin menghapus folder "${namaFolder}"?`)) {
                 let folders = JSON.parse(localStorage.getItem('mtechno_folders') || '[]');
                 folders = folders.filter(f => f.id !== id);
                 localStorage.setItem('mtechno_folders', JSON.stringify(folders));
@@ -969,83 +954,36 @@
             document.getElementById('judulFolderAktif').innerText = "Kelola Berkas: " + namaFolder;
             document.getElementById('inputNamaBerkas').value = '';
             document.getElementById('inputFileArsip').value = '';
-            document.getElementById('uploadStatusMsg').innerHTML = '';
             muatTabelBerkas();
             bukaHalaman('UploadArsip');
         }
 
-        // ==========================================
-        // PERBAIKAN UTAMA: UPLOAD LANGSUNG KE SUPABASE STORAGE
-        // ==========================================
-        async function prosesUploadBerkas() {
+        function prosesUploadBerkas() {
             let namaBerkas = document.getElementById('inputNamaBerkas').value.trim();
             let fileInput = document.getElementById('inputFileArsip');
-            let statusMsg = document.getElementById('uploadStatusMsg');
-            let btnUpload = document.getElementById('btnUploadBerkas');
 
             if(!namaBerkas) { alert('Nama / Keterangan dokumen wajib diisi!'); return; }
             if(fileInput.files.length === 0) { alert('Pilih file dokumen terlebih dahulu!'); return; }
 
             let file = fileInput.files[0];
+            let reader = new FileReader();
 
-            if(!supabaseClient) {
-                statusMsg.innerHTML = `<div class="alert alert-danger py-2 small">Konfigurasi Supabase Client belum diatur dengan benar di kode!</div>`;
-                return;
-            }
-
-            try {
-                btnUpload.disabled = true;
-                btnUpload.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Mengunggah...`;
-                statusMsg.innerHTML = `<div class="alert alert-info py-2 small">Sedang mengunggah berkas besar ke Supabase Storage...</div>`;
-
-                let fileExt = file.name.split('.').pop();
-                let uniqueFileName = `${Date.now()}_${Math.random().toString(36.substring(2, 8))}.${fileExt}`;
-
-                // Kirim langsung file mentah ke Supabase Storage (Melewati limit Vercel)
-                let { data: storageData, error: storageError } = await supabaseClient.storage
-                    .from(SUPABASE_BUCKET)
-                    .upload(uniqueFileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if(storageError) throw storageError;
-
-                // Ambil Public URL dari file yang diupload
-                let { data: publicUrlData } = supabaseClient.storage
-                    .from(SUPABASE_BUCKET)
-                    .getPublicUrl(uniqueFileName);
-
-                let filePublicUrl = publicUrlData.publicUrl;
-
-                // Simpan metadata ke localStorage agar ringan
+            reader.onload = function(e) {
+                let base64Data = e.target.result;
                 let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
                 berkas.push({
-                    id: Date.now(), 
-                    folderId: folderAktifId, 
-                    nama: namaBerkas,
-                    namaFileAsli: file.name, 
-                    tipe: fileExt.toUpperCase(),
-                    ukuranBytes: file.size, 
-                    ukuranFormatted: (file.size / (1024 * 1024)).toFixed(2) + " MB", 
-                    fileData: filePublicUrl // Menggunakan URL Cloud Supabase
+                    id: Date.now(), folderId: folderAktifId, nama: namaBerkas,
+                    namaFileAsli: file.name, tipe: file.name.split('.').pop().toUpperCase(),
+                    ukuranBytes: file.size, ukuranFormatted: (file.size / 1024).toFixed(2) + " KB", fileData: base64Data
                 });
-
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
-                catatLog("UPLOAD BERKAS", `Mengunggah berkas cloud "${namaBerkas}" (${file.name})`);
+                catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name})`);
 
                 document.getElementById('inputNamaBerkas').value = '';
                 document.getElementById('inputFileArsip').value = '';
-                statusMsg.innerHTML = `<div class="alert alert-success py-2 small">Berkas berhasil diunggah ke Supabase Storage!</div>`;
                 muatTabelBerkas();
-
-            } catch (err) {
-                console.error("Upload error:", err);
-                statusMsg.innerHTML = `<div class="alert alert-danger py-2 small">Gagal upload: ${err.message || 'Terjadi kesalahan sistem.'}</div>`;
-            } finally {
-                btnUpload.disabled = false;
-                btnUpload.innerHTML = `<i class="fa-solid fa-upload me-1"></i> Upload Berkas`;
-            }
+            };
+            reader.readAsDataURL(file);
         }
 
         function muatTabelBerkas() {
@@ -1097,7 +1035,7 @@
             } else if(b.tipe === 'PDF') {
                 container.innerHTML = `<iframe src="${b.fileData}" width="100%" height="400px" style="border: 1px solid #ccc; border-radius: 4px;"></iframe>`;
             } else {
-                container.innerHTML = `<div class="py-5 bg-light rounded border"><i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i><h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5><a href="${b.fileData}" target="_blank" class="btn btn-success btn-sm mt-2">Buka / Download File Cloud</a></div>`;
+                container.innerHTML = `<div class="py-5 bg-light rounded border"><i class="fa-solid fa-file-arrow-down fa-4x text-secondary mb-3"></i><h5 class="fw-bold">Pratinjau langsung tidak tersedia untuk format .${b.tipe.toLowerCase()}</h5></div>`;
             }
             new bootstrap.Modal(document.getElementById('modalLihatDokumen')).show();
         }
@@ -1109,7 +1047,6 @@
                 localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
                 catatLog("HAPUS BERKAS", `Menghapus berkas: "${namaBerkas}"`);
                 muatTabelFolder();
-                muatTabelBerkas();
             }
         }
 
@@ -1151,31 +1088,25 @@
             new bootstrap.Modal(document.getElementById('modalUploadMedia')).show();
         }
 
-        async function prosesUploadMedia() {
+        function prosesUploadMedia() {
             let judul = document.getElementById('inputJudulMedia').value.trim();
             let fileInput = document.getElementById('inputFileMedia');
             if(!judul || fileInput.files.length === 0) { alert('Judul dan file media wajib diisi!'); return; }
 
             let file = fileInput.files[0];
-            try {
-                let fileExt = file.name.split('.').pop();
-                let uniqueName = `media_${Date.now()}.${fileExt}`;
-                let { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(uniqueName, file);
-                if(error) throw error;
-
-                let { data: publicUrlData } = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(uniqueName);
+            let reader = new FileReader();
+            reader.onload = function(e) {
                 let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
                 mediaList.push({
-                    id: Date.now(), judul: judul, ket: `File: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
-                    tipe: fileExt.toUpperCase(), fileData: publicUrlData.publicUrl, namaFileAsli: file.name
+                    id: Date.now(), judul: judul, ket: `File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+                    tipe: file.name.split('.').pop().toUpperCase(), fileData: e.target.result, namaFileAsli: file.name
                 });
                 localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
                 catatLog("UPLOAD MEDIA", `Mengunggah dokumentasi: "${judul}"`);
                 bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia')).hide();
                 muatGaleriMedia();
-            } catch (err) {
-                alert("Gagal upload media: " + err.message);
-            }
+            };
+            reader.readAsDataURL(file);
         }
 
         function muatGaleriMedia() {
