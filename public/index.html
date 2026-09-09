@@ -13,6 +13,9 @@
     <meta property="og:url" content="https://sad-aplikasi.vercel.app/" />
     <meta property="og:type" content="website" />
 
+    <!-- Vercel Speed Insights Script -->
+    <script defer src="/_vercel/insights/script.js"></script>
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -400,7 +403,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h3 class="fw-bold m-0" id="judulFolderAktif" style="font-size: 22px; color: #3e2723;">Kelola Berkas Folder</h3>
-                        <p class="text-muted small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini.</p>
+                        <p class="text-muted small m-0 mt-1">Upload dokumen, berkas, dan nomor register dalam folder ini (Maksimal ukuran file: 2MB).</p>
                     </div>
                     <button class="btn btn-secondary btn-sm fw-bold px-3" onclick="bukaHalaman('DetailFolder')"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</button>
                 </div>
@@ -515,7 +518,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-photo-film text-success me-2"></i> Dokumentasi & Galeri Visual</h3>
-                        <p class="text-muted small m-0 mt-1">Pusat unggah foto, video, dan media dokumentasi kegiatan arsip.</p>
+                        <p class="text-muted small m-0 mt-1">Pusat unggah foto, video, dan media dokumentasi kegiatan arsip (Maksimal ukuran file: 2MB).</p>
                     </div>
                     <button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="bukaModalUploadMedia()"><i class="fa-solid fa-upload me-1"></i> Upload Media</button>
                 </div>
@@ -572,7 +575,7 @@
                 <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-cloud-arrow-up text-success me-2"></i> Upload Media Dokumentasi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-3"><label class="form-label fw-bold small">Judul / Keterangan Dokumentasi</label><input type="text" id="inputJudulMedia" class="form-control" placeholder="Contoh: Dokumentasi Kegiatan Ruang Arsip"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Pilih File (Foto/Video/Dokumen)</label><input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Pilih File (Foto/Video/Dokumen) - Maks 2MB</label><input type="file" id="inputFileMedia" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx"></div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="prosesUploadMedia()">Upload & Simpan</button></div>
             </div>
@@ -658,6 +661,10 @@
         function gantiFotoProfil(event) {
             let file = event.target.files[0];
             if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("Ukuran foto profil terlalu besar! Maksimal 2MB.");
+                    return;
+                }
                 let reader = new FileReader();
                 reader.onload = function(e) {
                     let avatarImg = document.getElementById('sidebarUserAvatar');
@@ -966,22 +973,33 @@
             if(fileInput.files.length === 0) { alert('Pilih file dokumen terlebih dahulu!'); return; }
 
             let file = fileInput.files[0];
+            
+            // Batasan ukuran 2MB agar localStorage browser tidak penuh/error
+            if(file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file terlalu besar! Maksimal ukuran file adalah 2 MB agar dapat disimpan di penyimpanan browser.');
+                return;
+            }
+
             let reader = new FileReader();
-
             reader.onload = function(e) {
-                let base64Data = e.target.result;
-                let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
-                berkas.push({
-                    id: Date.now(), folderId: folderAktifId, nama: namaBerkas,
-                    namaFileAsli: file.name, tipe: file.name.split('.').pop().toUpperCase(),
-                    ukuranBytes: file.size, ukuranFormatted: (file.size / 1024).toFixed(2) + " KB", fileData: base64Data
-                });
-                localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
-                catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name})`);
+                try {
+                    let base64Data = e.target.result;
+                    let berkas = JSON.parse(localStorage.getItem('mtechno_berkas') || '[]');
+                    berkas.push({
+                        id: Date.now(), folderId: folderAktifId, nama: namaBerkas,
+                        namaFileAsli: file.name, tipe: file.name.split('.').pop().toUpperCase(),
+                        ukuranBytes: file.size, ukuranFormatted: (file.size / 1024).toFixed(2) + " KB", fileData: base64Data
+                    });
+                    localStorage.setItem('mtechno_berkas', JSON.stringify(berkas));
+                    catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name})`);
 
-                document.getElementById('inputNamaBerkas').value = '';
-                document.getElementById('inputFileArsip').value = '';
-                muatTabelBerkas();
+                    document.getElementById('inputNamaBerkas').value = '';
+                    document.getElementById('inputFileArsip').value = '';
+                    muatTabelBerkas();
+                    alert('Berhasil mengunggah berkas!');
+                } catch (err) {
+                    alert('Gagal mengunggah: Penyimpanan browser penuh. Hapus beberapa file lama terlebih dahulu.');
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -1094,17 +1112,27 @@
             if(!judul || fileInput.files.length === 0) { alert('Judul dan file media wajib diisi!'); return; }
 
             let file = fileInput.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file media terlalu besar! Maksimal 2 MB.');
+                return;
+            }
+
             let reader = new FileReader();
             reader.onload = function(e) {
-                let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
-                mediaList.push({
-                    id: Date.now(), judul: judul, ket: `File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
-                    tipe: file.name.split('.').pop().toUpperCase(), fileData: e.target.result, namaFileAsli: file.name
-                });
-                localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
-                catatLog("UPLOAD MEDIA", `Mengunggah dokumentasi: "${judul}"`);
-                bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia')).hide();
-                muatGaleriMedia();
+                try {
+                    let mediaList = JSON.parse(localStorage.getItem('mtechno_media') || '[]');
+                    mediaList.push({
+                        id: Date.now(), judul: judul, ket: `File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+                        tipe: file.name.split('.').pop().toUpperCase(), fileData: e.target.result, namaFileAsli: file.name
+                    });
+                    localStorage.setItem('mtechno_media', JSON.stringify(mediaList));
+                    catatLog("UPLOAD MEDIA", `Mengunggah dokumentasi: "${judul}"`);
+                    bootstrap.Modal.getInstance(document.getElementById('modalUploadMedia')).hide();
+                    muatGaleriMedia();
+                    alert('Berhasil mengunggah media!');
+                } catch (err) {
+                    alert('Gagal mengunggah: Penyimpanan browser penuh.');
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -1124,7 +1152,7 @@
                     <div class="card border shadow-sm h-100 text-dark">
                         ${previewHtml}
                         <div class="card-body p-3 d-flex flex-column justify-content-between">
-                            <div><h6 class="fw-bold mb-1 text-truncate" style="font-size: 15px;">${m.judul}</h6><p class="text-muted small mb-2 text-truncate">${m.ket}</p></div>
+                            <div><h6 class="fw-bold mb-1 text-truncate" style="font-size: 15px;">${m.judul}</h6><p class="temp text-muted small mb-2 text-truncate">${m.ket}</p></div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <span class="badge" style="background-color: #2d5a27;">${m.tipe}</span>
                                 <div><button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="lihatMedia(${m.id})"><i class="fa-solid fa-eye"></i></button><button class="btn btn-danger btn-sm" onclick="hapusMedia(${m.id}, '${m.judul}')"><i class="fa-solid fa-trash-can"></i></button></div>
