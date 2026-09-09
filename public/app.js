@@ -24,7 +24,6 @@ authToggleLink.addEventListener('click', (e) => {
     e.preventDefault();
     isRegisterMode = !isRegisterMode;
     
-    // Tambahkan input nama jika mode register
     let nameFieldContainer = document.getElementById('nameFieldContainer');
     
     if (isRegisterMode) {
@@ -33,7 +32,6 @@ authToggleLink.addEventListener('click', (e) => {
         authToggleText.textContent = 'Sudah punya akun?';
         authToggleLink.textContent = 'Login di sini';
         
-        // Buat input nama jika belum ada di form
         if (!nameFieldContainer) {
             const div = document.createElement('div');
             div.id = 'nameFieldContainer';
@@ -47,7 +45,6 @@ authToggleLink.addEventListener('click', (e) => {
         authToggleText.textContent = 'Belum punya akun?';
         authToggleLink.textContent = 'Daftar Akun Baru';
         
-        // Hapus input nama saat kembali ke mode login
         if (nameFieldContainer) {
             nameFieldContainer.remove();
         }
@@ -56,7 +53,7 @@ authToggleLink.addEventListener('click', (e) => {
 
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('auth_username').value; // Mengambil dari input email/username
+    const email = document.getElementById('auth_username').value;
     const password = document.getElementById('auth_password').value;
     const nama = isRegisterMode ? document.getElementById('auth_nama').value : '';
 
@@ -74,7 +71,7 @@ authForm.addEventListener('submit', async (e) => {
         if (response.ok && resData.success) {
             alert(resData.message);
             if (isRegisterMode) {
-                authToggleLink.click(); // Kembali ke mode login setelah sukses daftar
+                authToggleLink.click();
             } else {
                 currentUser = resData.user;
                 localStorage.setItem('sad_user', JSON.stringify(currentUser));
@@ -204,14 +201,44 @@ if (btnBack) {
     });
 }
 
+// Handler Upload Dokumen yang Diperbarui
+const uploadForm = document.getElementById('uploadForm');
+if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(uploadForm);
+        formData.append('user_id', currentUser.id);
+        formData.append('folder_id', currentFolder.id);
+
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const resData = await response.json();
+
+            if (response.ok && resData.success) {
+                alert('Dokumen berhasil diunggah!');
+                uploadForm.reset();
+                document.getElementById('uploadBox').style.display = 'none';
+                fetchDocsInFolder();
+            } else {
+                alert(resData.message || 'Gagal mengunggah dokumen');
+            }
+        } catch (error) {
+            console.error('Error saat upload:', error);
+            alert('Terjadi kesalahan saat menghubungi server.');
+        }
+    });
+}
+
 async function fetchDocsInFolder() {
-    // Fitur arsip di dalam folder bisa disesuaikan nanti dengan endpoint arsip backend
     console.log('Membuka isi folder:', currentFolder.id);
 }
 
 async function deleteFolder(id) {
     if (confirm('Hapus folder ini?')) {
-        // Endpoint hapus folder bisa ditambahkan di backend jika diperlukan
         alert('Fitur hapus folder segera disempurnakan.');
         fetchFolders();
     }
