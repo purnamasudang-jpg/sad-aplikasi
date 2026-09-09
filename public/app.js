@@ -243,3 +243,4 @@ async function deleteFolder(id) {
         fetchFolders();
     }
 }
+
