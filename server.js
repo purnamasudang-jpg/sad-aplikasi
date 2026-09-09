@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -245,7 +246,6 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
 
         if (error) throw error;
 
-        // Kurangi kuota klik user
         const { data: user } = await supabase.from('users').select('kuota_klik').eq('id', userId).single();
         if (user) {
             await supabase.from('users')
@@ -256,6 +256,63 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
         await catatAktivitas('Upload / Buat Dokumen Arsip', userId);
         res.json({ success: true, data: newArsip });
     } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Alias Endpoint /api/upload (Untuk kompatibilitas langsung dengan frontend)
+app.post('/api/upload', upload.single('berkas'), async (req, res) => {
+    const userId = parseInt(req.headers['user-id'] || req.body.user_id);
+    const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
+
+    const finalJudul = judul_arsip || (req.file ? req.file.originalname : 'Dokumen Tanpa Judul');
+    const finalFolderId = folder_id ? parseInt(folder_id) : null;
+
+    if (!finalFolderId) {
+        return res.status(400).json({ success: false, error: 'Folder wajib dipilih' });
+    }
+
+    try {
+        let filePath = null;
+        if (req.file) {
+            const fileName = `${Date.now()}-${req.file.originalname}`;
+            const { data: storageData, error: storageError } = await supabase.storage
+                .from('sad-storage')
+                .upload(fileName, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: false
+                });
+
+            if (!storageError) {
+                const { data: publicUrlData } = supabase.storage
+                    .from('sad-storage')
+                    .getPublicUrl(fileName);
+                filePath = publicUrlData.publicUrl;
+            }
+        }
+
+        const { data: newArsip, error } = await supabase
+            .from('arsip_dokumen')
+            .insert([{
+                user_id: isNaN(userId) ? 1 : userId,
+                folder_id: finalFolderId,
+                judul_arsip: finalJudul,
+                nomor_surat: nomor_surat || '-',
+                instansi_asal: instansi_asal || '-',
+                tanggal_dokumen: tanggal_dokumen || null,
+                lokasi_fisik: lokasi_fisik || '-',
+                keterangan: keterangan || '-',
+                file_path: filePath
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        await catatAktivitas('Upload Dokumen via /api/upload', userId);
+        res.json({ success: true, message: 'Dokumen berhasil diunggah!', data: newArsip });
+    } catch (err) {
+        console.error('Error upload:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
