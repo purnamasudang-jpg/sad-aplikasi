@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const { put } = require('@vercel/blob');
 const { supabase } = require('./supabase');
 
 const app = express();
@@ -12,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const upload = multer({ 
     storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 } 
+    limits: { fileSize: 50 * 1024 * 1024 } 
 });
 
 async function catatAktivitas(namaAktivitas, userId = 'public') {
@@ -213,19 +214,11 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
         let filePath = null;
         if (req.file) {
             const fileName = `${Date.now()}-${req.file.originalname}`;
-            const { data: storageData, error: storageError } = await supabase.storage
-                .from('sad-storage')
-                .upload(fileName, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                });
-
-            if (!storageError) {
-                const { data: publicUrlData } = supabase.storage
-                    .from('sad-storage')
-                    .getPublicUrl(fileName);
-                filePath = publicUrlData.publicUrl;
-            }
+            const blob = await put(fileName, req.file.buffer, {
+                access: 'public',
+                token: process.env.BLOB_READ_WRITE_TOKEN
+            });
+            filePath = blob.url;
         }
 
         const { data: newArsip, error } = await supabase
@@ -260,7 +253,7 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
     }
 });
 
-// Alias Endpoint /api/upload (Untuk kompatibilitas langsung dengan frontend)
+// Alias Endpoint /api/upload
 app.post('/api/upload', upload.single('berkas'), async (req, res) => {
     const userId = parseInt(req.headers['user-id'] || req.body.user_id);
     const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
@@ -276,19 +269,11 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
         let filePath = null;
         if (req.file) {
             const fileName = `${Date.now()}-${req.file.originalname}`;
-            const { data: storageData, error: storageError } = await supabase.storage
-                .from('sad-storage')
-                .upload(fileName, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                });
-
-            if (!storageError) {
-                const { data: publicUrlData } = supabase.storage
-                    .from('sad-storage')
-                    .getPublicUrl(fileName);
-                filePath = publicUrlData.publicUrl;
-            }
+            const blob = await put(fileName, req.file.buffer, {
+                access: 'public',
+                token: process.env.BLOB_READ_WRITE_TOKEN
+            });
+            filePath = blob.url;
         }
 
         const { data: newArsip, error } = await supabase
