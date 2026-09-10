@@ -133,7 +133,7 @@ function renderFolderGrid(folders) {
             padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s;
         `;
         card.innerHTML = `
-            <div style="font-size: 40px; margin-bottom: 5px;">ðŸ“</div>
+            <div style="font-size: 40px; margin-bottom: 5px;">📁</div>
             <strong style="color: #2d3748; display: block; word-break: break-word;">${folder.nama_folder}</strong>
             <button onclick="event.stopPropagation(); deleteFolder(${folder.id})" style="margin-top: 10px; background: #e53e3e; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">Hapus</button>
         `;
@@ -173,7 +173,7 @@ if (folderForm) {
 
 async function openFolder(folder) {
     currentFolder = folder;
-    document.getElementById('currentFolderName').textContent = `ðŸ“ ${folder.nama_folder}`;
+    document.getElementById('currentFolderName').textContent = `📁 ${folder.nama_folder}`;
     document.getElementById('folder_id_hidden').value = folder.id;
 
     document.getElementById('uploadBox').style.display = 'none';
@@ -233,8 +233,83 @@ if (uploadForm) {
     });
 }
 
+// Fungsi Fetch Dokumen dalam Folder (Diperbarui secara utuh)
 async function fetchDocsInFolder() {
-    console.log('Membuka isi folder:', currentFolder.id);
+    try {
+        const response = await fetch('/api/arsip', {
+            headers: {
+                'user-id': currentUser.id
+            }
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            allDocsInFolder = result.data.filter(doc => doc.folder_id === currentFolder.id);
+            renderDocsList(allDocsInFolder);
+        } else {
+            console.error('Gagal memuat arsip:', result.error);
+        }
+    } catch (error) {
+        console.error('Error saat mengambil dokumen:', error);
+    }
+}
+
+function renderDocsList(docs) {
+    const container = document.getElementById('viewInsideFolder');
+    
+    let listElement = document.getElementById('docsListContainer');
+    if (!listElement) {
+        listElement = document.createElement('div');
+        listElement.id = 'docsListContainer';
+        listElement.style.marginTop = '20px';
+        container.appendChild(listElement);
+    }
+
+    if (!docs || docs.length === 0) {
+        listElement.innerHTML = '<p style="color: #718096; text-align: center;">Belum ada berkas di folder ini.</p>';
+        return;
+    }
+
+    let html = '<h3 style="font-size: 16px; margin-bottom: 10px; color: #2d3748;">Daftar Berkas & Dokumen:</h3>';
+    html += '<ul style="list-style: none; padding: 0;">';
+
+    docs.forEach(doc => {
+        html += `
+            <li style="background: #fff; border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong style="color: #2b6cb0; display: block;">${doc.judul_arsip}</strong>
+                    <span style="font-size: 12px; color: #718096;">No. Surat: ${doc.nomor_surat || '-'} | Instansi: ${doc.instansi_asal || '-'}</span>
+                </div>
+                <div>
+                    ${doc.file_path ? `<a href="${doc.file_path}" target="_blank" style="background: #3182ce; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 12px; margin-right: 5px;">Buka File</a>` : ''}
+                    <button onclick="deleteArsip(${doc.id})" style="background: #e53e3e; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-size: 12px; cursor: pointer;">Hapus</button>
+                </div>
+            </li>
+        `;
+    });
+
+    html += '</ul>';
+    listElement.innerHTML = html;
+}
+
+async function deleteArsip(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus dokumen ini?')) {
+        try {
+            const response = await fetch(`/api/arsip/${id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Dokumen berhasil dihapus.');
+                fetchDocsInFolder();
+            } else {
+                alert('Gagal menghapus dokumen: ' + result.error);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Terjadi kesalahan koneksi.');
+        }
+    }
 }
 
 async function deleteFolder(id) {
@@ -243,4 +318,3 @@ async function deleteFolder(id) {
         fetchFolders();
     }
 }
-
