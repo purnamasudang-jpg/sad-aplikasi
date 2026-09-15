@@ -159,14 +159,31 @@ app.delete('/api/folders/:id', async (req, res) => {
     }
 });
 
+// Ambil daftar ID folder milik seorang user (dipakai untuk menentukan
+// dokumen mana saja yang boleh dilihat user itu, karena tabel arsip_dokumen
+// tidak punya kolom user_id sendiri -- kepemilikan ditentukan lewat folder_id)
+async function ambilFolderIdMilikUser(userId) {
+    const { data: folders, error } = await supabase
+        .from('folders')
+        .select('id')
+        .eq('user_id', userId);
+    if (error) throw error;
+    return (folders || []).map(f => f.id);
+}
+
 // API Arsip / Dokumen
 app.get('/api/arsip', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     try {
+        const folderIds = await ambilFolderIdMilikUser(userId);
+        if (folderIds.length === 0) {
+            return res.json({ success: true, data: [] });
+        }
+
         const { data: arsip, error } = await supabase
             .from('arsip_dokumen')
             .select('*')
-            .eq('user_id', userId);
+            .in('folder_id', folderIds);
 
         if (error) throw error;
         await catatAktivitas('Buka Daftar Arsip Dokumen', userId);
@@ -182,10 +199,15 @@ app.get('/api/arsip/cari', async (req, res) => {
     const keyword = (req.query.q || '').toLowerCase();
 
     try {
+        const folderIds = await ambilFolderIdMilikUser(userId);
+        if (folderIds.length === 0) {
+            return res.json({ success: true, data: [] });
+        }
+
         const { data: userArsip, error } = await supabase
             .from('arsip_dokumen')
             .select('*')
-            .eq('user_id', userId);
+            .in('folder_id', folderIds);
 
         if (error) throw error;
 
@@ -239,7 +261,6 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
         const { data: newArsip, error } = await supabase
             .from('arsip_dokumen')
             .insert([{
-                user_id: userId,
                 folder_id: finalFolderId,
                 judul_arsip: finalJudul,
                 nomor_surat: nomor_surat || '-',
