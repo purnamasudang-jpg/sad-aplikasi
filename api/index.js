@@ -2,18 +2,19 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 const { put } = require('@vercel/blob');
-const { supabase } = require('./supabase');
+const { supabase } = require('../supabase');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-const upload = multer({ 
+const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 } 
+    limits: { fileSize: 50 * 1024 * 1024 }
 });
 
 async function catatAktivitas(namaAktivitas, userId = 'public') {
@@ -31,7 +32,7 @@ async function catatAktivitas(namaAktivitas, userId = 'public') {
 // API Register
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
-    if(!username || !password) {
+    if (!username || !password) {
         return res.status(400).json({ success: false, error: 'Username dan password wajib diisi' });
     }
 
@@ -42,13 +43,15 @@ app.post('/api/register', async (req, res) => {
             .eq('username', username)
             .single();
 
-        if(existing) {
+        if (existing) {
             return res.status(400).json({ success: false, error: 'Username sudah terdaftar' });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const { data: newUser, error } = await supabase
             .from('users')
-            .insert([{ username, password, kuota_klik: 10 }])
+            .insert([{ username, password: hashedPassword, kuota_klik: 10 }])
             .select()
             .single();
 
@@ -69,10 +72,15 @@ app.post('/api/login', async (req, res) => {
             .from('users')
             .select('*')
             .eq('username', username)
-            .eq('password', password)
             .single();
 
-        if(user) {
+        if (!user) {
+            return res.status(401).json({ success: false, error: 'Username atau password salah' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (passwordMatch) {
             await catatAktivitas('Login Berhasil', user.id);
             res.json({ success: true, user: { id: user.id, username: user.username } });
         } else {
@@ -93,7 +101,7 @@ app.get('/api/user-info/:id', async (req, res) => {
             .eq('id', userId)
             .single();
 
-        if(user) {
+        if (user) {
             res.json({ id: user.id, username: user.username, kuota_klik: user.kuota_klik || 0 });
         } else {
             res.status(404).json({ error: 'User tidak ditemukan' });
@@ -123,7 +131,7 @@ app.get('/api/folders', async (req, res) => {
 app.post('/api/folders', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const { nama_folder } = req.body;
-    if(!nama_folder) return res.status(400).json({ error: 'Nama folder wajib diisi' });
+    if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
 
     try {
         const { data: newFolder, error } = await supabase
@@ -172,7 +180,7 @@ app.get('/api/arsip', async (req, res) => {
 app.get('/api/arsip/cari', async (req, res) => {
     const userId = parseInt(req.headers['user-id']);
     const keyword = (req.query.q || '').toLowerCase();
-    
+
     try {
         const { data: userArsip, error } = await supabase
             .from('arsip_dokumen')
@@ -202,12 +210,19 @@ app.get('/api/arsip/cari', async (req, res) => {
     }
 });
 
-app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+// API Upload Berkas (dipakai halaman Kelola Berkas)
+app.post('/api/upload', upload.single('berkas'), async (req, res) => {
+    const userId = parseInt(req.headers['user-id'] || req.body.user_id);
     const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
 
-    if (!judul_arsip || !folder_id) {
-        return res.status(400).json({ error: 'Judul arsip dan folder wajib diisi' });
+    const finalJudul = judul_arsip || (req.file ? req.file.originalname : 'Dokumen Tanpa Judul');
+    const finalFolderId = folder_id ? parseInt(folder_id) : null;
+
+    if (!finalFolderId) {
+        return res.status(400).json({ success: false, error: 'Folder wajib dipilih' });
+    }
+    if (isNaN(userId)) {
+        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
     }
 
     try {
@@ -225,61 +240,6 @@ app.post('/api/arsip', upload.single('berkas'), async (req, res) => {
             .from('arsip_dokumen')
             .insert([{
                 user_id: userId,
-                folder_id: parseInt(folder_id),
-                judul_arsip,
-                nomor_surat,
-                instansi_asal,
-                tanggal_dokumen,
-                lokasi_fisik,
-                keterangan,
-                file_path: filePath
-            }])
-            .select()
-            .single();
-
-        if (error) throw error;
-
-        const { data: user } = await supabase.from('users').select('kuota_klik').eq('id', userId).single();
-        if (user) {
-            await supabase.from('users')
-                .update({ kuota_klik: Math.max(0, (user.kuota_klik || 10) - 1) })
-                .eq('id', userId);
-        }
-
-        await catatAktivitas('Upload / Buat Dokumen Arsip', userId);
-        res.json({ success: true, data: newArsip });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// Alias Endpoint /api/upload
-app.post('/api/upload', upload.single('berkas'), async (req, res) => {
-    const userId = parseInt(req.headers['user-id'] || req.body.user_id);
-    const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
-
-    const finalJudul = judul_arsip || (req.file ? req.file.originalname : 'Dokumen Tanpa Judul');
-    const finalFolderId = folder_id ? parseInt(folder_id) : null;
-
-    if (!finalFolderId) {
-        return res.status(400).json({ success: false, error: 'Folder wajib dipilih' });
-    }
-
-    try {
-        let filePath = null;
-        if (req.file) {
-            const fileName = `${Date.now()}-${req.file.originalname}`;
-            const blob = await put(fileName, req.file.buffer, {
-                access: 'public',
-                token: process.env.SAD_BLOB_READ_WRITE_TOKEN
-            });
-            filePath = blob.url;
-        }
-
-        const { data: newArsip, error } = await supabase
-            .from('arsip_dokumen')
-            .insert([{
-                user_id: isNaN(userId) ? 1 : userId,
                 folder_id: finalFolderId,
                 judul_arsip: finalJudul,
                 nomor_surat: nomor_surat || '-',
@@ -294,7 +254,7 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
 
         if (error) throw error;
 
-        await catatAktivitas('Upload Dokumen via /api/upload', userId);
+        await catatAktivitas('Upload Dokumen', userId);
         res.json({ success: true, message: 'Dokumen berhasil diunggah!', data: newArsip });
     } catch (err) {
         console.error('Error upload:', err);
@@ -317,7 +277,7 @@ app.get('/api/rekap-aktivitas', async (req, res) => {
     try {
         const { data: aktivitas, error } = await supabase.from('aktivitas').select('*');
         if (error) throw error;
-        
+
         res.json({
             success: true,
             total_aktivitas_klik: aktivitas.length,
