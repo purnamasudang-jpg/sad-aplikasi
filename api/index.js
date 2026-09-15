@@ -51,7 +51,7 @@ app.post('/api/register', async (req, res) => {
 
         const { data: newUser, error } = await supabase
             .from('users')
-            .insert([{ username, password: hashedPassword, kuota_klik: 10 }])
+            .insert([{ username, password: hashedPassword }])
             .select()
             .single();
 
@@ -102,7 +102,7 @@ app.get('/api/user-info/:id', async (req, res) => {
             .single();
 
         if (user) {
-            res.json({ id: user.id, username: user.username, kuota_klik: user.kuota_klik || 0 });
+            res.json({ id: user.id, username: user.username });
         } else {
             res.status(404).json({ error: 'User tidak ditemukan' });
         }
