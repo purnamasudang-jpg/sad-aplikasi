@@ -265,7 +265,7 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
                 judul_arsip: finalJudul,
                 nomor_surat: nomor_surat || '-',
                 instansi_asal: instansi_asal || '-',
-                tanggal_dokumen: tanggal_dokumen || null,
+                tanggal_dokumen: tanggal_dokumen || new Date().toISOString().split('T')[0],
                 lokasi_fisik: lokasi_fisik || '-',
                 keterangan: keterangan || '-',
                 file_path: filePath
