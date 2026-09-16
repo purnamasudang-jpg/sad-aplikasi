@@ -167,6 +167,14 @@ app.delete('/api/users/:id', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Tidak bisa menghapus akun sendiri' });
         }
 
+        const folderIdsTarget = await ambilFolderIdMilikUser(targetId);
+        if (folderIdsTarget.length > 0) {
+            return res.status(400).json({
+                success: false,
+                error: `Akun ini masih punya ${folderIdsTarget.length} folder arsip. Hapus/pindahkan folder-foldernya dulu sebelum menghapus akun, supaya data arsip tidak hilang atau tidak jelas pemiliknya.`
+            });
+        }
+
         await supabase.from('users').delete().eq('id', targetId);
         await catatAktivitas(`Hapus Akun Pengguna (ID: ${targetId})`, requesterId);
         res.json({ success: true });
