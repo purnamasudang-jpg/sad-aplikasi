@@ -94,7 +94,7 @@ app.post('/api/login', async (req, res) => {
 
         if (passwordMatch) {
             await catatAktivitas('Login Berhasil', user.id);
-            res.json({ success: true, user: { id: user.id, username: user.username } });
+            res.json({ success: true, user: { id: user.id, username: user.username, role: user.role || 'Operator' } });
         } else {
             res.status(401).json({ success: false, error: 'Username atau password salah' });
         }
@@ -114,12 +114,64 @@ app.get('/api/user-info/:id', async (req, res) => {
             .single();
 
         if (user) {
-            res.json({ id: user.id, username: user.username });
+            res.json({ id: user.id, username: user.username, role: user.role || 'Operator' });
         } else {
             res.status(404).json({ error: 'User tidak ditemukan' });
         }
     } catch (err) {
         res.status(404).json({ error: 'User tidak ditemukan' });
+    }
+});
+
+// Cek apakah pemanggil API adalah Admin. Dipakai untuk melindungi
+// endpoint manajemen pengguna supaya hanya pengendali (Admin) yang bisa akses.
+async function apakahAdmin(userId) {
+    if (!userId || isNaN(userId)) return false;
+    const { data: requester } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', userId)
+        .single();
+    return !!requester && requester.role === 'Admin';
+}
+
+// API Manajemen Pengguna (khusus Admin) — menampilkan semua akun asli
+app.get('/api/users', async (req, res) => {
+    const userId = parseInt(req.headers['user-id']);
+    try {
+        if (!(await apakahAdmin(userId))) {
+            return res.status(403).json({ success: false, error: 'Hanya Admin yang bisa melihat daftar pengguna' });
+        }
+
+        const { data: users, error } = await supabase
+            .from('users')
+            .select('id, username, role')
+            .order('id', { ascending: true });
+
+        if (error) throw error;
+        res.json({ success: true, data: users });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// API Hapus Akun Pengguna (khusus Admin, tidak bisa hapus akun sendiri)
+app.delete('/api/users/:id', async (req, res) => {
+    const requesterId = parseInt(req.headers['user-id']);
+    const targetId = parseInt(req.params.id);
+    try {
+        if (!(await apakahAdmin(requesterId))) {
+            return res.status(403).json({ success: false, error: 'Hanya Admin yang bisa menghapus akun pengguna' });
+        }
+        if (requesterId === targetId) {
+            return res.status(400).json({ success: false, error: 'Tidak bisa menghapus akun sendiri' });
+        }
+
+        await supabase.from('users').delete().eq('id', targetId);
+        await catatAktivitas(`Hapus Akun Pengguna (ID: ${targetId})`, requesterId);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 

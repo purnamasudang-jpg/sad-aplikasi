@@ -617,14 +617,13 @@
             <div id="halamanPengguna" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;"><i class="fa-solid fa-users text-success me-2"></i> Catatan Pengguna</h3>
-                        <p class="text-muted small m-0 mt-1">Daftar ini hanya catatan lokal di perangkat ini, terpisah dari akun login yang sesungguhnya.</p>
+                        <h3 class="fw-bold m-0" style="font-size: 22px; color: #3e2723;" id="judulHalamanPengguna"><i class="fa-solid fa-users text-success me-2"></i> Pengguna</h3>
+                        <p class="text-muted small m-0 mt-1" id="subHalamanPengguna">Memuat data akun...</p>
                     </div>
-                    <button class="btn btn-sm fw-bold text-white px-3" style="background-color: #5c4033;" onclick="bukaModalTambahUser()"><i class="fa-solid fa-user-plus me-1"></i> Tambah Catatan</button>
                 </div>
 
                 <div class="card bg-white text-dark">
-                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #5c4033 !important;"><span class="fw-bold text-dark"><i class="fa-solid fa-address-book text-success me-2"></i> Daftar Catatan Pengguna</span></div>
+                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #5c4033 !important;"><span class="fw-bold text-dark"><i class="fa-solid fa-address-book text-success me-2"></i> Daftar Akun</span></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
@@ -679,20 +678,6 @@
                     <div class="mb-3"><label class="form-label fw-bold small">Tautan / Link Proyek (URL)</label><input type="text" id="inputPortLink" class="form-control" placeholder="https://github.com/username/project"></div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #2d5a27;" onclick="simpanPortfolioBaru()">Simpan Portfolio</button></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL TAMBAH PENGGUNA -->
-    <div class="modal fade" id="modalTambahUser" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content text-dark">
-                <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-user-plus text-success me-2"></i> Tambah Catatan Pengguna</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <div class="mb-3"><label class="form-label fw-bold small">Username / Email</label><input type="text" id="inputUserBaruEmail" class="form-control" placeholder="Contoh: staf@mtechno.com"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Password</label><input type="password" id="inputUserBaruPass" class="form-control" placeholder="Buat password"></div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-sm fw-bold text-white px-3" style="background-color: #5c4033;" onclick="simpanUserBaru()">Simpan Pengguna</button></div>
             </div>
         </div>
     </div>
@@ -1251,60 +1236,80 @@
             }
         }
 
-        // ============ PENGGUNA - catatan lokal (masih lokal) ============
+        // ============ PENGGUNA - akun asli dari server, dibatasi berdasarkan role ============
         function muatTabelPengguna() {
-            let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
+            let currentUser = getCurrentUser();
             let tbody = document.getElementById('tabelPenggunaBody');
-            tbody.innerHTML = '';
+            let judulEl = document.getElementById('judulHalamanPengguna');
+            let subEl = document.getElementById('subHalamanPengguna');
+            if (!currentUser || !tbody) return;
 
-            if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada catatan pengguna.</td></tr>`;
-                return;
-            }
+            const isAdmin = currentUser.role === 'Admin';
 
-            users.forEach((usr, idx) => {
-                let roleBadge = usr.role === 'Administrator' ? 'bg-danger' : 'bg-success';
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-user-circle text-secondary me-2"></i> ${usr.username}</td>
-                    <td><span class="badge ${roleBadge}">${usr.role || 'Operator'}</span></td>
-                    <td class="text-center">
-                        <button class="btn btn-danger btn-sm" onclick="hapusUser(${idx}, '${usr.username}')" title="Hapus Catatan"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
+            if (isAdmin) {
+                if (judulEl) judulEl.innerHTML = '<i class="fa-solid fa-users text-success me-2"></i> Manajemen Pengguna';
+                if (subEl) subEl.innerText = 'Semua akun yang terdaftar di SAD. Kamu login sebagai Admin.';
+
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Memuat data...</td></tr>`;
+
+                fetch('/api/users', { headers: { 'user-id': currentUser.id } })
+                    .then(r => r.json())
+                    .then(hasil => {
+                        if (!hasil.success) {
+                            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">${hasil.error || 'Gagal memuat data pengguna.'}</td></tr>`;
+                            return;
+                        }
+                        if (hasil.data.length === 0) {
+                            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada pengguna terdaftar.</td></tr>`;
+                            return;
+                        }
+                        tbody.innerHTML = '';
+                        hasil.data.forEach(usr => {
+                            let roleBadge = usr.role === 'Admin' ? 'bg-danger' : 'bg-success';
+                            let tombolAksi = (usr.id === currentUser.id)
+                                ? '<span class="text-muted small">Akun kamu</span>'
+                                : `<button class="btn btn-danger btn-sm" onclick="hapusAkunPengguna(${usr.id}, '${usr.username}')" title="Hapus Akun"><i class="fa-solid fa-trash-can"></i></button>`;
+                            let tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-user-circle text-secondary me-2"></i> ${usr.username}</td>
+                                <td><span class="badge ${roleBadge}">${usr.role || 'Operator'}</span></td>
+                                <td class="text-center">${tombolAksi}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    })
+                    .catch(() => {
+                        tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Gagal memuat data pengguna.</td></tr>`;
+                    });
+            } else {
+                if (judulEl) judulEl.innerHTML = '<i class="fa-solid fa-user text-success me-2"></i> Akun Saya';
+                if (subEl) subEl.innerText = 'Informasi akun kamu di SAD.';
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td class="ps-3 fw-bold text-dark"><i class="fa-solid fa-user-circle text-secondary me-2"></i> ${currentUser.username}</td>
+                        <td><span class="badge bg-success">${currentUser.role || 'Operator'}</span></td>
+                        <td class="text-center text-muted small">-</td>
+                    </tr>
                 `;
-                tbody.appendChild(tr);
-            });
+            }
         }
 
-        function bukaModalTambahUser() {
-            document.getElementById('inputUserBaruEmail').value = '';
-            document.getElementById('inputUserBaruPass').value = '';
-            new bootstrap.Modal(document.getElementById('modalTambahUser')).show();
-        }
-
-        function simpanUserBaru() {
-            let u = document.getElementById('inputUserBaruEmail').value.trim();
-            let p = document.getElementById('inputUserBaruPass').value.trim();
-
-            if (!u || !p) { alert('Username dan password wajib diisi!'); return; }
-
-            let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
-            users.push({ username: u, password: p, role: "Operator" });
-            localStorage.setItem('mtechno_users', JSON.stringify(users));
-
-            catatLog("TAMBAH CATATAN PENGGUNA", `Menambahkan catatan pengguna: ${u}`);
-
-            bootstrap.Modal.getInstance(document.getElementById('modalTambahUser')).hide();
-            muatTabelPengguna();
-        }
-
-        function hapusUser(index, username) {
-            if (confirm(`Yakin ingin menghapus catatan "${username}"?`)) {
-                let users = JSON.parse(localStorage.getItem('mtechno_users') || '[]');
-                users.splice(index, 1);
-                localStorage.setItem('mtechno_users', JSON.stringify(users));
-                catatLog("HAPUS CATATAN PENGGUNA", `Menghapus catatan pengguna: ${username}`);
-                muatTabelPengguna();
+        function hapusAkunPengguna(id, username) {
+            let currentUser = getCurrentUser();
+            if (!currentUser) return;
+            if (confirm(`Yakin ingin menghapus akun "${username}"? Tindakan ini permanen dan tidak bisa dibatalkan.`)) {
+                fetch(`/api/users/${id}`, { method: 'DELETE', headers: { 'user-id': currentUser.id } })
+                    .then(r => r.json())
+                    .then(hasil => {
+                        if (hasil.success) {
+                            catatLog('HAPUS AKUN PENGGUNA', `Menghapus akun: ${username}`);
+                            muatTabelPengguna();
+                        } else {
+                            alert(hasil.error || 'Gagal menghapus akun.');
+                        }
+                    })
+                    .catch(() => alert('Gagal menghapus akun, coba lagi.'));
             }
         }
 
