@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-TECHNO - Sistem Arsip Digital (SAD)</title>
-    <meta name="description" content="SAD (Sistem Arsip Digital) M-TECHNO adalah platform pengelolaan arsip digital, folder instansi, dan register dokumen online yang aman, cepat, dan terstruktur.">
+    <title>SAD - Sistem Arsip Digital</title>
+    <meta name="description" content="SAD (Sistem Arsip Digital) adalah platform pengelolaan arsip digital, folder instansi, dan register dokumen online yang aman, cepat, dan terstruktur.">
     <meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q" />
 
     <!-- Open Graph SEO Meta Tags -->
-    <meta property="og:title" content="M-TECHNO - Sistem Arsip Digital (SAD)" />
+    <meta property="og:title" content="SAD - Sistem Arsip Digital" />
     <meta property="og:description" content="Aplikasi pengelola arsip digital, folder instansi, dan register dokumen berbasis web." />
     <meta property="og:url" content="https://sad-aplikasi.vercel.app/" />
     <meta property="og:type" content="website" />
@@ -136,6 +136,108 @@
         .btn-block-custom:hover { background: #5c4033; }
         .btn-block-custom:disabled { opacity: 0.65; cursor: not-allowed; }
 
+        /* Password: tombol lihat/sembunyikan */
+        .password-field { position: relative; }
+        .password-field input { padding-right: 42px !important; }
+        .password-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: #8d6e63;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .password-toggle:hover { color: #3e2723; }
+
+        /* Auth: bungkus hero + kartu + tagline jadi satu kolom */
+        .auth-stack { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+
+        /* Ilustrasi tumpukan arsip yang "hidup" saat halaman dibuka */
+        .arsip-hero { position: relative; width: 220px; height: 130px; }
+        .arsip-lembar {
+            position: absolute;
+            left: 50%;
+            bottom: 6px;
+            width: 108px;
+            height: 78px;
+            border-radius: 4px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translate(-50%, -55px) rotate(0deg) scale(0.85);
+            animation: arsipJatuh 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .arsip-lembar::before {
+            content: '';
+            position: absolute;
+            top: 14px; left: 12px; right: 12px;
+            height: 6px;
+            background: rgba(62,39,35,0.18);
+            border-radius: 3px;
+            box-shadow: 0 14px 0 rgba(62,39,35,0.12), 0 28px 0 rgba(62,39,35,0.08);
+        }
+        .arsip-lembar.l1 { background: #f5f2eb; transform-origin: bottom center; animation-delay: 0.05s; --akhir: -18deg; }
+        .arsip-lembar.l2 { background: #ece3d4; transform-origin: bottom center; animation-delay: 0.28s; --akhir: -6deg; }
+        .arsip-lembar.l3 { background: #f5f2eb; transform-origin: bottom center; animation-delay: 0.51s; --akhir: 8deg; }
+        .arsip-lembar.l4 { background: #d4af37; transform-origin: bottom center; animation-delay: 0.74s; --akhir: 20deg; }
+        .arsip-lembar.folder-tab {
+            width: 60px; height: 22px;
+            top: -14px; left: 20px;
+            border-radius: 4px 10px 0 0;
+        }
+        @keyframes arsipJatuh {
+            0%   { opacity: 0; transform: translate(-50%, -55px) rotate(0deg) scale(0.85); }
+            60%  { opacity: 1; }
+            100% { opacity: 1; transform: translate(-50%, 0) rotate(var(--akhir)) scale(1); }
+        }
+        .arsip-hero .arsip-check {
+            position: absolute;
+            right: 2px; top: 6px;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #2d5a27;
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            opacity: 0;
+            transform: scale(0.4);
+            animation: cekMuncul 0.4s ease-out forwards;
+            animation-delay: 1.0s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        @keyframes cekMuncul {
+            0%   { opacity: 0; transform: scale(0.4); }
+            70%  { opacity: 1; transform: scale(1.15); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .auth-tagline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 340px;
+            text-align: center;
+            color: rgba(255,255,255,0.82);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .auth-tagline i { color: var(--accent-gold); font-size: 15px; flex-shrink: 0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .arsip-lembar, .arsip-check {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: translate(-50%, 0) rotate(var(--akhir, 0deg)) scale(1) !important;
+            }
+        }
+
         /* Infografis Prosedur Nuansa Alam & Kopi */
         .infografis-container {
             position: relative;
@@ -205,7 +307,7 @@
                 <img id="sidebarUserAvatar" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="Avatar" style="width: 34px; height: 34px; border-radius: 50%; background: #fff; object-fit: cover; border: 1.5px solid var(--accent-gold);">
             </div>
             <div class="info text-truncate" style="max-width: 125px;">
-                <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" style="font-size: 12px; font-weight: 600;">user@mtechno.com</span>
+                <span id="sidebarUserEmail" class="d-block text-white text-decoration-none small text-truncate" style="font-size: 12px; font-weight: 600;">user@sad.app</span>
                 <span class="status text-success" style="font-size: 10px;"><i class="fa fa-circle text-success me-1"></i> Online</span>
             </div>
             <input type="file" name="berkas" id="inputFotoProfil" accept="image/*" style="display: none;" onchange="gantiFotoProfil(event)">
@@ -225,28 +327,56 @@
 
     <!-- LOGIN SECTION -->
     <div id="loginSection" class="auth-wrapper">
-        <div class="auth-box">
-            <h3><b>M-TECHNO</b> Login</h3>
-            <div class="form-group-custom"><label>Email / Username</label><input type="text" id="login_user" placeholder="Masukkan email / username"></div>
-            <div class="form-group-custom"><label>Password</label><input type="password" id="login_pass" placeholder="Masukkan password"></div>
-            <button class="btn-block-custom mb-3" id="btnLoginSubmit" onclick="login()">Sign In</button>
-            <p id="loginMsg" style="color: #d93838; font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
-            <div class="text-center" style="font-size: 13px;">
-                <span class="text-muted">Belum punya akun?</span>
-                <a href="#" onclick="tampilRegister()" style="color: #3e2723; font-weight: 600; text-decoration: none;">Daftar Akun</a>
+        <div class="auth-stack">
+            <div class="arsip-hero" aria-hidden="true">
+                <div class="arsip-lembar l1"></div>
+                <div class="arsip-lembar l2"></div>
+                <div class="arsip-lembar l3"></div>
+                <div class="arsip-lembar l4 folder-tab"></div>
+                <div class="arsip-check"><i class="fa-solid fa-check"></i></div>
             </div>
+            <div class="auth-box">
+                <h3><b>SAD</b> Login</h3>
+                <div class="form-group-custom"><label>Email / Username</label><input type="text" id="login_user" placeholder="Masukkan email / username"></div>
+                <div class="form-group-custom password-field">
+                    <label>Password</label>
+                    <input type="password" id="login_pass" placeholder="Masukkan password">
+                    <button type="button" class="password-toggle" onclick="toggleLihatPassword('login_pass', this)" title="Lihat/sembunyikan password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <button class="btn-block-custom mb-3" id="btnLoginSubmit" onclick="login()">Sign In</button>
+                <p id="loginMsg" style="color: #d93838; font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+                <div class="text-center" style="font-size: 13px;">
+                    <span class="text-muted">Belum punya akun?</span>
+                    <a href="#" onclick="tampilRegister()" style="color: #3e2723; font-weight: 600; text-decoration: none;">Daftar Akun</a>
+                </div>
+            </div>
+            <p class="auth-tagline"><i class="fa-solid fa-shield-halved"></i> Keamanan data dan kenyamanan pengguna adalah prioritas kami.</p>
         </div>
     </div>
 
     <!-- REGISTER SECTION -->
     <div id="registerSection" class="auth-wrapper">
-        <div class="auth-box">
-            <h3><b>M-TECHNO</b> Register</h3>
-            <div class="form-group-custom"><label>Email / Username Baru</label><input type="text" id="reg_user" placeholder="Masukkan email atau username"></div>
-            <div class="form-group-custom"><label>Password Baru</label><input type="password" id="reg_pass" placeholder="Buat password"></div>
-            <button class="btn-block-custom mb-3" id="btnRegisterSubmit" onclick="registerAkun()" style="background: #2d5a27;">Daftar Akun</button>
-            <button class="btn btn-sm btn-secondary w-100 mb-2 py-2 fw-bold" onclick="tampilLogin()">Kembali ke Login</button>
-            <p id="regMsg" style="font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+        <div class="auth-stack">
+            <div class="arsip-hero" aria-hidden="true">
+                <div class="arsip-lembar l1"></div>
+                <div class="arsip-lembar l2"></div>
+                <div class="arsip-lembar l3"></div>
+                <div class="arsip-lembar l4 folder-tab"></div>
+                <div class="arsip-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+            <div class="auth-box">
+                <h3><b>SAD</b> Register</h3>
+                <div class="form-group-custom"><label>Email / Username Baru</label><input type="text" id="reg_user" placeholder="Masukkan email atau username"></div>
+                <div class="form-group-custom password-field">
+                    <label>Password Baru</label>
+                    <input type="password" id="reg_pass" placeholder="Buat password">
+                    <button type="button" class="password-toggle" onclick="toggleLihatPassword('reg_pass', this)" title="Lihat/sembunyikan password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <button class="btn-block-custom mb-3" id="btnRegisterSubmit" onclick="registerAkun()" style="background: #2d5a27;">Daftar Akun</button>
+                <button class="btn btn-sm btn-secondary w-100 mb-2 py-2 fw-bold" onclick="tampilLogin()">Kembali ke Login</button>
+                <p id="regMsg" style="font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+            </div>
+            <p class="auth-tagline"><i class="fa-solid fa-shield-halved"></i> Keamanan data dan kenyamanan pengguna adalah prioritas kami.</p>
         </div>
     </div>
 
@@ -689,6 +819,20 @@
                     catatLog("UPDATE PROFIL", "Mengganti foto profil akun.");
                 }
                 reader.readAsDataURL(file);
+            }
+        }
+
+        function toggleLihatPassword(inputId, tombol) {
+            const input = document.getElementById(inputId);
+            const icon = tombol.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
 
