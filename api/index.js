@@ -3,7 +3,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const { put } = require('@vercel/blob');
+const { put, del } = require('@vercel/blob');
 const { supabase } = require('../supabase');
 
 const app = express();
@@ -16,6 +16,18 @@ const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 50 * 1024 * 1024 }
 });
+
+// Hapus file di Vercel Blob berdasarkan URL-nya. Dibuat "aman" (tidak
+// melempar error) supaya kalau filenya sudah tidak ada / URL kosong,
+// proses hapus data di database tetap bisa lanjut.
+async function hapusBlobJikaAda(fileUrl) {
+    if (!fileUrl) return;
+    try {
+        await del(fileUrl, { token: process.env.SAD_BLOB_READ_WRITE_TOKEN });
+    } catch (e) {
+        console.error('Gagal menghapus file di Vercel Blob:', fileUrl, e);
+    }
+}
 
 async function catatAktivitas(namaAktivitas, userId = 'public') {
     try {
@@ -151,6 +163,15 @@ app.post('/api/folders', async (req, res) => {
 app.delete('/api/folders/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
+        const { data: dokumenDalamFolder } = await supabase
+            .from('arsip_dokumen')
+            .select('file_path')
+            .eq('folder_id', id);
+
+        for (const dok of (dokumenDalamFolder || [])) {
+            await hapusBlobJikaAda(dok.file_path);
+        }
+
         await supabase.from('arsip_dokumen').delete().eq('folder_id', id);
         await supabase.from('folders').delete().eq('id', id);
         res.json({ success: true });
@@ -286,6 +307,16 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
 app.delete('/api/arsip/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('file_path')
+            .eq('id', id)
+            .single();
+
+        if (dokumen) {
+            await hapusBlobJikaAda(dokumen.file_path);
+        }
+
         await supabase.from('arsip_dokumen').delete().eq('id', id);
         res.json({ success: true });
     } catch (err) {
