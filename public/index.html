@@ -1,6 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- Google AdSense dimuat dinamis lewat JS di showApp(), bukan di sini,
+         supaya TIDAK aktif sama sekali selama layar login ditampilkan -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAD - Sistem Arsip Digital</title>
@@ -351,6 +354,11 @@
                 </div>
             </div>
             <p class="auth-tagline"><i class="fa-solid fa-shield-halved"></i> Keamanan data dan kenyamanan pengguna adalah prioritas kami.</p>
+            <p class="auth-footer-links" style="font-size: 12px; color: #d7ccc8; text-align: center;">
+                <a href="#" onclick="tampilPolicy('privacy'); return false;" style="color: #d4af37; text-decoration: none;">Kebijakan Privasi</a>
+                &nbsp;&middot;&nbsp;
+                <a href="#" onclick="tampilPolicy('terms'); return false;" style="color: #d4af37; text-decoration: none;">Syarat &amp; Ketentuan</a>
+            </p>
         </div>
     </div>
 
@@ -377,6 +385,19 @@
                 <p id="regMsg" style="font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
             </div>
             <p class="auth-tagline"><i class="fa-solid fa-shield-halved"></i> Keamanan data dan kenyamanan pengguna adalah prioritas kami.</p>
+            <p class="auth-footer-links" style="font-size: 12px; color: #d7ccc8; text-align: center;">
+                <a href="#" onclick="tampilPolicy('privacy'); return false;" style="color: #d4af37; text-decoration: none;">Kebijakan Privasi</a>
+                &nbsp;&middot;&nbsp;
+                <a href="#" onclick="tampilPolicy('terms'); return false;" style="color: #d4af37; text-decoration: none;">Syarat &amp; Ketentuan</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- PRIVACY POLICY & TERMS SECTION -->
+    <div id="policySection" class="auth-wrapper" style="display:none; align-items: flex-start; padding: 40px 16px;">
+        <div style="max-width: 700px; width: 100%; background: #fff; border-radius: 8px; padding: 32px 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 4px solid var(--accent-gold); color: #2c2c2c; max-height: 85vh; overflow-y: auto;">
+            <div id="policyContent"><!-- diisi via JS --></div>
+            <button class="btn btn-sm btn-secondary w-100 mt-3 py-2 fw-bold" onclick="tampilLogin()">Kembali ke Login</button>
         </div>
     </div>
 
@@ -423,6 +444,18 @@
                             <div class="step-icon"><i class="fa-solid fa-shield-halved"></i></div>
                             <div class="step-text">Dokumen fisik akan disimpan di depo arsip oleh administrator</div>
                         </div>
+                    </div>
+
+                    <!-- IKLAN ADSENSE (Dashboard) -->
+                    <div class="text-center mt-4" style="min-height: 90px;">
+                        <div style="font-size: 10px; letter-spacing: 0.5px; color: rgba(255,255,255,0.4); margin-bottom: 4px; text-transform: uppercase;">Iklan</div>
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-1865163606645337"
+                             data-ad-slot="4853638281"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                     </div>
 
                     <!-- FOOTER / HAK CIPTA -->
@@ -824,11 +857,55 @@
         function tampilLogin() {
             document.getElementById('loginSection').style.display = 'flex';
             document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('policySection').style.display = 'none';
         }
 
         function tampilRegister() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('registerSection').style.display = 'flex';
+            document.getElementById('policySection').style.display = 'none';
+        }
+
+        // ============ KEBIJAKAN PRIVASI & SYARAT KETENTUAN ============
+        const ISI_PRIVASI = `
+            <h3 style="color:#3e2723; font-weight:700; margin-bottom:18px;">Kebijakan Privasi</h3>
+            <p style="font-size:12px; color:#8d6e63;"><i>Terakhir diperbarui: 22 September 2026</i></p>
+            <p><b>1. Pendahuluan</b><br>SAD (Sistem Arsip Digital), yang dapat diakses melalui sad-aplikasi.vercel.app ("Layanan", "kami"), menghargai privasi pengguna ("Anda"). Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda.</p>
+            <p><b>2. Data yang Kami Kumpulkan</b><br>
+            &bull; Data akun: nama, email, dan kata sandi (terenkripsi)<br>
+            &bull; Data yang Anda unggah: dokumen, foto, atau arsip digital<br>
+            &bull; Data penggunaan: alamat IP, jenis perangkat, browser, aktivitas di Layanan<br>
+            &bull; Cookie untuk menjaga sesi login Anda</p>
+            <p><b>3. Bagaimana Kami Menggunakan Data Anda</b><br>Untuk menjalankan fitur penyimpanan arsip, mengamankan akun Anda, meningkatkan kualitas Layanan, dan mengirim pemberitahuan penting terkait akun.</p>
+            <p><b>4. Penyimpanan Data</b><br>Data dan file Anda disimpan di infrastruktur cloud tepercaya. Kami menerapkan langkah keamanan wajar, namun tidak ada sistem yang 100% bebas risiko.</p>
+            <p><b>5. Berbagi Data dengan Pihak Ketiga</b><br>Kami tidak menjual data pribadi Anda. Data hanya dibagikan kepada penyedia infrastruktur hosting/cloud, jika diwajibkan hukum, atau dengan persetujuan Anda.</p>
+            <p><b>6. Hak Anda</b><br>Anda berhak mengakses/memperbarui data akun, meminta penghapusan akun, dan mengunduh arsip yang telah disimpan.</p>
+            <p><b>7. Keamanan Data</b><br>Kami menerapkan enkripsi dan kontrol akses. Anda bertanggung jawab menjaga kerahasiaan kata sandi akun Anda.</p>
+            <p><b>8. Perubahan Kebijakan</b><br>Kebijakan ini dapat diperbarui sewaktu-waktu, dengan pemberitahuan melalui Layanan atau email.</p>
+            <p><b>9. Kontak</b><br>Pertanyaan seputar Kebijakan Privasi ini dapat disampaikan melalui purnamasudang@gmail.com.</p>
+        `;
+
+        const ISI_TERMS = `
+            <h3 style="color:#3e2723; font-weight:700; margin-bottom:18px;">Syarat &amp; Ketentuan</h3>
+            <p style="font-size:12px; color:#8d6e63;"><i>Terakhir diperbarui: 22 September 2026</i></p>
+            <p><b>1. Penerimaan Syarat</b><br>Dengan mendaftar dan menggunakan SAD ("Layanan"), Anda menyetujui Syarat &amp; Ketentuan ini.</p>
+            <p><b>2. Deskripsi Layanan</b><br>SAD adalah platform penyimpanan dan pengarsipan dokumen digital berbasis cloud untuk menyimpan, mengelola, dan mengakses arsip digital.</p>
+            <p><b>3. Akun Pengguna</b><br>Anda bertanggung jawab menjaga kerahasiaan kata sandi, seluruh aktivitas di akun Anda, dan memberikan informasi yang akurat saat mendaftar.</p>
+            <p><b>4. Konten dan Penggunaan yang Dilarang</b><br>Dilarang mengunggah konten yang melanggar hukum, mengandung materi ilegal/kekerasan/eksploitasi anak, melanggar hak cipta, atau berisi malware/virus. Kami berhak menghapus konten yang melanggar dan/atau menangguhkan akun terkait.</p>
+            <p><b>5. Kepemilikan Konten</b><br>Anda tetap memegang hak kepemilikan penuh atas dokumen dan file yang diunggah. Kami tidak mengklaim kepemilikan atas konten Anda.</p>
+            <p><b>6. Ketersediaan Layanan</b><br>Kami berupaya menjaga Layanan tetap tersedia, namun tidak menjamin bebas dari gangguan/downtime/kesalahan teknis.</p>
+            <p><b>7. Batasan Tanggung Jawab</b><br>Sepanjang diizinkan hukum, SAD tidak bertanggung jawab atas kerugian tidak langsung, kehilangan data, atau kerugian bisnis akibat penggunaan Layanan.</p>
+            <p><b>8. Penghentian Akun</b><br>Kami berhak menangguhkan/menghapus akun yang melanggar Syarat &amp; Ketentuan ini.</p>
+            <p><b>9. Perubahan Syarat &amp; Ketentuan</b><br>Dapat diperbarui sewaktu-waktu. Penggunaan Layanan setelah perubahan berlaku dianggap sebagai persetujuan.</p>
+            <p><b>10. Kontak</b><br>Pertanyaan seputar Syarat &amp; Ketentuan ini dapat disampaikan melalui purnamasudang@gmail.com.</p>
+        `;
+
+        function tampilPolicy(jenis) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('policySection').style.display = 'flex';
+            document.getElementById('policyContent').innerHTML = (jenis === 'terms') ? ISI_TERMS : ISI_PRIVASI;
+            window.scrollTo(0, 0);
         }
 
         // ============ REGISTER (cloud) ============
@@ -910,6 +987,18 @@
                 });
         }
 
+        // ============ ADSENSE: dimuat HANYA setelah login berhasil ============
+        let adsenseSudahDimuat = false;
+        function muatAdSense() {
+            if (adsenseSudahDimuat) return; // cegah dimuat berkali-kali
+            adsenseSudahDimuat = true;
+            let s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337';
+            s.crossOrigin = 'anonymous';
+            document.head.appendChild(s);
+        }
+
         function showApp() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('registerSection').style.display = 'none';
@@ -917,6 +1006,7 @@
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('mainAppContainer').style.display = 'block';
             bukaHalaman('Dashboard');
+            muatAdSense(); // iklan baru aktif di sini, setelah user berhasil masuk
         }
 
         function logout() {
