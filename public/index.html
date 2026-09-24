@@ -348,6 +348,9 @@
                 </div>
                 <button class="btn-block-custom mb-3" id="btnLoginSubmit" onclick="login()">Sign In</button>
                 <p id="loginMsg" style="color: #d93838; font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 6px;">
+                    <a href="#" onclick="tampilLupaPassword(); return false;" style="color: #8d6e63; font-weight: 600; text-decoration: none;">Lupa Password?</a>
+                </div>
                 <div class="text-center" style="font-size: 13px;">
                     <span class="text-muted">Belum punya akun?</span>
                     <a href="#" onclick="tampilRegister()" style="color: #3e2723; font-weight: 600; text-decoration: none;">Daftar Akun</a>
@@ -390,6 +393,55 @@
                 &nbsp;&middot;&nbsp;
                 <a href="#" onclick="tampilPolicy('terms'); return false;" style="color: #d4af37; text-decoration: none;">Syarat &amp; Ketentuan</a>
             </p>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD SECTION -->
+    <div id="forgotSection" class="auth-wrapper" style="display:none;">
+        <div class="auth-stack">
+            <div class="arsip-hero" aria-hidden="true">
+                <div class="arsip-lembar l1"></div>
+                <div class="arsip-lembar l2"></div>
+                <div class="arsip-lembar l3"></div>
+                <div class="arsip-lembar l4 folder-tab"></div>
+                <div class="arsip-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+            <div class="auth-box">
+                <h3><b>SAD</b> Lupa Password</h3>
+                <p style="font-size: 13px; color: #6d4c41; text-align: center; margin-bottom: 16px;">Masukkan email/username akun Anda. Kami akan mengirimkan link untuk membuat password baru.</p>
+                <div class="form-group-custom"><label>Email / Username</label><input type="text" id="forgot_user" placeholder="Masukkan email / username terdaftar"></div>
+                <button class="btn-block-custom mb-3" id="btnForgotSubmit" onclick="kirimLinkReset()">Kirim Link Reset</button>
+                <p id="forgotMsg" style="font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+                <button class="btn btn-sm btn-secondary w-100 mb-2 py-2 fw-bold" onclick="tampilLogin()">Kembali ke Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESET PASSWORD SECTION -->
+    <div id="resetSection" class="auth-wrapper" style="display:none;">
+        <div class="auth-stack">
+            <div class="arsip-hero" aria-hidden="true">
+                <div class="arsip-lembar l1"></div>
+                <div class="arsip-lembar l2"></div>
+                <div class="arsip-lembar l3"></div>
+                <div class="arsip-lembar l4 folder-tab"></div>
+                <div class="arsip-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+            <div class="auth-box">
+                <h3><b>SAD</b> Buat Password Baru</h3>
+                <div class="form-group-custom password-field">
+                    <label>Password Baru</label>
+                    <input type="password" id="reset_pass" placeholder="Masukkan password baru">
+                    <button type="button" class="password-toggle" onclick="toggleLihatPassword('reset_pass', this)" title="Lihat/sembunyikan password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="form-group-custom password-field">
+                    <label>Ulangi Password Baru</label>
+                    <input type="password" id="reset_pass2" placeholder="Ulangi password baru">
+                    <button type="button" class="password-toggle" onclick="toggleLihatPassword('reset_pass2', this)" title="Lihat/sembunyikan password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <button class="btn-block-custom mb-3" id="btnResetSubmit" onclick="prosesResetPassword()">Simpan Password Baru</button>
+                <p id="resetMsg" style="font-size: 13px; text-align: center; margin-top: 8px; font-weight: 600;"></p>
+            </div>
         </div>
     </div>
 
@@ -799,7 +851,12 @@
                 ]));
             }
 
-            if (localStorage.getItem('isLogin') === 'true' && currentUser) {
+            let urlParams = new URLSearchParams(window.location.search);
+            let resetToken = urlParams.get('reset');
+
+            if (resetToken) {
+                tampilResetPassword(resetToken);
+            } else if (localStorage.getItem('isLogin') === 'true' && currentUser) {
                 showApp();
             } else {
                 tampilLogin();
@@ -854,16 +911,36 @@
             }
         }
 
-        function tampilLogin() {
-            document.getElementById('loginSection').style.display = 'flex';
+        function sembunyikanSemuaAuthSection() {
+            document.getElementById('loginSection').style.display = 'none';
             document.getElementById('registerSection').style.display = 'none';
             document.getElementById('policySection').style.display = 'none';
+            document.getElementById('forgotSection').style.display = 'none';
+            document.getElementById('resetSection').style.display = 'none';
+        }
+
+        function tampilLogin() {
+            sembunyikanSemuaAuthSection();
+            document.getElementById('loginSection').style.display = 'flex';
         }
 
         function tampilRegister() {
-            document.getElementById('loginSection').style.display = 'none';
+            sembunyikanSemuaAuthSection();
             document.getElementById('registerSection').style.display = 'flex';
-            document.getElementById('policySection').style.display = 'none';
+        }
+
+        function tampilLupaPassword() {
+            sembunyikanSemuaAuthSection();
+            document.getElementById('forgotSection').style.display = 'flex';
+            document.getElementById('forgotMsg').innerText = '';
+        }
+
+        let resetTokenAktif = null;
+
+        function tampilResetPassword(token) {
+            resetTokenAktif = token;
+            sembunyikanSemuaAuthSection();
+            document.getElementById('resetSection').style.display = 'flex';
         }
 
         // ============ KEBIJAKAN PRIVASI & SYARAT KETENTUAN ============
@@ -901,8 +978,7 @@
         `;
 
         function tampilPolicy(jenis) {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('registerSection').style.display = 'none';
+            sembunyikanSemuaAuthSection();
             document.getElementById('policySection').style.display = 'flex';
             document.getElementById('policyContent').innerHTML = (jenis === 'terms') ? ISI_TERMS : ISI_PRIVASI;
             window.scrollTo(0, 0);
@@ -984,6 +1060,86 @@
                 .finally(() => {
                     btn.disabled = false;
                     btn.innerText = 'Sign In';
+                });
+        }
+
+        // ============ LUPA PASSWORD: kirim link reset ke email ============
+        function kirimLinkReset() {
+            let u = document.getElementById('forgot_user').value.trim();
+            let msg = document.getElementById('forgotMsg');
+            let btn = document.getElementById('btnForgotSubmit');
+
+            if (!u) { msg.style.color = '#d93838'; msg.innerText = 'Email / username wajib diisi!'; return; }
+
+            btn.disabled = true;
+            btn.innerText = 'Mengirim...';
+            msg.innerText = '';
+
+            fetch('/api/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u })
+            })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ data }) => {
+                    msg.style.color = '#2d5a27';
+                    msg.innerText = data.message || 'Jika akun terdaftar, link reset password telah dikirim ke email Anda.';
+                })
+                .catch(err => {
+                    console.error(err);
+                    msg.style.color = '#d93838';
+                    msg.innerText = 'Gagal terhubung ke server. Coba lagi.';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerText = 'Kirim Link Reset';
+                });
+        }
+
+        // ============ RESET PASSWORD: simpan password baru pakai token ============
+        function prosesResetPassword() {
+            let p1 = document.getElementById('reset_pass').value.trim();
+            let p2 = document.getElementById('reset_pass2').value.trim();
+            let msg = document.getElementById('resetMsg');
+            let btn = document.getElementById('btnResetSubmit');
+
+            if (!p1 || !p2) { msg.style.color = '#d93838'; msg.innerText = 'Password wajib diisi!'; return; }
+            if (p1 !== p2) { msg.style.color = '#d93838'; msg.innerText = 'Konfirmasi password tidak sama!'; return; }
+            if (p1.length < 6) { msg.style.color = '#d93838'; msg.innerText = 'Password minimal 6 karakter!'; return; }
+            if (!resetTokenAktif) { msg.style.color = '#d93838'; msg.innerText = 'Link reset tidak valid. Silakan minta link baru.'; return; }
+
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+            msg.innerText = '';
+
+            fetch('/api/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: resetTokenAktif, password: p1 })
+            })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok && data.success) {
+                        msg.style.color = '#2d5a27';
+                        msg.innerText = 'Password berhasil diubah! Mengarahkan ke halaman login...';
+                        setTimeout(() => {
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                            resetTokenAktif = null;
+                            tampilLogin();
+                        }, 1500);
+                    } else {
+                        msg.style.color = '#d93838';
+                        msg.innerText = data.error || 'Link reset tidak valid atau sudah kedaluwarsa.';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    msg.style.color = '#d93838';
+                    msg.innerText = 'Gagal terhubung ke server. Coba lagi.';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerText = 'Simpan Password Baru';
                 });
         }
 

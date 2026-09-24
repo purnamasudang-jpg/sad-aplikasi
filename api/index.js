@@ -3,10 +3,22 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const { put, del } = require('@vercel/blob');
 const { supabase } = require('../supabase');
 
 const app = express();
+
+// Pengirim email untuk fitur Lupa Password (pakai Gmail SMTP + App Password).
+// SAD_EMAIL_USER dan SAD_EMAIL_PASS diset lewat Environment Variables Vercel.
+const transporterEmail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.SAD_EMAIL_USER,
+        pass: process.env.SAD_EMAIL_PASS
+    }
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -100,6 +112,95 @@ app.post('/api/login', async (req, res) => {
         }
     } catch (err) {
         res.status(401).json({ success: false, error: 'Username atau password salah' });
+    }
+});
+
+// API Lupa Password — kirim link reset ke email pengguna
+app.post('/api/forgot-password', async (req, res) => {
+    const { username } = req.body;
+    if (!username) {
+        return res.status(400).json({ success: false, error: 'Email / username wajib diisi' });
+    }
+
+    // Pesan balasan dibuat SAMA baik akunnya ketemu atau tidak, supaya
+    // orang lain tidak bisa menebak-nebak email mana saja yang terdaftar.
+    const pesanUmum = { success: true, message: 'Jika akun terdaftar, link reset password telah dikirim ke email Anda.' };
+
+    try {
+        const { data: user } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username)
+            .single();
+
+        if (!user) {
+            return res.json(pesanUmum);
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiry = new Date(Date.now() + 60 * 60 * 1000); // link berlaku 1 jam
+
+        await supabase
+            .from('users')
+            .update({ reset_token: token, reset_token_expiry: expiry.toISOString() })
+            .eq('id', user.id);
+
+        const linkReset = `${req.protocol}://${req.get('host')}/?reset=${token}`;
+
+        await transporterEmail.sendMail({
+            from: `"SAD - Sistem Arsip Digital" <${process.env.SAD_EMAIL_USER}>`,
+            to: user.username,
+            subject: 'Reset Password Akun SAD',
+            html: `
+                <p>Halo,</p>
+                <p>Kami menerima permintaan untuk mengatur ulang password akun SAD Anda.</p>
+                <p><a href="${linkReset}" style="background:#3e2723;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;">Buat Password Baru</a></p>
+                <p>Atau salin tautan berikut ke browser Anda:<br>${linkReset}</p>
+                <p>Tautan ini hanya berlaku selama 1 jam. Jika Anda tidak meminta reset password, abaikan email ini.</p>
+            `
+        });
+
+        await catatAktivitas('Permintaan Reset Password', user.id);
+        res.json(pesanUmum);
+    } catch (err) {
+        console.error('Gagal proses forgot-password:', err);
+        res.status(500).json({ success: false, error: 'Terjadi kesalahan pada server, coba lagi nanti' });
+    }
+});
+
+// API Reset Password — simpan password baru berdasarkan token dari email
+app.post('/api/reset-password', async (req, res) => {
+    const { token, password } = req.body;
+    if (!token || !password) {
+        return res.status(400).json({ success: false, error: 'Data tidak lengkap' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ success: false, error: 'Password minimal 6 karakter' });
+    }
+
+    try {
+        const { data: user } = await supabase
+            .from('users')
+            .select('*')
+            .eq('reset_token', token)
+            .single();
+
+        if (!user || !user.reset_token_expiry || new Date(user.reset_token_expiry) < new Date()) {
+            return res.status(400).json({ success: false, error: 'Link reset tidak valid atau sudah kedaluwarsa. Silakan minta link baru.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await supabase
+            .from('users')
+            .update({ password: hashedPassword, reset_token: null, reset_token_expiry: null })
+            .eq('id', user.id);
+
+        await catatAktivitas('Reset Password Berhasil', user.id);
+        res.json({ success: true, message: 'Password berhasil diubah, silakan login dengan password baru.' });
+    } catch (err) {
+        console.error('Gagal proses reset-password:', err);
+        res.status(500).json({ success: false, error: 'Terjadi kesalahan pada server, coba lagi nanti' });
     }
 });
 
