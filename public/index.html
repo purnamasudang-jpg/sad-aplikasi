@@ -635,9 +635,10 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-4"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Pendirian / No Register 001"></div>
-                            <div class="col-md-5"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" name="berkas" id="inputFileArsip" class="form-control"></div>
-                            <div class="col-md-3 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" id="btnUploadBerkas" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload Berkas</button></div>
+                            <div class="col-md-3"><label class="form-label fw-bold small">Nomor Surat / No Register</label><input type="text" id="inputNomorSurat" class="form-control" placeholder="Contoh: 400.2.1/015/SK/IX/2026"></div>
+                            <div class="col-md-3"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Panitia STS Ganjil 2026/2027"></div>
+                            <div class="col-md-4"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" name="berkas" id="inputFileArsip" class="form-control"></div>
+                            <div class="col-md-2 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" id="btnUploadBerkas" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload</button></div>
                         </div>
                     </div>
                 </div>
@@ -649,7 +650,8 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="py-3 ps-3">NAMA BERKAS / NO REGISTER</th>
+                                        <th class="py-3 ps-3">NO REGISTER / NOMOR SURAT</th>
+                                        <th class="py-3">NAMA / KETERANGAN DOKUMEN</th>
                                         <th class="py-3">TIPE FILE</th>
                                         <th class="py-3 text-center" style="width: 180px;">AKSI</th>
                                     </tr>
@@ -1304,6 +1306,7 @@
         function bukaFolder(id, namaFolder) {
             folderAktifId = id;
             document.getElementById('judulFolderAktif').innerText = "Kelola Berkas: " + namaFolder;
+            document.getElementById('inputNomorSurat').value = '';
             document.getElementById('inputNamaBerkas').value = '';
             document.getElementById('inputFileArsip').value = '';
             muatTabelBerkas();
@@ -1312,11 +1315,13 @@
 
         // ============ BERKAS / ARSIP (cloud) ============
         function prosesUploadBerkas() {
+            let nomorSurat = document.getElementById('inputNomorSurat').value.trim();
             let namaBerkas = document.getElementById('inputNamaBerkas').value.trim();
             let fileInput = document.getElementById('inputFileArsip');
             let currentUser = getCurrentUser();
             let btn = document.getElementById('btnUploadBerkas');
 
+            if (!nomorSurat) { alert('Nomor Surat / No Register wajib diisi!'); return; }
             if (!namaBerkas) { alert('Nama / Keterangan dokumen wajib diisi!'); return; }
             if (fileInput.files.length === 0) { alert('Pilih file dokumen terlebih dahulu!'); return; }
             if (!currentUser) { alert('Sesi login tidak ditemukan, silakan login ulang.'); return; }
@@ -1326,6 +1331,7 @@
             let formData = new FormData();
             formData.append('berkas', file);
             formData.append('judul_arsip', namaBerkas);
+            formData.append('nomor_surat', nomorSurat);
             formData.append('folder_id', folderAktifId);
 
             btn.disabled = true;
@@ -1339,7 +1345,8 @@
                 .then(res => res.json().then(data => ({ ok: res.ok, data })))
                 .then(({ ok, data }) => {
                     if (!ok || !data.success) throw new Error(data.error || 'Gagal mengunggah ke server cloud.');
-                    catatLog("UPLOAD BERKAS", `Mengunggah berkas/register "${namaBerkas}" (${file.name}) ke Cloud`);
+                    catatLog("UPLOAD BERKAS", `Mengunggah berkas "${namaBerkas}" (No Register: ${nomorSurat}) ke Cloud`);
+                    document.getElementById('inputNomorSurat').value = '';
                     document.getElementById('inputNamaBerkas').value = '';
                     document.getElementById('inputFileArsip').value = '';
                     muatTabelBerkas();
@@ -1351,7 +1358,7 @@
                 })
                 .finally(() => {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-upload me-1"></i> Upload Berkas';
+                    btn.innerHTML = '<i class="fa-solid fa-upload me-1"></i> Upload';
                 });
         }
 
@@ -1373,7 +1380,7 @@
             tbody.innerHTML = '';
 
             if (folderBerkas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Belum ada berkas di folder ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Belum ada berkas di folder ini.</td></tr>`;
                 return;
             }
 
@@ -1384,10 +1391,12 @@
                     if (potongan.length > 1) tipeFile = potongan.pop().split('?')[0].toUpperCase();
                 }
                 let judulAman = (b.judul_arsip || '').replace(/'/g, "\\'");
+                let nomorSuratTampil = (b.nomor_surat && b.nomor_surat !== '-') ? b.nomor_surat : '<span class="text-muted">-</span>';
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="ps-3 fw-bold">
-                        <a href="${b.file_path || '#'}" target="_blank" rel="noopener" class="text-decoration-none d-flex align-items-center" style="color: #2d5a27;"><i class="fa-solid fa-file-lines me-2"></i> <span>${b.judul_arsip}</span></a>
+                    <td class="ps-3 fw-bold" style="color: #2d5a27;"><i class="fa-solid fa-hashtag me-1" style="font-size: 11px;"></i> ${nomorSuratTampil}</td>
+                    <td>
+                        <a href="${b.file_path || '#'}" target="_blank" rel="noopener" class="text-decoration-none d-flex align-items-center" style="color: #3e2723;"><i class="fa-solid fa-file-lines me-2"></i> <span>${b.judul_arsip}</span></a>
                     </td>
                     <td><span class="badge" style="background-color: #5c4033;">${tipeFile}</span></td>
                     <td class="text-center">
