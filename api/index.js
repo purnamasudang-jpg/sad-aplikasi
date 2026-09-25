@@ -5,6 +5,8 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 const { put, del } = require('@vercel/blob');
 const { supabase } = require('../supabase');
 
@@ -414,10 +416,43 @@ app.get('/api/arsip/cari', async (req, res) => {
     }
 });
 
+// Membaca isi teks dari berkas yang diunggah (khusus PDF & Word/.docx).
+// Untuk tipe file lain (gambar, scan, dll) hasilnya kosong -- karena memang
+// tidak bisa "dibaca" tanpa teknologi OCR terpisah.
+async function ekstrakTeksDariBerkas(buffer, originalname) {
+    const ekstensi = (originalname.split('.').pop() || '').toLowerCase();
+    try {
+        if (ekstensi === 'pdf') {
+            const data = await pdfParse(buffer);
+            return data.text || '';
+        }
+        if (ekstensi === 'docx') {
+            const hasil = await mammoth.extractRawText({ buffer });
+            return hasil.value || '';
+        }
+    } catch (e) {
+        console.error('Gagal membaca isi berkas untuk deteksi nomor surat:', e.message);
+    }
+    return '';
+}
+
+// Mencari pola "Nomor : ..." pada teks dokumen (format umum surat dinas/SK
+// pemerintahan, misal: "NOMOR : 400.2.1/015/SK/IX/2026")
+function cariNomorSuratDariTeks(teks) {
+    if (!teks) return null;
+    const pola = /NOMOR\s*[:.\-]?\s*([A-Za-z0-9./\-]{5,50})/i;
+    const cocok = teks.match(pola);
+    if (cocok && cocok[1]) {
+        return cocok[1].trim().replace(/[.,;]+$/, '');
+    }
+    return null;
+}
+
 // API Upload Berkas (dipakai halaman Kelola Berkas)
 app.post('/api/upload', upload.single('berkas'), async (req, res) => {
     const userId = parseInt(req.headers['user-id'] || req.body.user_id);
-    const { folder_id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
+    const { folder_id, judul_arsip, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
+    let { nomor_surat } = req.body;
 
     const finalJudul = judul_arsip || (req.file ? req.file.originalname : 'Dokumen Tanpa Judul');
     const finalFolderId = folder_id ? parseInt(folder_id) : null;
@@ -431,7 +466,20 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
 
     try {
         let filePath = null;
+        let nomorSuratTerdeteksiOtomatis = false;
+
         if (req.file) {
+            // Kalau pengguna TIDAK mengisi nomor surat secara manual, coba deteksi
+            // otomatis dari isi berkas (khusus PDF & Word yang berisi teks asli).
+            if (!nomor_surat || !nomor_surat.trim()) {
+                const teksBerkas = await ekstrakTeksDariBerkas(req.file.buffer, req.file.originalname);
+                const hasilDeteksi = cariNomorSuratDariTeks(teksBerkas);
+                if (hasilDeteksi) {
+                    nomor_surat = hasilDeteksi;
+                    nomorSuratTerdeteksiOtomatis = true;
+                }
+            }
+
             const fileName = `${Date.now()}-${req.file.originalname}`;
             const blob = await put(fileName, req.file.buffer, {
                 access: 'public',
@@ -458,7 +506,12 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
         if (error) throw error;
 
         await catatAktivitas('Upload Dokumen', userId);
-        res.json({ success: true, message: 'Dokumen berhasil diunggah!', data: newArsip });
+        res.json({
+            success: true,
+            message: 'Dokumen berhasil diunggah!',
+            data: newArsip,
+            nomorSuratTerdeteksiOtomatis: nomorSuratTerdeteksiOtomatis
+        });
     } catch (err) {
         console.error('Error upload:', err);
         res.status(500).json({ success: false, error: err.message });

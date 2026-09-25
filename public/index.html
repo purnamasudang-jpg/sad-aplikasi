@@ -635,7 +635,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-3"><label class="form-label fw-bold small">Nomor Surat / No Register</label><input type="text" id="inputNomorSurat" class="form-control" placeholder="Contoh: 400.2.1/015/SK/IX/2026"></div>
+                            <div class="col-md-3"><label class="form-label fw-bold small">Nomor Surat / No Register <span class="text-muted fw-normal">(Opsional)</span></label><input type="text" id="inputNomorSurat" class="form-control" placeholder="Kosongkan jika ingin dideteksi otomatis"></div>
                             <div class="col-md-3"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Panitia STS Ganjil 2026/2027"></div>
                             <div class="col-md-4"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" name="berkas" id="inputFileArsip" class="form-control"></div>
                             <div class="col-md-2 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" id="btnUploadBerkas" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload</button></div>
@@ -1321,7 +1321,6 @@
             let currentUser = getCurrentUser();
             let btn = document.getElementById('btnUploadBerkas');
 
-            if (!nomorSurat) { alert('Nomor Surat / No Register wajib diisi!'); return; }
             if (!namaBerkas) { alert('Nama / Keterangan dokumen wajib diisi!'); return; }
             if (fileInput.files.length === 0) { alert('Pilih file dokumen terlebih dahulu!'); return; }
             if (!currentUser) { alert('Sesi login tidak ditemukan, silakan login ulang.'); return; }
@@ -1345,12 +1344,20 @@
                 .then(res => res.json().then(data => ({ ok: res.ok, data })))
                 .then(({ ok, data }) => {
                     if (!ok || !data.success) throw new Error(data.error || 'Gagal mengunggah ke server cloud.');
-                    catatLog("UPLOAD BERKAS", `Mengunggah berkas "${namaBerkas}" (No Register: ${nomorSurat}) ke Cloud`);
+                    let noRegisterHasil = (data.data && data.data.nomor_surat && data.data.nomor_surat !== '-') ? data.data.nomor_surat : null;
+                    let ketNoRegister = data.nomorSuratTerdeteksiOtomatis
+                        ? ` (No Register terdeteksi otomatis: ${noRegisterHasil})`
+                        : (noRegisterHasil ? ` (No Register: ${noRegisterHasil})` : ' (Tanpa No Register)');
+                    catatLog("UPLOAD BERKAS", `Mengunggah berkas "${namaBerkas}"${ketNoRegister} ke Cloud`);
                     document.getElementById('inputNomorSurat').value = '';
                     document.getElementById('inputNamaBerkas').value = '';
                     document.getElementById('inputFileArsip').value = '';
                     muatTabelBerkas();
-                    alert('Berhasil mengunggah berkas ke penyimpanan Cloud!');
+                    if (data.nomorSuratTerdeteksiOtomatis) {
+                        alert(`Berhasil mengunggah berkas!\n\nSistem otomatis mendeteksi Nomor Surat: ${noRegisterHasil}`);
+                    } else {
+                        alert('Berhasil mengunggah berkas ke penyimpanan Cloud!');
+                    }
                 })
                 .catch(err => {
                     console.error(err);
@@ -1391,7 +1398,7 @@
                     if (potongan.length > 1) tipeFile = potongan.pop().split('?')[0].toUpperCase();
                 }
                 let judulAman = (b.judul_arsip || '').replace(/'/g, "\\'");
-                let nomorSuratTampil = (b.nomor_surat && b.nomor_surat !== '-') ? b.nomor_surat : '<span class="text-muted">-</span>';
+                let nomorSuratTampil = (b.nomor_surat && b.nomor_surat !== '-') ? b.nomor_surat : '<span class="text-muted fst-italic" style="font-size: 12px;">Tidak ada nomor surat</span>';
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="ps-3 fw-bold" style="color: #2d5a27;"><i class="fa-solid fa-hashtag me-1" style="font-size: 11px;"></i> ${nomorSuratTampil}</td>
