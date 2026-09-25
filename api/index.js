@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 // Pakai path langsung ke lib/pdf-parse.js agar tidak membaca file test
 // saat dimuat di Vercel (bug pdf-parse yang menyebabkan crash / ENOENT).
@@ -13,6 +14,8 @@ const { put, del } = require('@vercel/blob');
 const { supabase } = require('../supabase');
 
 const app = express();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Pengirim email untuk fitur Lupa Password (pakai Gmail SMTP + App Password).
 // SAD_EMAIL_USER dan SAD_EMAIL_PASS diset lewat Environment Variables Vercel.
@@ -32,6 +35,45 @@ const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 50 * 1024 * 1024 }
 });
+
+// ============ AUTH: TOKEN SESI (JWT) ============
+// Sebelumnya server percaya begitu saja pada header "user-id" yang dikirim
+// browser -- itu bisa dipalsukan siapa saja lewat DevTools. Sekarang server
+// hanya percaya pada token yang DIA SENDIRI buat & tanda-tangani saat login,
+// dan memeriksa ulang tanda tangannya di setiap permintaan. Token tidak bisa
+// diubah/dipalsukan tanpa tahu JWT_SECRET, yang hanya ada di server.
+
+function buatToken(user) {
+    if (!JWT_SECRET) {
+        throw new Error('JWT_SECRET belum diatur di server');
+    }
+    return jwt.sign(
+        { id: user.id, username: user.username, role: user.role || 'Operator' },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+}
+
+function wajibLogin(req, res, next) {
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Sesi tidak ditemukan, silakan login ulang' });
+    }
+    if (!JWT_SECRET) {
+        console.error('JWT_SECRET belum diatur di server');
+        return res.status(500).json({ success: false, error: 'Terjadi kesalahan pada server' });
+    }
+
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        req.user = payload; // { id, username, role } -- ini yang aman dipakai, bukan header manapun
+        next();
+    } catch (e) {
+        return res.status(401).json({ success: false, error: 'Sesi tidak valid atau sudah kedaluwarsa, silakan login ulang' });
+    }
+}
 
 // Hapus file di Vercel Blob berdasarkan URL-nya. Dibuat "aman" (tidak
 // melempar error) supaya kalau filenya sudah tidak ada / URL kosong,
@@ -57,7 +99,9 @@ async function catatAktivitas(namaAktivitas, userId = 'public') {
     }
 }
 
-// Cek apakah pemanggil API adalah Admin.
+// Cek apakah pemanggil API adalah Admin. Tetap dicek langsung ke database
+// (bukan dari isi token) supaya kalau role seseorang baru saja diturunkan
+// dari Admin, perubahan itu langsung berlaku tanpa nunggu token lama habis.
 async function apakahAdmin(userId) {
     if (!userId || isNaN(userId)) return false;
     const { data: requester } = await supabase
@@ -148,7 +192,9 @@ app.post('/api/login', async (req, res) => {
 
         if (passwordMatch) {
             await catatAktivitas('Login Berhasil', user.id);
-            res.json({ success: true, user: { id: user.id, username: user.username, role: user.role || 'Operator' } });
+            const userAman = { id: user.id, username: user.username, role: user.role || 'Operator' };
+            const token = buatToken(userAman);
+            res.json({ success: true, user: userAman, token });
         } else {
             res.status(401).json({ success: false, error: 'Username atau password salah' });
         }
@@ -249,9 +295,13 @@ app.post('/api/reset-password', async (req, res) => {
     }
 });
 
-// API Info User
-app.get('/api/user-info/:id', async (req, res) => {
+// API Info User -- sekarang butuh login, dan hanya boleh lihat data diri
+// sendiri (atau Admin boleh lihat siapa saja).
+app.get('/api/user-info/:id', wajibLogin, async (req, res) => {
     const userId = parseInt(req.params.id);
+    if (userId !== req.user.id && !(await apakahAdmin(req.user.id))) {
+        return res.status(403).json({ error: 'Tidak boleh melihat data pengguna lain' });
+    }
     try {
         const { data: user } = await supabase
             .from('users')
@@ -271,10 +321,9 @@ app.get('/api/user-info/:id', async (req, res) => {
 
 // ============ MANAJEMEN PENGGUNA (khusus Admin) ============
 
-app.get('/api/users', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.get('/api/users', wajibLogin, async (req, res) => {
     try {
-        if (!(await apakahAdmin(userId))) {
+        if (!(await apakahAdmin(req.user.id))) {
             return res.status(403).json({ success: false, error: 'Hanya Admin yang bisa melihat daftar pengguna' });
         }
 
@@ -290,8 +339,8 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-app.delete('/api/users/:id', async (req, res) => {
-    const requesterId = parseInt(req.headers['user-id']);
+app.delete('/api/users/:id', wajibLogin, async (req, res) => {
+    const requesterId = req.user.id;
     const targetId = parseInt(req.params.id);
     try {
         if (!(await apakahAdmin(requesterId))) {
@@ -324,11 +373,8 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // ============ FOLDER ============
 
-app.get('/api/folders', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
-    if (isNaN(userId)) {
-        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
-    }
+app.get('/api/folders', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     try {
         const { data: folders, error } = await supabase
             .from('folders')
@@ -343,12 +389,9 @@ app.get('/api/folders', async (req, res) => {
     }
 });
 
-app.post('/api/folders', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.post('/api/folders', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     const { nama_folder } = req.body;
-    if (isNaN(userId)) {
-        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
-    }
     if (!nama_folder) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
 
     try {
@@ -366,8 +409,8 @@ app.post('/api/folders', async (req, res) => {
     }
 });
 
-app.delete('/api/folders/:id', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.delete('/api/folders/:id', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     const id = parseInt(req.params.id);
     try {
         if (!(await folderMilikUser(id, userId))) {
@@ -393,11 +436,8 @@ app.delete('/api/folders/:id', async (req, res) => {
 
 // ============ ARSIP / DOKUMEN ============
 
-app.get('/api/arsip', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
-    if (isNaN(userId)) {
-        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
-    }
+app.get('/api/arsip', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     try {
         const folderIds = await ambilFolderIdMilikUser(userId);
         if (folderIds.length === 0) {
@@ -418,12 +458,9 @@ app.get('/api/arsip', async (req, res) => {
 });
 
 // API Pencarian Arsip / Dokumen
-app.get('/api/arsip/cari', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.get('/api/arsip/cari', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     const keyword = (req.query.q || '').toLowerCase();
-    if (isNaN(userId)) {
-        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
-    }
 
     try {
         const folderIds = await ambilFolderIdMilikUser(userId);
@@ -492,8 +529,8 @@ function cariNomorSuratDariTeks(teks) {
 }
 
 // API Upload Berkas (dipakai halaman Kelola Berkas)
-app.post('/api/upload', upload.single('berkas'), async (req, res) => {
-    const userId = parseInt(req.headers['user-id'] || req.body.user_id);
+app.post('/api/upload', wajibLogin, upload.single('berkas'), async (req, res) => {
+    const userId = req.user.id;
     const { folder_id, judul_arsip, instansi_asal, tanggal_dokumen, lokasi_fisik, keterangan } = req.body;
     let { nomor_surat } = req.body;
 
@@ -502,9 +539,6 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
 
     if (!finalFolderId) {
         return res.status(400).json({ success: false, error: 'Folder wajib dipilih' });
-    }
-    if (isNaN(userId)) {
-        return res.status(401).json({ success: false, error: 'Sesi pengguna tidak valid, silakan login ulang' });
     }
 
     try {
@@ -566,8 +600,8 @@ app.post('/api/upload', upload.single('berkas'), async (req, res) => {
     }
 });
 
-app.delete('/api/arsip/:id', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.delete('/api/arsip/:id', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
     const id = parseInt(req.params.id);
     try {
         const { data: dokumen } = await supabase
@@ -593,10 +627,9 @@ app.delete('/api/arsip/:id', async (req, res) => {
 
 // ============ REKAP AKTIVITAS (khusus Admin) ============
 
-app.get('/api/rekap-aktivitas', async (req, res) => {
-    const userId = parseInt(req.headers['user-id']);
+app.get('/api/rekap-aktivitas', wajibLogin, async (req, res) => {
     try {
-        if (!(await apakahAdmin(userId))) {
+        if (!(await apakahAdmin(req.user.id))) {
             return res.status(403).json({ success: false, error: 'Hanya Admin yang bisa melihat rekap aktivitas' });
         }
 
