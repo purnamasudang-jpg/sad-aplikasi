@@ -831,6 +831,14 @@
             }
         }
 
+        // Header wajib untuk semua permintaan ke endpoint yang butuh login.
+        // Server sekarang memverifikasi token ini (JWT), bukan lagi header
+        // 'user-id' yang gampang dipalsukan dari DevTools.
+        function getAuthHeader() {
+            let token = localStorage.getItem('authToken');
+            return token ? { 'Authorization': 'Bearer ' + token } : {};
+        }
+
         window.onload = () => {
             let savedAvatar = localStorage.getItem('mtechno_avatar');
             if (savedAvatar) {
@@ -1055,6 +1063,7 @@
                     if (ok && data.success) {
                         localStorage.setItem('isLogin', 'true');
                         localStorage.setItem('currentUser', JSON.stringify(data.user));
+                        localStorage.setItem('authToken', data.token || '');
                         catatLog("LOGIN", `Pengguna ${data.user.username} masuk ke sistem.`);
                         showApp();
                     } else {
@@ -1169,6 +1178,11 @@
             document.getElementById('topHeader').style.display = 'flex';
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('mainAppContainer').style.display = 'block';
+            let cu = getCurrentUser();
+            if (cu) {
+                let elEmail = document.getElementById('sidebarUserEmail');
+                if (elEmail) elEmail.innerText = cu.username;
+            }
             bukaHalaman('Dashboard');
             muatAdSense(); // iklan baru aktif di sini, setelah user berhasil masuk
         }
@@ -1177,6 +1191,7 @@
             catatLog("LOGOUT", "Pengguna keluar dari sistem.");
             localStorage.removeItem('isLogin');
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('authToken');
             location.reload();
         }
 
@@ -1205,8 +1220,8 @@
             if (!currentUser) return;
 
             Promise.all([
-                fetch('/api/folders', { headers: { 'user-id': currentUser.id } }).then(r => r.json()),
-                fetch('/api/arsip', { headers: { 'user-id': currentUser.id } }).then(r => r.json())
+                fetch('/api/folders', { headers: getAuthHeader() }).then(r => r.json()),
+                fetch('/api/arsip', { headers: getAuthHeader() }).then(r => r.json())
             ])
                 .then(([folderRes, arsipRes]) => {
                     let folders = folderRes.success ? folderRes.data : [];
@@ -1265,7 +1280,7 @@
 
             fetch('/api/folders', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'user-id': currentUser.id },
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({ nama_folder: nama })
             })
                 .then(res => res.json().then(data => ({ ok: res.ok, data })))
@@ -1286,7 +1301,7 @@
 
         function hapusFolder(id, namaFolder) {
             if (confirm(`Yakin ingin menghapus folder "${namaFolder}"? Semua berkas di dalamnya juga akan terhapus.`)) {
-                fetch(`/api/folders/${id}`, { method: 'DELETE', headers: { 'user-id': getCurrentUser().id } })
+                fetch(`/api/folders/${id}`, { method: 'DELETE', headers: getAuthHeader() })
                     .then(res => res.json())
                     .then(result => {
                         if (result.success) {
@@ -1338,7 +1353,7 @@
 
             fetch('/api/upload', {
                 method: 'POST',
-                headers: { 'user-id': currentUser.id },
+                headers: getAuthHeader(),
                 body: formData
             })
                 .then(res => res.json().then(data => ({ ok: res.ok, data })))
@@ -1373,7 +1388,7 @@
             let currentUser = getCurrentUser();
             if (!currentUser || !folderAktifId) return;
 
-            fetch('/api/arsip', { headers: { 'user-id': currentUser.id } })
+            fetch('/api/arsip', { headers: getAuthHeader() })
                 .then(res => res.json())
                 .then(result => {
                     let berkas = result.success ? result.data.filter(b => b.folder_id === folderAktifId) : [];
@@ -1417,7 +1432,7 @@
 
         function hapusBerkas(id, namaBerkas) {
             if (confirm(`Hapus berkas "${namaBerkas}"?`)) {
-                fetch(`/api/arsip/${id}`, { method: 'DELETE', headers: { 'user-id': getCurrentUser().id } })
+                fetch(`/api/arsip/${id}`, { method: 'DELETE', headers: getAuthHeader() })
                     .then(res => res.json())
                     .then(result => {
                         if (result.success) {
@@ -1520,7 +1535,7 @@
 
                 tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-3">Memuat data...</td></tr>`;
 
-                fetch('/api/users', { headers: { 'user-id': currentUser.id } })
+                fetch('/api/users', { headers: getAuthHeader() })
                     .then(r => r.json())
                     .then(hasil => {
                         if (!hasil.success) {
@@ -1567,7 +1582,7 @@
             let currentUser = getCurrentUser();
             if (!currentUser) return;
             if (confirm(`Yakin ingin menghapus akun "${username}"? Tindakan ini permanen dan tidak bisa dibatalkan.`)) {
-                fetch(`/api/users/${id}`, { method: 'DELETE', headers: { 'user-id': currentUser.id } })
+                fetch(`/api/users/${id}`, { method: 'DELETE', headers: getAuthHeader() })
                     .then(r => r.json())
                     .then(hasil => {
                         if (hasil.success) {
