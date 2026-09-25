@@ -1286,7 +1286,7 @@
 
         function hapusFolder(id, namaFolder) {
             if (confirm(`Yakin ingin menghapus folder "${namaFolder}"? Semua berkas di dalamnya juga akan terhapus.`)) {
-                fetch(`/api/folders/${id}`, { method: 'DELETE' })
+                fetch(`/api/folders/${id}`, { method: 'DELETE', headers: { 'user-id': getCurrentUser().id } })
                     .then(res => res.json())
                     .then(result => {
                         if (result.success) {
@@ -1417,7 +1417,7 @@
 
         function hapusBerkas(id, namaBerkas) {
             if (confirm(`Hapus berkas "${namaBerkas}"?`)) {
-                fetch(`/api/arsip/${id}`, { method: 'DELETE' })
+                fetch(`/api/arsip/${id}`, { method: 'DELETE', headers: { 'user-id': getCurrentUser().id } })
                     .then(res => res.json())
                     .then(result => {
                         if (result.success) {
