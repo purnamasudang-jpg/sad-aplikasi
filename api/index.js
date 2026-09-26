@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -210,7 +210,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// API Lupa Password — kirim link reset ke email pengguna
+// API Lupa Password â€” kirim link reset ke email pengguna
 app.post('/api/forgot-password', async (req, res) => {
     const { username } = req.body;
     if (!username) {
@@ -263,7 +263,7 @@ app.post('/api/forgot-password', async (req, res) => {
     }
 });
 
-// API Reset Password — simpan password baru berdasarkan token dari email
+// API Reset Password â€” simpan password baru berdasarkan token dari email
 app.post('/api/reset-password', async (req, res) => {
     const { token, password } = req.body;
     if (!token || !password) {
@@ -664,7 +664,8 @@ app.get('/api/file/:id', wajibLogin, async (req, res) => {
         });
 
         res.setHeader('Content-Type', (hasil.blob && hasil.blob.contentType) || 'application/octet-stream');
-        hasil.stream.pipe(res);
+        const { Readable } = require('node:stream');
+        Readable.fromWeb(hasil.stream).pipe(res);
     } catch (err) {
         console.error('Gagal mengambil file:', err);
         res.status(500).json({ success: false, error: 'Gagal mengambil file' });
@@ -698,3 +699,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = app;
+
