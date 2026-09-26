@@ -839,6 +839,28 @@
             return token ? { 'Authorization': 'Bearer ' + token } : {};
         }
 
+        // Buka file arsip lewat proxy server (bukan link langsung), supaya
+        // file di store privat tetap butuh login & cek kepemilikan folder.
+        async function bukaFileArsip(id) {
+            let tabBaru = window.open('', '_blank');
+            try {
+                let res = await fetch(`/api/file/${id}`, { headers: getAuthHeader() });
+                if (!res.ok) {
+                    if (tabBaru) tabBaru.close();
+                    alert('Gagal membuka file.');
+                    return;
+                }
+                let blob = await res.blob();
+                let url = URL.createObjectURL(blob);
+                if (tabBaru) tabBaru.location.href = url;
+                else window.open(url, '_blank');
+            } catch (e) {
+                console.error(e);
+                if (tabBaru) tabBaru.close();
+                alert('Gagal membuka file.');
+            }
+        }
+
         window.onload = () => {
             let savedAvatar = localStorage.getItem('mtechno_avatar');
             if (savedAvatar) {
@@ -1418,11 +1440,11 @@
                 tr.innerHTML = `
                     <td class="ps-3 fw-bold" style="color: #2d5a27;"><i class="fa-solid fa-hashtag me-1" style="font-size: 11px;"></i> ${nomorSuratTampil}</td>
                     <td>
-                        <a href="${b.file_path || '#'}" target="_blank" rel="noopener" class="text-decoration-none d-flex align-items-center" style="color: #3e2723;"><i class="fa-solid fa-file-lines me-2"></i> <span>${b.judul_arsip}</span></a>
+                        <a href="#" onclick="bukaFileArsip(${b.id}); return false;" class="text-decoration-none d-flex align-items-center" style="color: #3e2723;"><i class="fa-solid fa-file-lines me-2"></i> <span>${b.judul_arsip}</span></a>
                     </td>
                     <td><span class="badge" style="background-color: #5c4033;">${tipeFile}</span></td>
                     <td class="text-center">
-                        <a href="${b.file_path || '#'}" target="_blank" rel="noopener" class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" title="Buka File"><i class="fa-solid fa-eye"></i></a>
+                        <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="bukaFileArsip(${b.id})" title="Buka File"><i class="fa-solid fa-eye"></i></button>
                         <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id}, '${judulAman}')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
