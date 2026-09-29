@@ -239,22 +239,44 @@ async function fetchDocsInFolder() {
 // Fungsi untuk mengambil statistik dokumen
 async function fetchStatistikDokumen() {
     try {
+        console.log('Fetching statistik dokumen...');
         const response = await fetch('/api/statistik-dokumen', {
             headers: authHeaders()
         });
+
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            console.error('API Error:', response.status, response.statusText);
+            return;
+        }
+
         const result = await response.json();
+        console.log('Statistik result:', result);
 
         if (result.success) {
             // Update tampilan statistik di dashboard
             const noRegisterElement = document.getElementById('stat-no-register');
             const noSuratElement = document.getElementById('stat-no-surat');
 
+            console.log('No Register element:', noRegisterElement);
+            console.log('No Surat element:', noSuratElement);
+
             if (noRegisterElement) {
                 noRegisterElement.textContent = result.no_register;
+                console.log('Updated no_register to:', result.no_register);
+            } else {
+                console.error('Element stat-no-register not found!');
             }
+
             if (noSuratElement) {
                 noSuratElement.textContent = result.no_surat;
+                console.log('Updated no_surat to:', result.no_surat);
+            } else {
+                console.error('Element stat-no-surat not found!');
             }
+        } else {
+            console.error('API returned success:false', result);
         }
     } catch (error) {
         console.error('Error fetching statistik:', error);

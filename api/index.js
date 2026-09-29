@@ -1,5 +1,7 @@
 ﻿require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcryptjs');
@@ -27,13 +29,62 @@ const transporterEmail = nodemailer.createTransport({
     }
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Vercel menjalankan aplikasi di belakang proxy -- diperlukan supaya
+// express-rate-limit membaca IP asli pengguna dari header X-Forwarded-For.
+app.set('trust proxy', 1);
+
+// Header keamanan dasar. CSP dimatikan karena halaman publik memakai skrip
+// dan gaya inline -- mengaktifkannya akan merusak tampilan yang sudah ada.
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Pembatas laju umum: mencegah penyalahgunaan API tanpa mengganggu
+// pengguna normal (batas longgar, dihitung per IP).
+const limiterUmum = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 500,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { success: false, error: 'Terlalu banyak permintaan. Coba lagi beberapa menit lagi.' }
+});
+
+// Pembatas laju ketat khusus endpoint auth -- memperlambat serangan
+// tebak password / spam email reset, tanpa memengaruhi pengguna biasa.
+const limiterAuth = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 15,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { success: false, error: 'Terlalu banyak percobaan. Coba lagi 15 menit lagi.' }
+});
+
+app.use('/api', limiterUmum);
+app.use('/api/login', limiterAuth);
+app.use('/api/register', limiterAuth);
+app.use('/api/forgot-password', limiterAuth);
+app.use('/api/reset-password', limiterAuth);
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Hanya jenis berkas arsip yang memang didukung aplikasi yang boleh
+// diunggah -- memblokir berkas berbahaya (mis. .exe, .bat, .html).
+const EKSTENSI_DIIZINKANKAN = new Set([
+    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+    'txt', 'csv', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'zip'
+]);
 
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 }
+    limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const ekstensi = (file.originalname.split('.').pop() || '').toLowerCase();
+        if (EKSTENSI_DIIZINKANKAN.has(ekstensi)) {
+            return cb(null, true);
+        }
+        cb(new Error('Jenis berkas tidak diizinkan. Gunakan PDF, Word, Excel, gambar, atau ZIP.'));
+    }
 });
 
 // ============ AUTH: TOKEN SESI (JWT) ============
@@ -691,6 +742,22 @@ app.get('/api/rekap-aktivitas', wajibLogin, async (req, res) => {
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
+});
+
+// Penangan error dari middleware (mis. penolakan jenis berkas oleh multer
+// atau berkas melebihi 50 MB) -- dikembalikan sebagai 400 yang jelas.
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        const pesan = err.code === 'LIMIT_FILE_SIZE'
+            ? 'Ukuran berkas melebihi 50 MB.'
+            : 'Gagal mengunggah berkas: ' + err.message;
+        return res.status(400).json({ success: false, error: pesan });
+    }
+    if (err && err.message && err.message.includes('tidak diizinkan')) {
+        return res.status(400).json({ success: false, error: err.message });
+    }
+    console.error('Error tidak terduga:', err);
+    res.status(500).json({ success: false, error: 'Terjadi kesalahan pada server' });
 });
 
 if (process.env.NODE_ENV !== 'production') {
