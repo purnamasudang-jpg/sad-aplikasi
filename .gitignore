@@ -41,3 +41,8 @@ temp/
 
 # SQLite database
 *.sqlite
+.vercel-token
+token.txt
+token-email.txt
+SAD app.txt
+token-supabase*
