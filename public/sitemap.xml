@@ -2,10 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sad-aplikasi.vercel.app/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-09-29</lastmod>
   </url>
   <url>
     <loc>https://sad-aplikasi.vercel.app/tentang.html</loc>
     <lastmod>2026-09-25</lastmod>
+  </url>
+  <url>
+    <loc>https://sad-aplikasi.vercel.app/panduan.html</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://sad-aplikasi.vercel.app/faq.html</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://sad-aplikasi.vercel.app/kebijakan-privasi.html</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://sad-aplikasi.vercel.app/syarat-ketentuan.html</loc>
+    <lastmod>2026-09-29</lastmod>
   </url>
 </urlset>
