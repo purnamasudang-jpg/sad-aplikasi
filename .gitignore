@@ -1,4 +1,40 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Dependencies
 node_modules/
+
+# Database files
 *.db
-.vercel
-.env*
+data.db
+database.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.git.zip
+
+# Build outputs
+dist/
+build/
+.vercel/
+
+# Temporary files
+tmp/
+temp/

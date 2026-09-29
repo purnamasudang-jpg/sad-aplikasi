@@ -103,6 +103,7 @@ function checkAuth() {
         viewMain.style.display = 'block';
         updateUserInfo();
         fetchFolders();
+        fetchStatistikDokumen(); // Panggil fungsi statistik dokumen
     } else {
         viewAuth.style.display = 'block';
         viewMain.style.display = 'none';
@@ -189,6 +190,7 @@ document.getElementById('folderForm').addEventListener('submit', async (e) => {
             input.value = '';
             updateUserInfo();
             fetchFolders();
+            fetchStatistikDokumen();
         } else {
             alert(resData.error);
         }
@@ -231,6 +233,31 @@ async function fetchDocsInFolder() {
         renderTable(allDocsInFolder);
     } catch (error) {
         console.error(error);
+    }
+}
+
+// Fungsi untuk mengambil statistik dokumen
+async function fetchStatistikDokumen() {
+    try {
+        const response = await fetch('/api/statistik-dokumen', {
+            headers: authHeaders()
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            // Update tampilan statistik di dashboard
+            const noRegisterElement = document.getElementById('stat-no-register');
+            const noSuratElement = document.getElementById('stat-no-surat');
+
+            if (noRegisterElement) {
+                noRegisterElement.textContent = result.no_register;
+            }
+            if (noSuratElement) {
+                noSuratElement.textContent = result.no_surat;
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching statistik:', error);
     }
 }
 
@@ -287,6 +314,7 @@ document.getElementById('arsipForm').addEventListener('submit', async (e) => {
             document.getElementById('uploadBox').style.display = 'none';
             updateUserInfo();
             fetchDocsInFolder();
+            fetchStatistikDokumen();
             alert('Dokumen berhasil disimpan!');
         } else {
             alert(resData.error);
@@ -300,6 +328,7 @@ async function deleteFolder(id) {
     if (confirm('Hapus folder ini?')) {
         await fetch(`${FOLDER_URL}/${id}`, { method: 'DELETE', headers: authHeaders() });
         fetchFolders();
+        fetchStatistikDokumen();
     }
 }
 
@@ -307,5 +336,6 @@ async function deleteArsip(id) {
     if (confirm('Hapus dokumen ini?')) {
         await fetch(`${API_URL}/${id}`, { method: 'DELETE', headers: authHeaders() });
         fetchDocsInFolder();
+        fetchStatistikDokumen();
     }
 }
