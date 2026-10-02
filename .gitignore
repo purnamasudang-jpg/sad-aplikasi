@@ -47,3 +47,6 @@ token-email.txt
 SAD app.txt
 token-supabase*
 akun-tes.txt
+supabase-url.txt
+backup/
+backup-supabase.py
