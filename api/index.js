@@ -12,7 +12,7 @@ const nodemailer = require('nodemailer');
 // saat dimuat di Vercel (bug pdf-parse yang menyebabkan crash / ENOENT).
 const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 const mammoth = require('mammoth');
-const { put, del, get } = require('@vercel/blob');
+const { put, del, get, list } = require('@vercel/blob');
 const { supabase } = require('../supabase');
 
 const app = express();
@@ -691,7 +691,7 @@ app.get('/api/file/:id', wajibLogin, async (req, res) => {
     try {
         const { data: dokumen } = await supabase
             .from('arsip_dokumen')
-            .select('id, file_path, folder_id')
+            .select('id, file_path, folder_id, judul_arsip')
             .eq('id', id)
             .maybeSingle();
 
@@ -701,6 +701,10 @@ app.get('/api/file/:id', wajibLogin, async (req, res) => {
         if (!(await folderMilikUser(dokumen.folder_id, userId)) && !(await apakahAdmin(userId))) {
             return res.status(403).json({ success: false, error: 'Anda tidak punya akses ke file ini' });
         }
+
+        // Catat unduhan sebagai jejak audit (fire-and-forget, tidak boleh
+        // mengganggu pengiriman berkas jika pencatatan gagal).
+        catatUnduhan(req.user, dokumen);
 
         const isPrivate = dokumen.file_path.includes('.private.blob.vercel-storage.com');
 
@@ -720,6 +724,154 @@ app.get('/api/file/:id', wajibLogin, async (req, res) => {
     } catch (err) {
         console.error('Gagal mengambil file:', err);
         res.status(500).json({ success: false, error: 'Gagal mengambil file' });
+    }
+});
+
+// ============ STATISTIK & RIWAYAT UNDUHAN (fitur tambahan, tanpa ubah skema DB) ============
+// Membuat tabel baru di Supabase butuh akses dashboard (service key sengaja
+// dihapus demi keamanan), jadi jejak unduhan dicatat sebagai berkas JSON mungil
+// di Vercel Blob. Seluruh metadata (waktu, pengguna, dokumen) disimpan di nama
+// berkas (base64url) sehingga riwayat bisa di-list cepat tanpa mengunduh isi
+// tiap berkas. Awalan khusus juga memisahkannya dari berkas arsip sungguhan.
+
+const AWALAN_LOG_UNDUH = 'sad-log-unduh/';
+const MAKS_LOG_UNDUH = 1000;     // retensi: simpan 1000 unduhan terakhir
+const MAKS_TAMPIL_LOG = 300;     // batas baris yang dikembalikan ke frontend
+
+// Nama berkas disusun menurun (stempel terbalik) supaya urutan bawaan list()
+// yang naik justru menampilkan unduhan TERBARU di halaman pertama.
+function namaBerkasLogUnduh(userId, username, dokumenId, judulArsip) {
+    const stempelTerbalik = String(Number.MAX_SAFE_INTEGER - Date.now()).padStart(16, '0');
+    const kode = (t) => Buffer.from(String(t ?? ''), 'utf8').toString('base64url');
+    return `${AWALAN_LOG_UNDUH}${stempelTerbalik}~${userId}~${kode(username)}~${dokumenId}~${kode(judulArsip)}.json`;
+}
+
+function parseBerkasLogUnduh(pathname) {
+    const potong = pathname.replace(AWALAN_LOG_UNDUH, '').replace(/\.json$/, '').split('~');
+    if (potong.length < 5) return null;
+    const stempelTerbalik = parseInt(potong[0], 10);
+    const dekode = (kode) => {
+        try { return Buffer.from(kode, 'base64url').toString('utf8'); } catch { return ''; }
+    };
+    return {
+        waktu: new Date(Number.MAX_SAFE_INTEGER - stempelTerbalik).toISOString(),
+        user_id: parseInt(potong[1], 10),
+        username: dekode(potong[2]),
+        dokumen_id: parseInt(potong[3], 10),
+        judul_arsip: dekode(potong[4])
+    };
+}
+
+async function ambilLogUnduh() {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return [];
+        const { blobs } = await list({ prefix: AWALAN_LOG_UNDUH, limit: MAKS_TAMPIL_LOG, token });
+        return blobs
+            .map(b => parseBerkasLogUnduh(b.pathname))
+            .filter(Boolean);
+    } catch (e) {
+        console.error('Gagal membaca riwayat unduhan:', e.message);
+        return [];
+    }
+}
+
+// Catat unduhan. Sengaja "api tak terlihat" (tidak melempar error ke pemanggil)
+// supaya kegagalan mencatat tidak menghalangi pengguna membuka berkasnya.
+async function catatUnduhan(user, dokumen) {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        await put(namaBerkasLogUnduh(user.id, user.username, dokumen.id, dokumen.judul_arsip),
+            '{}', { access: 'private', token, addRandomSuffix: false, allowOverwrite: false });
+
+        // Retensi ringan: bila jumlah jejak melebihi batas, hapus jejak tertua
+        // (berada di ujung daftar) maksimal 10 per sekali tulis.
+        const { blobs } = await list({ prefix: AWALAN_LOG_UNDUH, limit: MAKS_LOG_UNDUH, token });
+        if (blobs.length >= MAKS_LOG_UNDUH) {
+            const sisa = blobs.slice(MAKS_LOG_UNDUH - 10, MAKS_LOG_UNDUH);
+            for (const b of sisa) await del(b.url, { token }).catch(() => {});
+        }
+    } catch (e) {
+        console.error('Gagal mencatat unduhan:', e.message);
+    }
+}
+
+// Total ukuran data dihitung dari daftar blob kedua store (publik untuk
+// berkas lama, privat untuk berkas baru) lalu dicocokkan dengan URL file
+// milik dokumen user -- tanpa perlu kolom/kolom baru di database.
+async function hitungUkuranData(daftarFilePath) {
+    const ukuranPerUrl = new Map();
+    const store = [
+        { token: process.env.SAD_BLOB_READ_WRITE_TOKEN },
+        { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN }
+    ];
+    for (const s of store) {
+        if (!s.token) continue;
+        try {
+            const { blobs } = await list({ token: s.token, limit: 1000 });
+            for (const b of blobs) ukuranPerUrl.set(b.url, b.size);
+        } catch (e) {
+            console.error('Gagal membaca daftar blob:', e.message);
+        }
+    }
+    let total = 0;
+    const perDokumen = {};
+    for (const dok of daftarFilePath) {
+        if (!dok.file_path) continue;
+        const ukuran = ukuranPerUrl.get(dok.file_path) || 0;
+        total += ukuran;
+        perDokumen[dok.id] = ukuran;
+    }
+    return { total, perDokumen };
+}
+
+// API Statistik Dashboard: satu pintu untuk kartu statistik di beranda.
+app.get('/api/statistik', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const { data: folders } = await supabase
+            .from('folders').select('id').eq('user_id', userId);
+        const folderIds = await ambilFolderIdMilikUser(userId);
+
+        let arsip = [];
+        if (folderIds.length > 0) {
+            const { data } = await supabase
+                .from('arsip_dokumen').select('id, file_path').in('folder_id', folderIds);
+            arsip = data || [];
+        }
+
+        const { total, perDokumen } = await hitungUkuranData(arsip);
+        const logUnduh = await ambilLogUnduh();
+        const unduhanPerDokumen = {};
+        for (const l of logUnduh) {
+            unduhanPerDokumen[l.dokumen_id] = (unduhanPerDokumen[l.dokumen_id] || 0) + 1;
+        }
+
+        res.json({
+            success: true,
+            jumlah_folder: (folders || []).length,
+            jumlah_arsip: arsip.length,
+            ukuran_total: total,
+            ukuran_per_dokumen: perDokumen,
+            unduhan_total: logUnduh.length,
+            unduhan_per_dokumen: unduhanPerDokumen
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// API Riwayat Unduhan: user biasa hanya melihat jejaknya sendiri,
+// Admin bisa melihat seluruh jejak semua pengguna.
+app.get('/api/riwayat-download', wajibLogin, async (req, res) => {
+    try {
+        let log = await ambilLogUnduh();
+        if (!(await apakahAdmin(req.user.id))) {
+            log = log.filter(l => l.user_id === req.user.id);
+        }
+        res.json({ success: true, data: log.slice(0, MAKS_TAMPIL_LOG) });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
