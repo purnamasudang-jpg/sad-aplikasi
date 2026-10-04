@@ -795,8 +795,8 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-3"><label class="form-label fw-bold small">Nomor Surat / No Register <span class="text-muted fw-normal">(Opsional)</span></label><input type="text" id="inputNomorSurat" class="form-control" placeholder="Kosongkan jika ingin dideteksi otomatis"></div>
-                            <div class="col-md-3"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Contoh: SK Panitia STS Ganjil 2026/2027"></div>
+                            <div class="col-md-3"><label class="form-label fw-bold small">Nomor Surat / No Register <span class="text-muted fw-normal">(Opsional)</span></label><input type="text" id="inputNomorSurat" class="form-control" placeholder="Masukkan nomor surat / no register"><div class="form-text">Kosongkan untuk deteksi otomatis dari isi dokumen.</div></div>
+                            <div class="col-md-3"><label class="form-label fw-bold small">Nama / Keterangan Dokumen</label><input type="text" id="inputNamaBerkas" class="form-control" placeholder="Masukkan nama / keterangan dokumen"></div>
                             <div class="col-md-4"><label class="form-label fw-bold small">Pilih File (PDF, Word, Excel, Gambar)</label><input type="file" name="berkas" id="inputFileArsip" class="form-control"></div>
                             <div class="col-md-2 d-flex align-items-end"><button class="btn w-100 fw-bold py-2 text-white" id="btnUploadBerkas" style="background-color: #3e2723;" onclick="prosesUploadBerkas()"><i class="fa-solid fa-upload me-1"></i> Upload</button></div>
                         </div>
@@ -1010,7 +1010,7 @@
         <div class="modal-dialog">
             <div class="modal-content text-dark">
                 <div class="modal-header"><h5 class="modal-title fw-bold fs-6"><i class="fa-solid fa-folder-plus text-success me-2"></i> Buat Folder Arsip Baru</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body"><div class="mb-3"><label class="form-label fw-bold small">Nama Folder / Instansi</label><input type="text" id="inputNamaFolderBaru" class="form-control" placeholder="Contoh: SDIT AL-IKHLAS"></div></div>
+                <div class="modal-body"><div class="mb-3"><label class="form-label fw-bold small">Nama Folder / Instansi</label><input type="text" id="inputNamaFolderBaru" class="form-control" placeholder="Masukkan nama folder / instansi"></div></div>
                 <div class="modal-footer"><button class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button><button class="btn btn-success btn-sm fw-bold px-3" style="background-color: #2d5a27;" onclick="simpanFolderBaru()">Simpan Folder</button></div>
             </div>
         </div>
