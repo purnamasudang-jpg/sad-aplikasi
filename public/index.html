@@ -861,7 +861,10 @@
                 </div>
 
                 <div class="card bg-white text-dark">
-                    <div class="card-header bg-white border-bottom py-3" style="border-top: 3px solid #2d5a27 !important;"><span class="fw-bold text-dark"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> Daftar Riwayat Unduhan</span></div>
+                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-top: 3px solid #2d5a27 !important;">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> Daftar Riwayat Unduhan</span>
+                        <button class="btn btn-danger btn-sm fw-bold d-none" id="btnHapusSemuaRiwayat" onclick="hapusSemuaRiwayat()" title="Hapus seluruh riwayat (Admin)"><i class="fa-solid fa-trash-can me-1"></i> Hapus Semua Riwayat</button>
+                    </div>
                     <div class="card-body p-0" id="tblRiwayat">
                         <div class="p-3 border-bottom d-flex flex-wrap gap-2 align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-2">
@@ -886,6 +889,7 @@
                                         <th class="py-3 ps-3 th-sortable" data-sort="_waktu" style="width: 190px;">WAKTU<span class="sort-ikon fa-solid fa-sort"></span></th>
                                         <th class="py-3 th-sortable" data-sort="username">PENGGUNA<span class="sort-ikon fa-solid fa-sort"></span></th>
                                         <th class="py-3 th-sortable" data-sort="judul_arsip">DOKUMEN<span class="sort-ikon fa-solid fa-sort"></span></th>
+                                        <th class="py-3 text-center" style="width: 90px;">AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabelRiwayatBody"></tbody>
@@ -1754,6 +1758,12 @@
                 key: 'judul_arsip', cari: true,
                 sortVal: r => r.judul_arsip || '',
                 render: r => `<td class="text-dark"><i class="fa-solid fa-file-lines me-2" style="color: #8d6e63;"></i> ${escapeHtml(r.judul_arsip)}</td>`
+            },
+            {
+                key: '_aksi',
+                render: r => `<td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="hapusRiwayat(${r._no})" title="Hapus Riwayat"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>`
             }
         ];
 
@@ -2038,19 +2048,67 @@
         }
 
         // ============ RIWAYAT UNDUHAN & DASHBOARD (data asli server) ============
+        let riwayatRegistry = [];
         function muatTabelRiwayatUnduh() {
             let tbody = document.getElementById('tabelRiwayatBody');
-            tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">Memuat data...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Memuat data...</td></tr>';
 
             fetch('/api/riwayat-download', { headers: getAuthHeader() })
                 .then(r => r.json())
                 .then(hasil => {
                     let daftar = (hasil.success && Array.isArray(hasil.data)) ? hasil.data : [];
-                    muatDataTabel('tblRiwayat', daftar.map(r => ({ ...r, _waktu: r.waktu })));
+                    riwayatRegistry = [];
+                    let baris = daftar.map((r, i) => {
+                        riwayatRegistry[i] = r.id || '';
+                        return { ...r, _waktu: r.waktu, _no: i };
+                    });
+                    muatDataTabel('tblRiwayat', baris);
+                    let cu = getCurrentUser();
+                    let btnSemua = document.getElementById('btnHapusSemuaRiwayat');
+                    if (btnSemua) btnSemua.classList.toggle('d-none', !(cu && cu.role === 'Admin'));
                 })
                 .catch(err => {
                     console.error('Gagal memuat riwayat unduhan:', err);
                     muatDataTabel('tblRiwayat', []);
+                });
+        }
+
+        function hapusRiwayat(no) {
+            let id = riwayatRegistry[no];
+            if (!id || !/^[0-9a-f]{16}$/.test(id)) return;
+            if (!confirm('Yakin ingin menghapus catatan riwayat unduhan ini?')) return;
+            fetch('/api/riwayat-download/' + id, { method: 'DELETE', headers: getAuthHeader() })
+                .then(r => r.json())
+                .then(hasil => {
+                    if (hasil.success) {
+                        catatLog('HAPUS RIWAYAT', 'Menghapus satu catatan riwayat unduhan');
+                        muatTabelRiwayatUnduh();
+                    } else {
+                        alert(hasil.error || 'Gagal menghapus riwayat.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Gagal terhubung ke server.');
+                });
+        }
+
+        function hapusSemuaRiwayat() {
+            if (!confirm('Yakin ingin menghapus SEMUA catatan riwayat unduhan (semua pengguna)?\n\nTindakan ini tidak bisa dibatalkan.')) return;
+            if (!confirm('Konfirmasi terakhir: seluruh riwayat unduhan akan dihapus permanen. Lanjutkan?')) return;
+            fetch('/api/riwayat-download', { method: 'DELETE', headers: getAuthHeader() })
+                .then(r => r.json())
+                .then(hasil => {
+                    if (hasil.success) {
+                        catatLog('HAPUS RIWAYAT', 'Menghapus seluruh riwayat unduhan (' + (hasil.terhapus || 0) + ' catatan)');
+                        muatTabelRiwayatUnduh();
+                    } else {
+                        alert(hasil.error || 'Gagal menghapus riwayat.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Gagal terhubung ke server.');
                 });
         }
 

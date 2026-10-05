@@ -762,18 +762,34 @@ function parseBerkasLogUnduh(pathname) {
     };
 }
 
+// ID publik untuk frontend: hash pendek dari pathname. Pathname internal tidak
+// pernah dikirim ke klien -- server memetakan ulang id -> pathname saat hapus.
+function idLogUnduh(pathname) {
+    return crypto.createHash('sha256').update(pathname).digest('hex').slice(0, 16);
+}
+
 async function ambilLogUnduh() {
     try {
         const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
         if (!token) return [];
         const { blobs } = await list({ prefix: AWALAN_LOG_UNDUH, limit: MAKS_TAMPIL_LOG, token });
         return blobs
-            .map(b => parseBerkasLogUnduh(b.pathname))
+            .map(b => {
+                const info = parseBerkasLogUnduh(b.pathname);
+                return info ? { ...info, id: idLogUnduh(b.pathname) } : null;
+            })
             .filter(Boolean);
     } catch (e) {
         console.error('Gagal membaca riwayat unduhan:', e.message);
         return [];
     }
+}
+
+async function cariBerkasLogUnduh(id) {
+    const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+    if (!token) return null;
+    const { blobs } = await list({ prefix: AWALAN_LOG_UNDUH, limit: MAKS_LOG_UNDUH, token });
+    return blobs.find(b => idLogUnduh(b.pathname) === id) || null;
 }
 
 // Catat unduhan. Sengaja "api tak terlihat" (tidak melempar error ke pemanggil)
@@ -870,6 +886,47 @@ app.get('/api/riwayat-download', wajibLogin, async (req, res) => {
             log = log.filter(l => l.user_id === req.user.id);
         }
         res.json({ success: true, data: log.slice(0, MAKS_TAMPIL_LOG) });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Hapus satu catatan riwayat. Admin boleh menghapus catatan mana pun;
+// operator hanya catatan unduhannya sendiri (selaras dengan aturan lihat).
+app.delete('/api/riwayat-download/:id', wajibLogin, async (req, res) => {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan riwayat belum aktif.' });
+        const id = String(req.params.id || '');
+        if (!/^[0-9a-f]{16}$/.test(id)) {
+            return res.status(400).json({ success: false, error: 'ID riwayat tidak valid.' });
+        }
+        const berkas = await cariBerkasLogUnduh(id);
+        if (!berkas) return res.status(404).json({ success: false, error: 'Catatan riwayat tidak ditemukan.' });
+        const info = parseBerkasLogUnduh(berkas.pathname);
+        if (!(await apakahAdmin(req.user.id)) && (!info || info.user_id !== req.user.id)) {
+            return res.status(403).json({ success: false, error: 'Anda hanya bisa menghapus riwayat unduhan milik sendiri.' });
+        }
+        await del(berkas.url, { token });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Hapus SELURUH catatan riwayat unduhan (khusus Admin). Hanya berkas log
+// berawalan sad-log-unduh/ yang tersentuh -- dokumen arsip berada di luar
+// awalan ini sehingga tidak mungkin ikut terhapus.
+app.delete('/api/riwayat-download', wajibLogin, async (req, res) => {
+    try {
+        if (!(await apakahAdmin(req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Hanya Admin yang bisa menghapus seluruh riwayat unduhan.' });
+        }
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan riwayat belum aktif.' });
+        const { blobs } = await list({ prefix: AWALAN_LOG_UNDUH, limit: MAKS_LOG_UNDUH, token });
+        if (blobs.length > 0) await del(blobs.map(b => b.url), { token });
+        res.json({ success: true, terhapus: blobs.length });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
