@@ -1063,6 +1063,44 @@
         </div>
     </div>
 
+    <!-- Modal Bagikan Tautan (gaya Google Drive) -->
+    <div class="modal fade" id="modalBagikan" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-dark">
+                <div class="modal-header" style="background: linear-gradient(135deg, #3e2723, #5c4033);">
+                    <h5 class="modal-title fw-bold fs-6 text-white"><i class="fa-solid fa-user-plus me-2" style="color: #d4af37;"></i> Bagikan Berkas</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 11px;">Nama Berkas</div>
+                    <div class="fw-bold mb-3" id="bagikanNamaBerkas" style="color: #3e2723; word-break: break-word;">-</div>
+
+                    <label class="form-label fw-bold text-uppercase mb-1" style="font-size: 11px; color: #5c4033;" for="bagikanAkses">Akses Umum</label>
+                    <select class="form-select mb-1" id="bagikanAkses" onchange="ubahAksesBagikan()">
+                        <option value="terbatas">Terbatas — hanya Anda yang punya akses</option>
+                        <option value="publik">Siapa saja yang memiliki tautan</option>
+                    </select>
+
+                    <div id="bagikanAreaTautan" style="display: none;">
+                        <div class="input-group mt-3 mb-2">
+                            <input type="text" class="form-control" id="bagikanInputTautan" readonly placeholder="Tautan akan muncul di sini">
+                            <button class="btn text-white fw-bold" id="bagikanBtnSalin" style="background-color: #2d5a27;" onclick="salinTautanBagikan()" title="Salin tautan"><i class="fa-solid fa-copy me-1"></i> Salin</button>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a id="bagikanBtnWhatsapp" href="#" target="_blank" rel="noopener" class="btn btn-sm text-white fw-bold" style="background-color: #25D366;"><i class="fa-brands fa-whatsapp me-1"></i> Kirim via WhatsApp</a>
+                            <button class="btn btn-sm btn-outline-danger fw-bold" id="bagikanBtnCabut" onclick="cabutTautanBagikan(false)"><i class="fa-solid fa-link-slash me-1"></i> Cabut Tautan</button>
+                        </div>
+                        <div class="form-text mt-2"><i class="fa-solid fa-shield-halved me-1" style="color: #b8860b;"></i>Siapa pun yang membuka tautan ini hanya bisa melihat &amp; mengunduh berkas ini saja — data lain tidak terlihat. Tautan bisa dicabut kapan saja.</div>
+                    </div>
+                    <div class="form-text mt-2" id="bagikanCatatanTerbatas"><i class="fa-solid fa-lock me-1"></i>Berkas hanya bisa diakses lewat akun yang punya izin.</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm px-4 fw-bold" data-bs-dismiss="modal">Selesai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1735,6 +1773,7 @@
                 key: '_aksi',
                 render: b => `<td class="text-center">
                         <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="bukaFileArsip(${b.id})" title="Buka File"><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn btn-sm text-white me-1" style="background-color: #b8860b;" onclick="bukaModalBagikan(${b.id})" title="Bagikan Tautan"><i class="fa-solid fa-user-plus"></i></button>
                         <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                     </td>`
             }
@@ -2041,6 +2080,124 @@
                         console.error(err);
                         alert('Gagal terhubung ke server.');
                     });
+            }
+        }
+
+        // ============ BAGIKAN TAUTAN (gaya Google Drive) ============
+        // Membuat link publik per berkas; yang membuka link hanya melihat &
+        // mengunduh berkas itu saja. Tautan bisa dicabut kapan saja.
+        let modalBagikanObj = null;
+        let bagikanArsipId = null;
+
+        function bukaModalBagikan(id) {
+            bagikanArsipId = id;
+            let nama = berkasRegistry[id] || ('Berkas #' + id);
+            document.getElementById('bagikanNamaBerkas').innerText = nama;
+            document.getElementById('bagikanInputTautan').value = '';
+            document.getElementById('bagikanAkses').value = 'terbatas';
+            document.getElementById('bagikanAreaTautan').style.display = 'none';
+            document.getElementById('bagikanCatatanTerbatas').style.display = 'block';
+            if (!modalBagikanObj) modalBagikanObj = new bootstrap.Modal(document.getElementById('modalBagikan'));
+            modalBagikanObj.show();
+
+            // Sinkronkan dengan status tautan yang tersimpan di server.
+            fetch(`/api/arsip/${id}/bagikan`, { headers: getAuthHeader() })
+                .then(r => r.json())
+                .then(hasil => {
+                    if (bagikanArsipId !== id) return; // modal sudah pindah berkas lain
+                    if (hasil && hasil.success && hasil.data && hasil.data.aktif) {
+                        tampilTautanBagikan(hasil.data.url);
+                    }
+                })
+                .catch(err => console.error('Gagal memuat status tautan:', err));
+        }
+
+        function tampilTautanBagikan(url) {
+            document.getElementById('bagikanAkses').value = 'publik';
+            document.getElementById('bagikanInputTautan').value = url;
+            document.getElementById('bagikanAreaTautan').style.display = 'block';
+            document.getElementById('bagikanCatatanTerbatas').style.display = 'none';
+            let nama = document.getElementById('bagikanNamaBerkas').innerText;
+            let pesan = `Berkas "${nama}" dibagikan lewat SAD:\n` + url;
+            document.getElementById('bagikanBtnWhatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(pesan);
+        }
+
+        function sembunyikanTautanBagikan() {
+            document.getElementById('bagikanAkses').value = 'terbatas';
+            document.getElementById('bagikanInputTautan').value = '';
+            document.getElementById('bagikanAreaTautan').style.display = 'none';
+            document.getElementById('bagikanCatatanTerbatas').style.display = 'block';
+        }
+
+        function ubahAksesBagikan() {
+            let nilai = document.getElementById('bagikanAkses').value;
+            if (nilai === 'publik') buatTautanBagikan();
+            else cabutTautanBagikan(false);
+        }
+
+        function buatTautanBagikan() {
+            if (!bagikanArsipId) return;
+            let idSaatIni = bagikanArsipId;
+            fetch(`/api/arsip/${idSaatIni}/bagikan`, { method: 'POST', headers: getAuthHeader() })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (bagikanArsipId !== idSaatIni) return;
+                    if (!ok || !data.success) throw new Error((data && data.error) || 'Gagal membuat tautan.');
+                    tampilTautanBagikan(data.data.url);
+                    catatLog('BAGIKAN BERKAS', `Membuat tautan bagikan untuk "${document.getElementById('bagikanNamaBerkas').innerText}"`);
+                })
+                .catch(err => {
+                    console.error(err);
+                    if (bagikanArsipId === idSaatIni) {
+                        sembunyikanTautanBagikan();
+                        alert('Gagal membuat tautan: ' + err.message);
+                    }
+                });
+        }
+
+        function cabutTautanBagikan(diamSaja) {
+            if (!bagikanArsipId) return;
+            if (!diamSaja && !confirm('Cabut tautan bagikan?\n\nSiapa pun yang memegang tautan lama tidak bisa lagi membuka berkas ini.')) {
+                document.getElementById('bagikanAkses').value = 'publik';
+                return;
+            }
+            let idSaatIni = bagikanArsipId;
+            fetch(`/api/arsip/${idSaatIni}/bagikan`, { method: 'DELETE', headers: getAuthHeader() })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (bagikanArsipId !== idSaatIni) return;
+                    if (!ok || !data.success) throw new Error((data && data.error) || 'Gagal mencabut tautan.');
+                    catatLog('CABUT TAUTAN', `Mencabut tautan bagikan "${document.getElementById('bagikanNamaBerkas').innerText}"`);
+                    sembunyikanTautanBagikan();
+                })
+                .catch(err => {
+                    console.error(err);
+                    if (bagikanArsipId === idSaatIni) {
+                        document.getElementById('bagikanAkses').value = 'publik';
+                        alert('Gagal mencabut tautan: ' + err.message);
+                    }
+                });
+        }
+
+        function salinTautanBagikan() {
+            let input = document.getElementById('bagikanInputTautan');
+            if (!input.value) return;
+            let btn = document.getElementById('bagikanBtnSalin');
+            let selesai = () => {
+                if (!btn) return;
+                let asli = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Tersalin';
+                setTimeout(() => { btn.innerHTML = asli; }, 1500);
+            };
+            let fallback = () => {
+                input.select();
+                try { document.execCommand('copy'); } catch (e) { console.error(e); }
+                selesai();
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(input.value).then(selesai).catch(fallback);
+            } else {
+                fallback();
             }
         }
 

@@ -675,6 +675,13 @@ app.delete('/api/arsip/:id', wajibLogin, async (req, res) => {
         }
 
         await hapusBlobJikaAda(dokumen.file_path);
+        // Cabut juga tautan bagikan berkas ini (kalau ada) supaya link lama mati.
+        try {
+            const tautan = await cariBagikanArsip(id);
+            if (tautan) await del(tautan.url, { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN });
+        } catch (e) {
+            console.error('Gagal mencabut tautan bagikan:', e.message);
+        }
         await supabase.from('arsip_dokumen').delete().eq('id', id);
         res.json({ success: true });
     } catch (err) {
@@ -932,6 +939,289 @@ app.delete('/api/riwayat-download', wajibLogin, async (req, res) => {
     }
 });
 
+// ============ BERBAGI TAUTAN (link publik per berkas) ============
+// Mirip Google Drive: pemilik berkas membuat tautan yang bisa dibuka TANPA
+// login dan HANYA menampilkan berkas itu saja -- tidak ada data folder,
+// pemilik, atau berkas lain yang terekspos. Tanpa ubah skema DB: penanda
+// tautan disimpan sebagai berkas JSON mungil di Vercel Blob (awalan
+// sad-bagi/), seluruh metadata di nama berkas:
+//   sad-bagi/<token>~<arsip_id>~<user_id>~<stempel waktu>.json
+
+const AWALAN_BAGI = 'sad-bagi/';
+const MAKS_BAGI = 1000;          // batas jumlah tautan aktif yang dipindai
+
+function tokenBagikanValid(token) {
+    return typeof token === 'string' && /^[0-9a-f]{32}$/.test(token);
+}
+
+function namaBerkasBagikan(token, arsipId, userId) {
+    return `${AWALAN_BAGI}${token}~${arsipId}~${userId}~${Date.now()}.json`;
+}
+
+function parseBerkasBagikan(pathname) {
+    const potong = pathname.replace(AWALAN_BAGI, '').replace(/\.json$/, '').split('~');
+    if (potong.length < 4) return null;
+    const token = potong[0];
+    const arsipId = parseInt(potong[1], 10);
+    const userId = parseInt(potong[2], 10);
+    const stempel = parseInt(potong[3], 10);
+    if (!tokenBagikanValid(token) || !arsipId || !userId || !stempel) return null;
+    return { token, arsip_id: arsipId, user_id: userId, dibuat: new Date(stempel).toISOString() };
+}
+
+async function daftarBagikan() {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return [];
+        const { blobs } = await list({ prefix: AWALAN_BAGI, limit: MAKS_BAGI, token });
+        return blobs
+            .map(b => {
+                const info = parseBerkasBagikan(b.pathname);
+                return info ? { ...info, url: b.url, pathname: b.pathname } : null;
+            })
+            .filter(Boolean);
+    } catch (e) {
+        console.error('Gagal membaca daftar tautan bagikan:', e.message);
+        return [];
+    }
+}
+
+async function cariBagikanArsip(arsipId) {
+    const semua = await daftarBagikan();
+    return semua.find(b => b.arsip_id === arsipId) || null;
+}
+
+async function cariBagikanToken(token) {
+    if (!tokenBagikanValid(token)) return null;
+    const semua = await daftarBagikan();
+    return semua.find(b => b.token === token) || null;
+}
+
+function tautanBagikan(req, token) {
+    return `${req.protocol}://${req.get('host')}/bagi/${token}`;
+}
+
+// Ambil nama asli berkas dari URL blob (menghapus awalan stempel waktu yang
+// ditambahkan saat upload) -- dipakai agar hasil unduhan punya nama & ekstensi
+// yang benar, bukan sekadar judul arsip.
+function namaAsliDariUrl(fileUrl) {
+    try {
+        const nama = decodeURIComponent(new URL(fileUrl).pathname.replace(/^\//, ''));
+        return nama.replace(/^\d{13}-/, '') || nama;
+    } catch (e) {
+        return null;
+    }
+}
+
+// Ukuran berkas dicari dengan satu permintaan list ber-prefix nama berkas,
+// lalu dicocokkan persis -- tanpa membaca isi berkas.
+async function ukuranBlobDariUrl(fileUrl) {
+    if (!fileUrl) return 0;
+    try {
+        const isPrivate = fileUrl.includes('.private.blob.vercel-storage.com');
+        const token = isPrivate ? process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN : process.env.SAD_BLOB_READ_WRITE_TOKEN;
+        if (!token) return 0;
+        const nama = decodeURIComponent(new URL(fileUrl).pathname.replace(/^\//, ''));
+        const { blobs } = await list({ prefix: nama, limit: 20, token });
+        const cocok = blobs.find(b => b.pathname === nama);
+        return cocok ? (cocok.size || 0) : 0;
+    } catch (e) {
+        return 0;
+    }
+}
+
+// Cek akses pemilik berkas (folder milik user) atau Admin -- pola sama
+// dengan endpoint file yang sudah ada.
+async function bolehAksesDokumen(dokumen, userId) {
+    return (await folderMilikUser(dokumen.folder_id, userId)) || (await apakahAdmin(userId));
+}
+
+// Status tautan bagikan sebuah berkas (khusus pemilik / Admin).
+app.get('/api/arsip/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, folder_id, file_path')
+            .eq('id', id)
+            .maybeSingle();
+        if (!dokumen) return res.status(404).json({ success: false, error: 'Dokumen tidak ditemukan' });
+        if (!(await bolehAksesDokumen(dokumen, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Anda tidak punya akses ke berkas ini' });
+        }
+        const ada = await cariBagikanArsip(id);
+        res.json({
+            success: true,
+            data: ada
+                ? { aktif: true, token: ada.token, url: tautanBagikan(req, ada.token), dibuat: ada.dibuat }
+                : { aktif: false }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Buat tautan bagikan. Idempoten: kalau sudah ada, kembalikan yang lama
+// (tidak menumpuk tautan ganda untuk berkas yang sama).
+app.post('/api/arsip/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, folder_id, file_path')
+            .eq('id', id)
+            .maybeSingle();
+        if (!dokumen || !dokumen.file_path) {
+            return res.status(404).json({ success: false, error: 'Dokumen tidak ditemukan' });
+        }
+        if (!(await bolehAksesDokumen(dokumen, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Anda tidak punya akses ke berkas ini' });
+        }
+        const sudahAda = await cariBagikanArsip(id);
+        if (sudahAda) {
+            return res.json({
+                success: true, sudahAda: true,
+                data: { aktif: true, token: sudahAda.token, url: tautanBagikan(req, sudahAda.token), dibuat: sudahAda.dibuat }
+            });
+        }
+        const tokenBaru = crypto.randomBytes(16).toString('hex');
+        await put(namaBerkasBagikan(tokenBaru, dokumen.id, req.user.id), '{}', {
+            access: 'private', token, addRandomSuffix: false, allowOverwrite: false
+        });
+        catatAktivitas('Bagikan Dokumen', req.user.id);
+        res.json({
+            success: true,
+            data: { aktif: true, token: tokenBaru, url: tautanBagikan(req, tokenBaru), dibuat: new Date().toISOString() }
+        });
+    } catch (err) {
+        console.error('Gagal membuat tautan bagikan:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Cabut tautan bagikan -- link lama langsung mati.
+app.delete('/api/arsip/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, folder_id')
+            .eq('id', id)
+            .maybeSingle();
+        if (!dokumen) return res.status(404).json({ success: false, error: 'Dokumen tidak ditemukan' });
+        if (!(await bolehAksesDokumen(dokumen, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Anda tidak punya akses ke berkas ini' });
+        }
+        const ada = await cariBagikanArsip(id);
+        if (ada) await del(ada.url, { token });
+        catatAktivitas('Cabut Tautan Bagikan', req.user.id);
+        res.json({ success: true, dicabut: !!ada });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ---------- Endpoint PUBLIK (tanpa login) untuk halaman /bagi/<token> ----------
+
+// Info berkas yang dibagikan. HANYA data berkas itu sendiri.
+app.get('/api/bagi/:token', async (req, res) => {
+    try {
+        const info = await cariBagikanToken(req.params.token);
+        if (!info) return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, keterangan, file_path')
+            .eq('id', info.arsip_id)
+            .maybeSingle();
+
+        if (!dokumen || !dokumen.file_path) {
+            // Berkas sudah dihapus -- bersihkan penanda tautan, anggap mati.
+            await del(info.url, { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN }).catch(() => {});
+            return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+        }
+
+        let tipe = 'FILE';
+        const potongan = dokumen.file_path.split('.');
+        if (potongan.length > 1) tipe = potongan.pop().split('?')[0].toUpperCase();
+        const ukuran = await ukuranBlobDariUrl(dokumen.file_path);
+
+        res.json({
+            success: true,
+            data: {
+                judul_arsip: dokumen.judul_arsip,
+                nomor_surat: dokumen.nomor_surat,
+                instansi_asal: dokumen.instansi_asal,
+                tanggal_dokumen: dokumen.tanggal_dokumen,
+                keterangan: dokumen.keterangan,
+                tipe,
+                ukuran,
+                dibagikan: info.dibuat
+            }
+        });
+    } catch (err) {
+        console.error('Gagal membaca tautan bagikan:', err);
+        res.status(500).json({ success: false, error: 'Gagal membuka tautan' });
+    }
+});
+
+// Kirim isi berkas dari tautan bagikan. mode 'inline' untuk pratinjau,
+// 'attachment' untuk unduhan (di situ juga jejak audit dicatat).
+async function kirimBerkasBagikan(req, res, mode) {
+    try {
+        const info = await cariBagikanToken(req.params.token);
+        if (!info) return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, file_path, judul_arsip')
+            .eq('id', info.arsip_id)
+            .maybeSingle();
+
+        if (!dokumen || !dokumen.file_path) {
+            return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+        }
+
+        if (mode === 'unduh') {
+            // Jejak audit: tercatat di riwayat PEMILIK berkas sebagai "Tautan Publik".
+            catatUnduhan({ id: info.user_id, username: 'Tautan Publik' }, dokumen);
+        }
+
+        const isPrivate = dokumen.file_path.includes('.private.blob.vercel-storage.com');
+        if (!isPrivate) return res.redirect(dokumen.file_path);
+
+        const hasil = await get(dokumen.file_path, {
+            access: 'private',
+            token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN
+        });
+
+        res.setHeader('Content-Type', (hasil.blob && hasil.blob.contentType) || 'application/octet-stream');
+        res.setHeader('Cache-Control', 'no-store');
+        if (mode === 'unduh') {
+            const namaAsli = namaAsliDariUrl(dokumen.file_path) || (dokumen.judul_arsip || 'dokumen');
+            res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(namaAsli)}`);
+        } else {
+            res.setHeader('Content-Disposition', 'inline');
+        }
+        const { Readable } = require('node:stream');
+        Readable.fromWeb(hasil.stream).pipe(res);
+    } catch (err) {
+        console.error('Gagal mengirim berkas bagikan:', err);
+        if (!res.headersSent) {
+            res.status(500).json({ success: false, error: 'Gagal mengambil berkas' });
+        } else {
+            res.end();
+        }
+    }
+}
+
+app.get('/api/bagi/:token/unduh', (req, res) => kirimBerkasBagikan(req, res, 'unduh'));
+app.get('/api/bagi/:token/lihat', (req, res) => kirimBerkasBagikan(req, res, 'lihat'));
+
 // ============ REKAP AKTIVITAS (khusus Admin) ============
 
 app.get('/api/rekap-aktivitas', wajibLogin, async (req, res) => {
@@ -951,6 +1241,13 @@ app.get('/api/rekap-aktivitas', wajibLogin, async (req, res) => {
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
+});
+
+// Halaman publik tautan bagikan. Di Vercel halaman ini dilayani lewat
+// rewrite vercel.json (/bagi/<token> -> /public/bagi.html); rute express
+// ini dipakai untuk pengembangan lokal.
+app.get('/bagi/:token', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'bagi.html'));
 });
 
 // Penangan error dari middleware (mis. penolakan jenis berkas oleh multer
