@@ -1742,7 +1742,7 @@
             },
             {
                 key: '_aksi',
-                render: f => `<td class="text-center">
+                render: f => `<td class="text-center text-nowrap">
                         <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="bukaFolder(${f.id})" title="Buka Folder"><i class="fa-solid fa-folder-open"></i></button>
                         <button class="btn btn-danger btn-sm" onclick="hapusFolder(${f.id})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                     </td>`
@@ -1780,7 +1780,7 @@
             },
             {
                 key: '_aksi',
-                render: b => `<td class="text-center">
+                render: b => `<td class="text-center text-nowrap">
                         <button class="btn btn-sm text-white me-1" style="background-color: #2d5a27;" onclick="bukaFileArsip(${b.id})" title="Buka File"><i class="fa-solid fa-eye"></i></button>
                         <button class="btn btn-sm text-white me-1" style="background-color: #b8860b;" onclick="bukaModalBagikan(${b.id})" title="Bagikan Tautan"><i class="fa-solid fa-user-plus"></i></button>
                         <button class="btn btn-danger btn-sm" onclick="hapusBerkas(${b.id})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
