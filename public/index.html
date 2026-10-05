@@ -1092,7 +1092,16 @@
                         </div>
                         <div class="form-text mt-2"><i class="fa-solid fa-shield-halved me-1" style="color: #b8860b;"></i>Siapa pun yang membuka tautan ini hanya bisa melihat &amp; mengunduh berkas ini saja — data lain tidak terlihat. Tautan bisa dicabut kapan saja.</div>
                     </div>
-                    <div class="form-text mt-2" id="bagikanCatatanTerbatas"><i class="fa-solid fa-lock me-1"></i>Berkas hanya bisa diakses lewat akun yang punya izin.</div>
+                    <div id="bagikanCatatanTerbatas" class="mt-3">
+                        <div class="p-3 rounded" style="background-color: #f5f2eb; border: 1px solid #e3dccb;">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="fa-solid fa-lock me-2" style="color: #8d6e63;"></i>
+                                <span class="fw-bold" style="font-size: 13px; color: #3e2723;">Saat ini hanya Anda yang punya akses</span>
+                            </div>
+                            <div class="form-text mb-2 mt-0">Belum ada tautan bagikan untuk berkas ini. Klik tombol di bawah untuk membuat tautan yang bisa dibuka siapa saja.</div>
+                            <button class="btn btn-sm w-100 fw-bold text-white" style="background-color: #2d5a27;" onclick="buatTautanDariTerbatas()"><i class="fa-solid fa-link me-1"></i> Buat Tautan Bagikan</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-sm px-4 fw-bold" data-bs-dismiss="modal">Selesai</button>
@@ -2133,6 +2142,12 @@
             let nilai = document.getElementById('bagikanAkses').value;
             if (nilai === 'publik') buatTautanBagikan();
             else cabutTautanBagikan(false);
+        }
+
+        // Tombol pintas di mode Terbatas: ubah akses ke publik sekaligus buat tautan.
+        function buatTautanDariTerbatas() {
+            document.getElementById('bagikanAkses').value = 'publik';
+            buatTautanBagikan();
         }
 
         function buatTautanBagikan() {
