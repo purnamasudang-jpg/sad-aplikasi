@@ -474,11 +474,19 @@ app.delete('/api/folders/:id', wajibLogin, async (req, res) => {
 
         const { data: dokumenDalamFolder } = await supabase
             .from('arsip_dokumen')
-            .select('file_path')
+            .select('id, file_path')
             .eq('folder_id', id);
 
         for (const dok of (dokumenDalamFolder || [])) {
             await hapusBlobJikaAda(dok.file_path);
+            // Selaras dengan hapus dokumen satuan: tautan bagikan ikut dicabut
+            // supaya tidak ada blob sad-bagi/ yatim yang tetap terhitung & aktif.
+            try {
+                const tautan = await cariBagikanArsip(dok.id);
+                if (tautan) await del(tautan.url, { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN });
+            } catch (e) {
+                console.error('Gagal mencabut tautan bagikan:', e.message);
+            }
         }
 
         await supabase.from('arsip_dokumen').delete().eq('folder_id', id);
@@ -1136,6 +1144,40 @@ app.delete('/api/arsip/:id/bagikan', wajibLogin, async (req, res) => {
         if (ada) await del(ada.url, { token });
         catatAktivitas('Cabut Tautan Bagikan', req.user.id);
         res.json({ success: true, dicabut: !!ada });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Membersihkan tautan bagikan "hangus": blob sad-bagi/ milik sendiri yang
+// arsipnya sudah tidak ada lagi (mis. terhapus lewat hapus folder sebelum
+// pencabutan otomatis tersedia). Operator hanya bisa membersihkan milik
+// sendiri, selaras dengan aturan lihat/hapus riwayat.
+app.post('/api/bagi/bersihkan', wajibLogin, async (req, res) => {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
+        const milikSendiri = (await daftarBagikan()).filter(b => b.user_id === req.user.id);
+        if (milikSendiri.length === 0) {
+            return res.json({ success: true, diperiksa: 0, dibersihkan: 0 });
+        }
+        const { data: arsipMasihAda } = await supabase
+            .from('arsip_dokumen')
+            .select('id')
+            .in('id', [...new Set(milikSendiri.map(b => b.arsip_id))]);
+        const idHidup = new Set((arsipMasihAda || []).map(a => a.id));
+        let dibersihkan = 0;
+        for (const b of milikSendiri) {
+            if (idHidup.has(b.arsip_id)) continue;
+            try {
+                await del(b.url, { token });
+                dibersihkan++;
+            } catch (e) {
+                console.error('Gagal membersihkan tautan hangus:', e.message);
+            }
+        }
+        if (dibersihkan > 0) catatAktivitas('Bersihkan Tautan Bagikan Hangus', req.user.id);
+        res.json({ success: true, diperiksa: milikSendiri.length, dibersihkan });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
