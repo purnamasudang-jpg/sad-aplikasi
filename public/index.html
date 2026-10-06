@@ -531,6 +531,34 @@
                     <button class="btn btn-success btn-sm fw-bold px-3" style="background-color: #2d5a27; border: none;" onclick="bukaHalaman('DetailFolder')"><i class="fa-solid fa-folder-open me-1"></i> Kelola Arsip</button>
                 </div>
 
+                <!-- GRAFIK LINGKARAN STATISTIK (donat + logo SAD di tengah) -->
+                <div class="card bg-white text-dark mb-4">
+                    <div class="card-header bg-white border-bottom py-3 d-flex flex-wrap justify-content-between align-items-center gap-2" style="border-top: 3px solid #b8860b !important;">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-chart-pie me-2" style="color: #b8860b;"></i> Grafik Statistik Arsip</span>
+                        <span class="text-muted small">Persebaran data arsip Anda dalam satu lingkaran</span>
+                    </div>
+                    <div class="card-body p-3 p-md-4">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg-5 text-center">
+                                <div id="wadahGrafikDonat" class="d-inline-block position-relative" style="max-width: 400px; width: 100%;"></div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <div class="fw-bold" style="color: #3e2723;">Ringkasan Data</div>
+                                        <div class="text-muted small">Klik warna pada legenda untuk menyorot bagian grafik.</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-muted small text-uppercase fw-bold" style="font-size: 11px;">Total Data</div>
+                                        <div id="donatTotalData" class="fw-bold" style="font-size: 24px; color: #5c4033;">0</div>
+                                    </div>
+                                </div>
+                                <div id="legendaGrafikDonat"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 4 KARTU STATISTIK (data asli dari server) -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-3">
@@ -2311,8 +2339,111 @@
                     if (elArsip) elArsip.innerText = hasil.jumlah_arsip ?? 0;
                     if (elUkuran) elUkuran.innerText = formatUkuran(hasil.ukuran_total || 0);
                     if (elUnduhan) elUnduhan.innerText = (hasil.unduhan_total || 0) + ' Unduhan';
+                    gambarGrafikDonat(hasil);
                 })
                 .catch(err => console.error('Gagal memuat statistik:', err));
+        }
+
+        // ============ GRAFIK LINGKARAN (DONAT) STATISTIK ARSIP ============
+        // SVG murni tanpa pustaka eksternal; logo SAD (favicon.png) di tengah.
+        const DONAT_SERI = [
+            { kunci: 'jumlah_folder', nama: 'Folder', ikon: 'fa-folder', warna: '#5c4033' },
+            { kunci: 'jumlah_foto', nama: 'Foto', ikon: 'fa-image', warna: '#2d5a27' },
+            { kunci: 'jumlah_nomor_surat', nama: 'No. Surat / Register', ikon: 'fa-file-invoice', warna: '#b8860b' },
+            { kunci: 'unduhan_total', nama: 'Unduhan', ikon: 'fa-download', warna: '#8d6e63' },
+            { kunci: 'jumlah_berbagi', nama: 'Berbagi', ikon: 'fa-user-plus', warna: '#3e2723' }
+        ];
+
+        function gambarGrafikDonat(hasil) {
+            let wadah = document.getElementById('wadahGrafikDonat');
+            let legenda = document.getElementById('legendaGrafikDonat');
+            let elTotal = document.getElementById('donatTotalData');
+            if (!wadah || !legenda) return;
+
+            let data = DONAT_SERI.map(s => ({ ...s, nilai: Math.max(0, parseInt(hasil[s.kunci], 10) || 0) }));
+            let total = data.reduce((j, s) => j + s.nilai, 0);
+            if (elTotal) elTotal.innerText = total.toLocaleString('id-ID');
+
+            // Geometri donat
+            const CX = 130, CY = 130, R_LUAR = 100, R_DALAM = 58, R_LABEL = R_LUAR + 17;
+            const keRad = a => (a - 90) * Math.PI / 180;
+            const pt = (r, a) => `${(CX + r * Math.cos(keRad(a))).toFixed(2)} ${(CY + r * Math.sin(keRad(a))).toFixed(2)}`;
+
+            function potongDonat(a0, a1) {
+                let besar = a1 - a0;
+                if (besar <= 0) return '';
+                if (besar >= 359.99) {
+                    // Cincin penuh: dua busur + fill evenodd agar bolong tengahnya
+                    return `M ${pt(R_LUAR, 0)} A ${R_LUAR} ${R_LUAR} 0 1 1 ${pt(R_LUAR, 180)} A ${R_LUAR} ${R_LUAR} 0 1 1 ${pt(R_LUAR, 360)} Z ` +
+                           `M ${pt(R_DALAM, 0)} A ${R_DALAM} ${R_DALAM} 0 1 1 ${pt(R_DALAM, 180)} A ${R_DALAM} ${R_DALAM} 0 1 1 ${pt(R_DALAM, 360)} Z`;
+                }
+                const busurBesar = besar > 180 ? 1 : 0;
+                return `M ${pt(R_LUAR, a0)} A ${R_LUAR} ${R_LUAR} 0 ${busurBesar} 1 ${pt(R_LUAR, a1)} ` +
+                       `L ${pt(R_DALAM, a1)} A ${R_DALAM} ${R_DALAM} 0 ${busurBesar} 0 ${pt(R_DALAM, a0)} Z`;
+            }
+
+            let sudut = 0;
+            let potongan = [];
+            let labelSekitar = [];
+            data.forEach(s => {
+                if (total > 0 && s.nilai > 0) {
+                    let besar = (s.nilai / total) * 360;
+                    let a1 = (sudut + besar >= 360) ? 360 : sudut + besar;
+                    potongan.push(`<path d="${potongDonat(sudut, a1)}" fill="${s.warna}" fill-rule="evenodd" class="donat-seg" data-seri="${s.kunci}" stroke="#ffffff" stroke-width="2"><title>${s.nama}: ${s.nilai.toLocaleString('id-ID')} (${(s.nilai / total * 100).toFixed(1).replace('.', ',')}%)</title></path>`);
+                    let tengah = sudut + besar / 2;
+                    let pct = (s.nilai / total * 100);
+                    let pctTeks = pct >= 10 ? Math.round(pct) + '%' : pct.toFixed(1).replace('.', ',') + '%';
+                    labelSekitar.push(`<text x="${(CX + R_LABEL * Math.cos(keRad(tengah))).toFixed(2)}" y="${(CY + R_LABEL * Math.sin(keRad(tengah))).toFixed(2)}" text-anchor="middle" style="font-size: 13px; font-weight: 700; fill: ${s.warna};"><tspan x="${(CX + R_LABEL * Math.cos(keRad(tengah))).toFixed(2)}" dy="0">${s.nilai.toLocaleString('id-ID')}</tspan><tspan x="${(CX + R_LABEL * Math.cos(keRad(tengah))).toFixed(2)}" dy="13" style="font-size: 10px; font-weight: 600; fill: #8d6e63;">${pctTeks}</tspan></text>`);
+                    sudut = a1;
+                }
+            });
+
+            if (total === 0) {
+                potongan.push(`<circle cx="${CX}" cy="${CY}" r="${(R_LUAR + R_DALAM) / 2}" fill="none" stroke="#d7ccc8" stroke-width="${R_LUAR - R_DALAM}"></circle>`);
+                labelSekitar.push(`<text x="${CX}" y="${CY - R_LABEL}" text-anchor="middle" style="font-size: 11px; font-weight: 600; fill: #a1887f;">Belum ada data</text>`);
+            }
+
+            wadah.innerHTML = `
+                <svg viewBox="0 0 260 260" style="width: 100%; height: auto; display: block;" role="img" aria-label="Grafik statistik arsip">
+                    <defs>
+                        <clipPath id="donatClipLogo"><circle cx="${CX}" cy="${CY}" r="${R_DALAM - 4}"></circle></clipPath>
+                    </defs>
+                    <circle cx="${CX}" cy="${CY}" r="${R_DALAM - 4}" fill="#faf7f2" stroke="#d4af37" stroke-width="1.5"></circle>
+                    <image href="/favicon.png" x="${CX - (R_DALAM - 6)}" y="${CY - (R_DALAM - 6)}" width="${(R_DALAM - 6) * 2}" height="${(R_DALAM - 6) * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#donatClipLogo)"></image>
+                    ${potongan.join('')}
+                    ${labelSekitar.join('')}
+                </svg>`;
+
+            let maks = Math.max(...data.map(s => s.nilai), 1);
+            legenda.innerHTML = data.map(s => {
+                let pct = total > 0 ? (s.nilai / total * 100) : 0;
+                return `
+                <div class="d-flex align-items-center gap-3 py-2 px-2 rounded legenda-donat" data-seri="${s.kunci}" style="cursor: pointer; border-bottom: 1px dashed #efebe9;">
+                    <span style="width: 16px; height: 16px; border-radius: 4px; background: ${s.warna}; flex-shrink: 0;"></span>
+                    <i class="fa-solid ${s.ikon} text-muted"></i>
+                    <span class="fw-bold" style="color: #3e2723; min-width: 150px;">${s.nama}</span>
+                    <div class="flex-grow-1 d-none d-md-block">
+                        <div class="progress" style="height: 6px; background: #efebe9;">
+                            <div class="progress-bar" style="width: ${(s.nilai / maks * 100).toFixed(1)}%; background: ${s.warna};"></div>
+                        </div>
+                    </div>
+                    <span class="fw-bold ms-auto" style="color: ${s.warna}; font-size: 15px;">${s.nilai.toLocaleString('id-ID')}</span>
+                    <span class="text-muted small" style="min-width: 46px; text-align: right;">${total > 0 ? pct.toFixed(1).replace('.', ',') + '%' : '0%'}</span>
+                </div>`;
+            }).join('');
+
+            // Interaksi legenda <-> potongan grafik
+            legenda.querySelectorAll('.legenda-donat').forEach(baris => {
+                let kunci = baris.dataset.seri;
+                let seg = wadah.querySelector(`.donat-seg[data-seri="${kunci}"]`);
+                if (!seg) return;
+                const nyalakan = () => { seg.style.filter = 'brightness(1.18) saturate(1.1)'; seg.style.strokeWidth = '3'; baris.style.background = '#faf7f2'; };
+                const padamkan = () => { seg.style.filter = ''; seg.style.strokeWidth = '2'; baris.style.background = ''; };
+                baris.addEventListener('mouseenter', nyalakan);
+                baris.addEventListener('mouseleave', padamkan);
+                seg.addEventListener('mouseenter', nyalakan);
+                seg.addEventListener('mouseleave', padamkan);
+            });
         }
 
         function muatRiwayatUnduhanRingkas() {

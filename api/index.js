@@ -859,7 +859,7 @@ app.get('/api/statistik', wajibLogin, async (req, res) => {
         let arsip = [];
         if (folderIds.length > 0) {
             const { data } = await supabase
-                .from('arsip_dokumen').select('id, file_path').in('folder_id', folderIds);
+                .from('arsip_dokumen').select('id, file_path, nomor_surat').in('folder_id', folderIds);
             arsip = data || [];
         }
 
@@ -870,6 +870,19 @@ app.get('/api/statistik', wajibLogin, async (req, res) => {
             unduhanPerDokumen[l.dokumen_id] = (unduhanPerDokumen[l.dokumen_id] || 0) + 1;
         }
 
+        // Statistik tambahan untuk grafik lingkaran dashboard (aditif --
+        // konsisten dengan klasifikasi gambar di halaman Gallery frontend).
+        const EKSTENSI_FOTO = new Set(['JPG', 'JPEG', 'PNG', 'GIF']);
+        let jumlahFoto = 0;
+        let jumlahNomorSurat = 0;
+        for (const a of arsip) {
+            const ekstensi = (a.file_path || '').split('?')[0].split('.').pop().toUpperCase();
+            if (EKSTENSI_FOTO.has(ekstensi)) jumlahFoto++;
+            const ns = (a.nomor_surat || '').trim();
+            if (ns && ns !== '-') jumlahNomorSurat++;
+        }
+        const jumlahBerbagi = (await daftarBagikan()).filter(b => b.user_id === userId).length;
+
         res.json({
             success: true,
             jumlah_folder: (folders || []).length,
@@ -877,7 +890,10 @@ app.get('/api/statistik', wajibLogin, async (req, res) => {
             ukuran_total: total,
             ukuran_per_dokumen: perDokumen,
             unduhan_total: logUnduh.length,
-            unduhan_per_dokumen: unduhanPerDokumen
+            unduhan_per_dokumen: unduhanPerDokumen,
+            jumlah_foto: jumlahFoto,
+            jumlah_nomor_surat: jumlahNomorSurat,
+            jumlah_berbagi: jumlahBerbagi
         });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
