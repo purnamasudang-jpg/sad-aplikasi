@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- Google AdSense dimuat dinamis lewat JS di showApp(), bukan di sini,
-         supaya TIDAK aktif sama sekali selama layar login ditampilkan -->
+    <!-- Google AdSense: kode dasar statis (syarat peninjauan situs oleh Google).
+         Unit iklan TIDAK dirender selama layar login — baru di-push setelah login berhasil. -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337" crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -694,7 +695,6 @@
                          data-ad-slot="4853638281"
                          data-ad-format="auto"
                          data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div>
 
                 <!-- FOOTER / HAK CIPTA -->
@@ -1543,17 +1543,19 @@
                 });
         }
 
-        // ============ ADSENSE: dimuat HANYA setelah login berhasil ============
+        // ============ ADSENSE: kode dasar statis di <head>, unit dirender setelah login ============
         let adsenseSudahDimuat = false;
         function muatAdSense() {
             if (adsenseSudahDimuat) return; // cegah dimuat berkali-kali
             adsenseSudahDimuat = true;
+            if (document.querySelector('script[src*="adsbygoogle.js"]')) return; // kode dasar sudah termuat statis di <head>
             let s = document.createElement('script');
             s.async = true;
             s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337';
             s.crossOrigin = 'anonymous';
             document.head.appendChild(s);
         }
+        let adsSudahDiPush = false;
 
         function showApp() {
             document.getElementById('loginSection').style.display = 'none';
@@ -1567,7 +1569,13 @@
                 if (elEmail) elEmail.innerText = cu.username;
             }
             bukaHalaman('Dashboard');
-            muatAdSense(); // iklan baru aktif di sini, setelah user berhasil masuk
+            muatAdSense();
+            // Render unit iklan Dashboard HANYA di sini: saat di-push, halaman sudah terlihat
+            // (bukan display:none) sehingga Google bisa mengukur & mengisi unit dengan benar
+            if (!adsSudahDiPush) {
+                adsSudahDiPush = true;
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }
         }
 
         function logout() {
