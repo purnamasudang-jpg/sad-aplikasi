@@ -7,6 +7,17 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
     {
+      "src": "/bagi-folder/(.+)",
+      "dest": "/public/bagi-folder.html",
+      "headers": {
+        "X-Robots-Tag": "noindex, nofollow, noarchive",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      }
+    },
+    {
       "src": "/bagi/(.+)",
       "dest": "/public/bagi.html",
       "headers": {

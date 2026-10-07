@@ -464,6 +464,32 @@ app.post('/api/folders', wajibLogin, async (req, res) => {
     }
 });
 
+// Ganti nama folder (hanya pemilik).
+app.patch('/api/folders/:id', wajibLogin, async (req, res) => {
+    const userId = req.user.id;
+    const id = parseInt(req.params.id);
+    const nama = typeof req.body.nama_folder === 'string' ? req.body.nama_folder.trim() : '';
+    if (!nama) return res.status(400).json({ success: false, error: 'Nama folder wajib diisi' });
+
+    try {
+        if (!(await folderMilikUser(id, userId))) {
+            return res.status(403).json({ success: false, error: 'Folder tidak ditemukan atau bukan milik Anda' });
+        }
+        const { data: folderBaru, error } = await supabase
+            .from('folders')
+            .update({ nama_folder: nama })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        await catatAktivitas('Ganti Nama Folder', userId);
+        res.json({ success: true, data: folderBaru });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 app.delete('/api/folders/:id', wajibLogin, async (req, res) => {
     const userId = req.user.id;
     const id = parseInt(req.params.id);
@@ -487,6 +513,14 @@ app.delete('/api/folders/:id', wajibLogin, async (req, res) => {
             } catch (e) {
                 console.error('Gagal mencabut tautan bagikan:', e.message);
             }
+        }
+
+        // Tautan bagikan folder ikut dicabut supaya halaman publiknya langsung mati.
+        try {
+            const tautanFolder = await cariBagikanFolder(id);
+            if (tautanFolder) await del(tautanFolder.url, { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN });
+        } catch (e) {
+            console.error('Gagal mencabut tautan bagikan folder:', e.message);
         }
 
         await supabase.from('arsip_dokumen').delete().eq('folder_id', id);
@@ -889,7 +923,8 @@ app.get('/api/statistik', wajibLogin, async (req, res) => {
             const ns = (a.nomor_surat || '').trim();
             if (ns && ns !== '-') jumlahNomorSurat++;
         }
-        const jumlahBerbagi = (await daftarBagikan()).filter(b => b.user_id === userId).length;
+        const jumlahBerbagi = (await daftarBagikan()).filter(b => b.user_id === userId).length
+            + (await daftarBagikanFolder()).filter(b => b.user_id === userId).length;
 
         res.json({
             success: true,
@@ -1149,35 +1184,301 @@ app.delete('/api/arsip/:id/bagikan', wajibLogin, async (req, res) => {
     }
 });
 
-// Membersihkan tautan bagikan "hangus": blob sad-bagi/ milik sendiri yang
-// arsipnya sudah tidak ada lagi (mis. terhapus lewat hapus folder sebelum
-// pencabutan otomatis tersedia). Operator hanya bisa membersihkan milik
-// sendiri, selaras dengan aturan lihat/hapus riwayat.
+// ============ BERBAGI TAUTAN FOLDER (link publik per folder) ============
+// Pola sama dengan tautan per berkas, tetap tanpa ubah skema DB: penanda
+// disimpan sebagai blob JSON mungil berawalan sad-bagi-folder/ (tidak
+// bertabrakan dengan sad-bagi/ karena prefiksnya berbeda):
+//   sad-bagi-folder/<token>~<folder_id>~<user_id>~<stempel waktu>.json
+
+const AWALAN_BAGI_FOLDER = 'sad-bagi-folder/';
+
+function namaBerkasBagikanFolder(token, folderId, userId) {
+    return `${AWALAN_BAGI_FOLDER}${token}~${folderId}~${userId}~${Date.now()}.json`;
+}
+
+function parseBerkasBagikanFolder(pathname) {
+    const potong = pathname.replace(AWALAN_BAGI_FOLDER, '').replace(/\.json$/, '').split('~');
+    if (potong.length < 4) return null;
+    const token = potong[0];
+    const folderId = parseInt(potong[1], 10);
+    const userId = parseInt(potong[2], 10);
+    const stempel = parseInt(potong[3], 10);
+    if (!tokenBagikanValid(token) || !folderId || !userId || !stempel) return null;
+    return { token, folder_id: folderId, user_id: userId, dibuat: new Date(stempel).toISOString() };
+}
+
+async function daftarBagikanFolder() {
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return [];
+        const { blobs } = await list({ prefix: AWALAN_BAGI_FOLDER, limit: MAKS_BAGI, token });
+        return blobs
+            .map(b => {
+                const info = parseBerkasBagikanFolder(b.pathname);
+                return info ? { ...info, url: b.url, pathname: b.pathname } : null;
+            })
+            .filter(Boolean);
+    } catch (e) {
+        console.error('Gagal membaca daftar tautan bagikan folder:', e.message);
+        return [];
+    }
+}
+
+async function cariBagikanFolder(folderId) {
+    const semua = await daftarBagikanFolder();
+    return semua.find(b => b.folder_id === folderId) || null;
+}
+
+async function cariBagikanFolderToken(token) {
+    if (!tokenBagikanValid(token)) return null;
+    const semua = await daftarBagikanFolder();
+    return semua.find(b => b.token === token) || null;
+}
+
+function tautanBagikanFolder(req, token) {
+    return `${req.protocol}://${req.get('host')}/bagi-folder/${token}`;
+}
+
+// Akses pengelolaan tautan folder: pemilik folder atau Admin -- pola sama
+// dengan bolehAksesDokumen untuk berkas.
+async function bolehAksesFolder(folderId, userId) {
+    return (await folderMilikUser(folderId, userId)) || (await apakahAdmin(userId));
+}
+
+// Status tautan bagikan sebuah folder (khusus pemilik / Admin).
+app.get('/api/folders/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        if (!(await bolehAksesFolder(id, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Folder tidak ditemukan atau bukan milik Anda' });
+        }
+        const ada = await cariBagikanFolder(id);
+        res.json({
+            success: true,
+            data: ada
+                ? { aktif: true, token: ada.token, url: tautanBagikanFolder(req, ada.token), dibuat: ada.dibuat }
+                : { aktif: false }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Buat tautan bagikan folder. Idempoten seperti tautan berkas.
+app.post('/api/folders/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
+        if (!(await bolehAksesFolder(id, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Folder tidak ditemukan atau bukan milik Anda' });
+        }
+        const sudahAda = await cariBagikanFolder(id);
+        if (sudahAda) {
+            return res.json({
+                success: true, sudahAda: true,
+                data: { aktif: true, token: sudahAda.token, url: tautanBagikanFolder(req, sudahAda.token), dibuat: sudahAda.dibuat }
+            });
+        }
+        const tokenBaru = crypto.randomBytes(16).toString('hex');
+        await put(namaBerkasBagikanFolder(tokenBaru, id, req.user.id), '{}', {
+            access: 'private', token, addRandomSuffix: false, allowOverwrite: false
+        });
+        catatAktivitas('Bagikan Folder', req.user.id);
+        res.json({
+            success: true,
+            data: { aktif: true, token: tokenBaru, url: tautanBagikanFolder(req, tokenBaru), dibuat: new Date().toISOString() }
+        });
+    } catch (err) {
+        console.error('Gagal membuat tautan bagikan folder:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Cabut tautan bagikan folder -- halaman publiknya langsung mati.
+app.delete('/api/folders/:id/bagikan', wajibLogin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
+        if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
+        if (!(await bolehAksesFolder(id, req.user.id))) {
+            return res.status(403).json({ success: false, error: 'Folder tidak ditemukan atau bukan milik Anda' });
+        }
+        const ada = await cariBagikanFolder(id);
+        if (ada) await del(ada.url, { token });
+        catatAktivitas('Cabut Tautan Bagikan Folder', req.user.id);
+        res.json({ success: true, dicabut: !!ada });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ---------- Endpoint PUBLIK (tanpa login) untuk halaman /bagi-folder/<token> ----------
+
+// Info folder + daftar berkasnya (metadata saja, tanpa data pemilik).
+app.get('/api/bagi-folder/:token', async (req, res) => {
+    try {
+        const info = await cariBagikanFolderToken(req.params.token);
+        if (!info) return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+
+        const { data: folder } = await supabase
+            .from('folders')
+            .select('id, nama_folder')
+            .eq('id', info.folder_id)
+            .maybeSingle();
+
+        if (!folder) {
+            // Folder sudah dihapus -- bersihkan penanda tautan, anggap mati.
+            await del(info.url, { token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN }).catch(() => {});
+            return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+        }
+
+        const { data: berkas } = await supabase
+            .from('arsip_dokumen')
+            .select('id, judul_arsip, nomor_surat, instansi_asal, tanggal_dokumen, keterangan, file_path')
+            .eq('folder_id', info.folder_id);
+
+        const daftarSumber = (berkas || []).filter(d => d.file_path);
+        const { total, perDokumen } = await hitungUkuranData(daftarSumber);
+        const daftar = daftarSumber.map(dok => {
+            let tipe = 'FILE';
+            const potongan = dok.file_path.split('.');
+            if (potongan.length > 1) tipe = potongan.pop().split('?')[0].toUpperCase();
+            return {
+                id: dok.id,
+                judul_arsip: dok.judul_arsip,
+                nomor_surat: dok.nomor_surat,
+                tanggal_dokumen: dok.tanggal_dokumen,
+                keterangan: dok.keterangan,
+                tipe,
+                ukuran: perDokumen[dok.id] || 0
+            };
+        });
+
+        res.json({
+            success: true,
+            data: {
+                nama_folder: folder.nama_folder,
+                jumlah_berkas: daftar.length,
+                ukuran_total: total,
+                berkas: daftar,
+                dibagikan: info.dibuat
+            }
+        });
+    } catch (err) {
+        console.error('Gagal membaca tautan bagikan folder:', err);
+        res.status(500).json({ success: false, error: 'Gagal membuka tautan' });
+    }
+});
+
+// Kirim isi berkas dari tautan bagikan folder. Kunci keamanan: berkas harus
+// benar-benar berada di folder yang dibagikan -- token folder tidak bisa
+// dipakai mengambil berkas lain di luar folder itu.
+async function kirimBerkasBagikanFolder(req, res, mode) {
+    try {
+        const info = await cariBagikanFolderToken(req.params.token);
+        if (!info) return res.status(404).json({ success: false, error: 'Tautan tidak valid atau sudah dicabut.' });
+
+        const arsipId = parseInt(req.params.arsipId);
+        const { data: dokumen } = await supabase
+            .from('arsip_dokumen')
+            .select('id, folder_id, file_path, judul_arsip')
+            .eq('id', arsipId)
+            .maybeSingle();
+
+        if (!dokumen || !dokumen.file_path || dokumen.folder_id !== info.folder_id) {
+            return res.status(404).json({ success: false, error: 'Berkas tidak ditemukan di folder ini.' });
+        }
+
+        if (mode === 'unduh') {
+            // Jejak audit: tercatat di riwayat PEMILIK folder sebagai "Tautan Folder Publik".
+            catatUnduhan({ id: info.user_id, username: 'Tautan Folder Publik' }, dokumen);
+        }
+
+        const isPrivate = dokumen.file_path.includes('.private.blob.vercel-storage.com');
+        if (!isPrivate) return res.redirect(dokumen.file_path);
+
+        const hasil = await get(dokumen.file_path, {
+            access: 'private',
+            token: process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN
+        });
+
+        res.setHeader('Content-Type', (hasil.blob && hasil.blob.contentType) || 'application/octet-stream');
+        res.setHeader('Cache-Control', 'no-store');
+        if (mode === 'unduh') {
+            const namaAsli = namaAsliDariUrl(dokumen.file_path) || (dokumen.judul_arsip || 'dokumen');
+            res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(namaAsli)}`);
+        } else {
+            res.setHeader('Content-Disposition', 'inline');
+        }
+        const { Readable } = require('node:stream');
+        Readable.fromWeb(hasil.stream).pipe(res);
+    } catch (err) {
+        console.error('Gagal mengirim berkas bagikan folder:', err);
+        if (!res.headersSent) {
+            res.status(500).json({ success: false, error: 'Gagal mengambil berkas' });
+        } else {
+            res.end();
+        }
+    }
+}
+
+app.get('/api/bagi-folder/:token/unduh/:arsipId', (req, res) => kirimBerkasBagikanFolder(req, res, 'unduh'));
+app.get('/api/bagi-folder/:token/lihat/:arsipId', (req, res) => kirimBerkasBagikanFolder(req, res, 'lihat'));
+
+// Membersihkan tautan bagikan "hangus": blob sad-bagi/ & sad-bagi-folder/
+// milik sendiri yang arsip/foldernya sudah tidak ada lagi (mis. terhapus
+// sebelum pencabutan otomatis tersedia). Operator hanya bisa membersihkan
+// milik sendiri, selaras dengan aturan lihat/hapus riwayat.
 app.post('/api/bagi/bersihkan', wajibLogin, async (req, res) => {
     try {
         const token = process.env.SAD_BLOB_PRIVATE_READ_WRITE_TOKEN;
         if (!token) return res.status(503).json({ success: false, error: 'Penyimpanan tautan belum aktif.' });
-        const milikSendiri = (await daftarBagikan()).filter(b => b.user_id === req.user.id);
-        if (milikSendiri.length === 0) {
-            return res.json({ success: true, diperiksa: 0, dibersihkan: 0 });
-        }
-        const { data: arsipMasihAda } = await supabase
-            .from('arsip_dokumen')
-            .select('id')
-            .in('id', [...new Set(milikSendiri.map(b => b.arsip_id))]);
-        const idHidup = new Set((arsipMasihAda || []).map(a => a.id));
+
+        const tautanBerkas = (await daftarBagikan()).filter(b => b.user_id === req.user.id);
+        const tautanFolder = (await daftarBagikanFolder()).filter(b => b.user_id === req.user.id);
+
+        let diperiksa = 0;
         let dibersihkan = 0;
-        for (const b of milikSendiri) {
-            if (idHidup.has(b.arsip_id)) continue;
-            try {
-                await del(b.url, { token });
-                dibersihkan++;
-            } catch (e) {
-                console.error('Gagal membersihkan tautan hangus:', e.message);
+
+        if (tautanBerkas.length > 0) {
+            const { data: arsipMasihAda } = await supabase
+                .from('arsip_dokumen')
+                .select('id')
+                .in('id', [...new Set(tautanBerkas.map(b => b.arsip_id))]);
+            const idHidup = new Set((arsipMasihAda || []).map(a => a.id));
+            for (const b of tautanBerkas) {
+                diperiksa++;
+                if (idHidup.has(b.arsip_id)) continue;
+                try {
+                    await del(b.url, { token });
+                    dibersihkan++;
+                } catch (e) {
+                    console.error('Gagal membersihkan tautan hangus:', e.message);
+                }
             }
         }
+
+        if (tautanFolder.length > 0) {
+            const { data: folderMasihAda } = await supabase
+                .from('folders')
+                .select('id')
+                .in('id', [...new Set(tautanFolder.map(b => b.folder_id))]);
+            const idHidup = new Set((folderMasihAda || []).map(f => f.id));
+            for (const b of tautanFolder) {
+                diperiksa++;
+                if (idHidup.has(b.folder_id)) continue;
+                try {
+                    await del(b.url, { token });
+                    dibersihkan++;
+                } catch (e) {
+                    console.error('Gagal membersihkan tautan folder hangus:', e.message);
+                }
+            }
+        }
+
         if (dibersihkan > 0) catatAktivitas('Bersihkan Tautan Bagikan Hangus', req.user.id);
-        res.json({ success: true, diperiksa: milikSendiri.length, dibersihkan });
+        res.json({ success: true, diperiksa, dibersihkan });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }

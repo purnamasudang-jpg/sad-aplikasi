@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="theme-color" content="#3e2723">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>Folder Dibagikan — SAD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+            background: #f5f2eb;
+            color: #3e2723;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 40px;
+        }
+        .wrap { width: 100%; max-width: 620px; }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #3e2723, #5c4033);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 14px rgba(62, 39, 35, 0.25);
+        }
+        .brand-icon {
+            width: 44px; height: 44px; flex: 0 0 44px;
+            background: #d4af37;
+            color: #3e2723;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+        }
+        .brand-title { color: #fff; font-weight: 700; font-size: 16px; letter-spacing: 0.3px; }
+        .brand-sub { color: #d4af37; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px rgba(62, 39, 35, 0.12);
+            padding: 26px 22px;
+        }
+
+        .state { text-align: center; padding: 34px 8px; color: #8d6e63; }
+        .state i { font-size: 38px; margin-bottom: 14px; display: block; }
+        .state .pesan { font-size: 15px; font-weight: 600; color: #5c4033; }
+        .state .sub { font-size: 13px; margin-top: 6px; }
+        .spin { animation: putar 1s linear infinite; }
+        @keyframes putar { to { transform: rotate(360deg); } }
+
+        .file-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+        .file-ico {
+            width: 58px; height: 58px; flex: 0 0 58px;
+            border-radius: 12px;
+            background: #f5f2eb;
+            color: #b8860b;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+        }
+        .file-judul { font-size: 19px; font-weight: 700; line-height: 1.35; color: #3e2723; word-break: break-word; }
+        .badges { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            background: #5c4033;
+            color: #fff;
+        }
+        .badge-soft { background: #f0e9df; color: #5c4033; }
+
+        .meta { width: 100%; border-collapse: collapse; margin: 6px 0 18px; }
+        .meta td { padding: 8px 0; font-size: 13.5px; vertical-align: top; border-bottom: 1px dashed #eee5d8; }
+        .meta td:first-child { color: #8d6e63; font-weight: 600; width: 132px; padding-right: 10px; white-space: nowrap; }
+        .meta td:last-child { color: #3e2723; word-break: break-word; }
+
+        .label-daftar { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8d6e63; margin-bottom: 10px; }
+        .berkas-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 12px;
+            border: 1px solid #eee5d8; border-radius: 10px;
+            margin-bottom: 8px; background: #fff;
+        }
+        .berkas-ico {
+            width: 38px; height: 38px; flex: 0 0 38px;
+            border-radius: 9px; background: #f5f2eb;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .berkas-info { flex: 1; min-width: 0; }
+        .berkas-judul { font-size: 14px; font-weight: 700; color: #3e2723; word-break: break-word; }
+        .berkas-meta { font-size: 12px; color: #8d6e63; margin-top: 2px; }
+        .berkas-aksi { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .btn-lihat {
+            width: 34px; height: 34px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            background: #f5f2eb; color: #5c4033; text-decoration: none;
+            border: 1px solid #eee5d8; font-size: 13px;
+        }
+        .btn-lihat:hover { background: #eee5d8; color: #3e2723; }
+        .btn-unduh-kecil {
+            height: 34px; padding: 0 12px; border-radius: 8px;
+            display: flex; align-items: center; gap: 6px;
+            background: #2d5a27; color: #fff; text-decoration: none;
+            font-size: 12.5px; font-weight: 700;
+        }
+        .btn-unduh-kecil:hover { background: #234a1f; color: #fff; }
+        .kosong { text-align: center; color: #8d6e63; font-size: 13px; padding: 18px 6px; }
+
+        .hint { margin-top: 14px; text-align: center; font-size: 12px; color: #8d6e63; }
+        .hint i { color: #b8860b; margin-right: 4px; }
+
+        .foot { margin-top: 18px; text-align: center; font-size: 12.5px; color: #8d6e63; }
+        .foot a { color: #5c4033; font-weight: 700; text-decoration: none; }
+        .foot a:hover { text-decoration: underline; }
+
+        @media (max-width: 480px) {
+            .card { padding: 20px 16px; }
+            .file-judul { font-size: 17px; }
+            .meta td:first-child { width: 108px; }
+            .berkas-item { gap: 9px; padding: 10px; }
+            .btn-unduh-kecil { padding: 0 10px; }
+            .btn-unduh-kecil .teks-unduh { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-box-archive"></i></div>
+            <div>
+                <div class="brand-title">Sistem Arsip Digital</div>
+                <div class="brand-sub">Folder Dibagikan</div>
+            </div>
+        </header>
+
+        <main class="card">
+            <div id="stateMemuat" class="state">
+                <i class="fa-solid fa-circle-notch spin"></i>
+                <div class="pesan">Memuat folder...</div>
+            </div>
+
+            <div id="stateError" class="state" hidden>
+                <i class="fa-solid fa-link-slash"></i>
+                <div class="pesan" id="pesanError">Tautan tidak valid atau sudah dicabut.</div>
+                <div class="sub">Minta pemilik folder untuk mengirim ulang tautan yang baru.</div>
+            </div>
+
+            <div id="stateSukses" hidden>
+                <div class="file-head">
+                    <div class="file-ico"><i class="fa-solid fa-folder-open"></i></div>
+                    <div>
+                        <h1 class="file-judul" id="judulFolder"></h1>
+                        <div class="badges">
+                            <span class="badge" id="badgeJumlah"></span>
+                            <span class="badge badge-soft" id="badgeTotal" hidden></span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="meta"><tbody id="tabelMeta"></tbody></table>
+
+                <div class="label-daftar">Daftar Berkas</div>
+                <div id="isiDaftarBerkas"></div>
+
+                <div class="hint"><i class="fa-solid fa-lock"></i> Anda hanya bisa melihat &amp; mengunduh berkas di dalam folder ini.</div>
+            </div>
+        </main>
+
+        <footer class="foot">Dibagikan melalui <a href="/">Sistem Arsip Digital (SAD)</a></footer>
+    </div>
+
+    <script>
+        (function () {
+            const TOKEN_RE = /^[0-9a-f]{32}$/;
+
+            function tokenDariJalur() {
+                let segmen = location.pathname.split('/').filter(Boolean).pop() || '';
+                if (segmen.toLowerCase() === 'bagi-folder.html') return new URLSearchParams(location.search).get('t') || '';
+                return segmen;
+            }
+
+            function tampilError(pesan) {
+                let m = document.getElementById('stateMemuat');
+                if (m) m.hidden = true;
+                document.getElementById('pesanError').textContent = pesan || 'Tautan tidak valid atau sudah dicabut.';
+                document.getElementById('stateError').hidden = false;
+            }
+
+            function formatUkuran(byte) {
+                let n = Number(byte) || 0;
+                if (n <= 0) return '0 B';
+                if (n < 1024) return n + ' B';
+                let satuan = ['KB', 'MB', 'GB', 'TB'];
+                let i = -1;
+                do { n = n / 1024; i++; } while (n >= 1024 && i < satuan.length - 1);
+                return (Math.round(n * 10) / 10).toString().replace(/\.0$/, '') + ' ' + satuan[i];
+            }
+
+            function formatTanggalDokumen(val) {
+                if (!val) return '';
+                let s = String(val);
+                let d = new Date(s.length === 10 ? s + 'T00:00:00' : s);
+                if (isNaN(d.getTime())) return s;
+                return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+            }
+
+            function formatWaktuLengkap(val) {
+                if (!val) return '';
+                let d = new Date(val);
+                if (isNaN(d.getTime())) return String(val);
+                return d.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+                    ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            }
+
+            function infoTipe(tipe) {
+                const t = String(tipe || '').toUpperCase();
+                if (t === 'PDF') return { ikon: 'fa-file-pdf', warna: '#c0392b' };
+                if (t === 'DOC' || t === 'DOCX') return { ikon: 'fa-file-word', warna: '#2b579a' };
+                if (t === 'XLS' || t === 'XLSX' || t === 'CSV') return { ikon: 'fa-file-excel', warna: '#217346' };
+                if (t === 'PPT' || t === 'PPTX') return { ikon: 'fa-file-powerpoint', warna: '#d24726' };
+                if (['JPG', 'JPEG', 'PNG', 'WEBP', 'GIF'].includes(t)) return { ikon: 'fa-file-image', warna: '#8d6e63' };
+                if (t === 'ZIP') return { ikon: 'fa-file-zipper', warna: '#b8860b' };
+                if (t === 'TXT') return { ikon: 'fa-file-lines', warna: '#5c4033' };
+                return { ikon: 'fa-file', warna: '#5c4033' };
+            }
+
+            function tambahBarisMeta(label, nilai) {
+                let tbody = document.getElementById('tabelMeta');
+                let tr = document.createElement('tr');
+                let td1 = document.createElement('td');
+                td1.textContent = label;
+                let td2 = document.createElement('td');
+                td2.textContent = nilai;
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tbody.appendChild(tr);
+            }
+
+            function buatBarisBerkas(b, token) {
+                let row = document.createElement('div');
+                row.className = 'berkas-item';
+
+                let ico = document.createElement('div');
+                ico.className = 'berkas-ico';
+                let info = infoTipe(b.tipe);
+                ico.style.color = info.warna;
+                let ikon = document.createElement('i');
+                ikon.className = 'fa-solid ' + info.ikon;
+                ico.appendChild(ikon);
+
+                let tengah = document.createElement('div');
+                tengah.className = 'berkas-info';
+                let judul = document.createElement('div');
+                judul.className = 'berkas-judul';
+                judul.textContent = b.judul_arsip || 'Berkas';
+                tengah.appendChild(judul);
+
+                let metaPieces = [b.tipe || 'FILE', formatUkuran(b.ukuran || 0)];
+                if (b.nomor_surat && b.nomor_surat !== '-') metaPieces.push(b.nomor_surat);
+                let tgl = formatTanggalDokumen(b.tanggal_dokumen);
+                if (tgl) metaPieces.push(tgl);
+                let meta = document.createElement('div');
+                meta.className = 'berkas-meta';
+                meta.textContent = metaPieces.join(' · ');
+                tengah.appendChild(meta);
+
+                let aksi = document.createElement('div');
+                aksi.className = 'berkas-aksi';
+                let tipe = String(b.tipe || '').toUpperCase();
+
+                if (['JPG', 'JPEG', 'PNG', 'WEBP', 'GIF', 'PDF'].includes(tipe)) {
+                    let lihat = document.createElement('a');
+                    lihat.className = 'btn-lihat';
+                    lihat.href = '/api/bagi-folder/' + token + '/lihat/' + b.id;
+                    lihat.target = '_blank';
+                    lihat.rel = 'noopener';
+                    lihat.title = 'Lihat pratinjau';
+                    let li = document.createElement('i');
+                    li.className = 'fa-solid fa-eye';
+                    lihat.appendChild(li);
+                    aksi.appendChild(lihat);
+                }
+
+                let unduh = document.createElement('a');
+                unduh.className = 'btn-unduh-kecil';
+                unduh.href = '/api/bagi-folder/' + token + '/unduh/' + b.id;
+                unduh.title = 'Unduh berkas';
+                let ui = document.createElement('i');
+                ui.className = 'fa-solid fa-download';
+                unduh.appendChild(ui);
+                let ut = document.createElement('span');
+                ut.className = 'teks-unduh';
+                ut.textContent = 'Unduh';
+                unduh.appendChild(ut);
+                aksi.appendChild(unduh);
+
+                row.appendChild(ico);
+                row.appendChild(tengah);
+                row.appendChild(aksi);
+                return row;
+            }
+
+            function render(data, token) {
+                document.getElementById('stateMemuat').hidden = true;
+                document.getElementById('stateSukses').hidden = false;
+
+                document.title = 'Folder: ' + (data.nama_folder || 'Tanpa Nama') + ' — SAD';
+                document.getElementById('judulFolder').textContent = data.nama_folder || 'Tanpa Nama';
+
+                let jumlah = Number(data.jumlah_berkas) || 0;
+                document.getElementById('badgeJumlah').textContent = jumlah + ' berkas';
+                if (data.ukuran_total > 0) {
+                    let badgeTotal = document.getElementById('badgeTotal');
+                    badgeTotal.textContent = formatUkuran(data.ukuran_total);
+                    badgeTotal.hidden = false;
+                }
+
+                let dibagikan = formatWaktuLengkap(data.dibagikan);
+                if (dibagikan) tambahBarisMeta('Dibagikan Pada', dibagikan);
+
+                let wadah = document.getElementById('isiDaftarBerkas');
+                let daftar = Array.isArray(data.berkas) ? data.berkas : [];
+                if (daftar.length === 0) {
+                    let kosong = document.createElement('div');
+                    kosong.className = 'kosong';
+                    kosong.textContent = 'Folder ini belum memiliki berkas.';
+                    wadah.appendChild(kosong);
+                    return;
+                }
+                daftar.forEach(b => wadah.appendChild(buatBarisBerkas(b, token)));
+            }
+
+            let token = tokenDariJalur();
+            if (!TOKEN_RE.test(token)) {
+                tampilError('Tautan tidak valid atau sudah dicabut.');
+                return;
+            }
+
+            fetch('/api/bagi-folder/' + token, { cache: 'no-store' })
+                .then(res => res.json().then(d => ({ ok: res.ok, d })).catch(() => ({ ok: false, d: null })))
+                .then(({ ok, d }) => {
+                    if (!ok || !d || !d.success) {
+                        tampilError((d && d.error) || 'Tautan tidak valid atau sudah dicabut.');
+                        return;
+                    }
+                    render(d.data, token);
+                })
+                .catch(() => tampilError('Gagal membuka tautan. Periksa koneksi lalu coba lagi.'));
+        })();
+    </script>
+</body>
+</html>
