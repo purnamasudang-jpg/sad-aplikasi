@@ -1,73 +1,166 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Panduan menyusun struktur folder dan klasifikasi arsip agar dokumen mudah ditemukan oleh siapa pun yang membutuhkan.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-klasifikasi-arsip.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari">
-<meta property="og:description" content="Panduan menyusun struktur folder dan klasifikasi arsip agar dokumen mudah ditemukan oleh siapa pun yang membutuhkan.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-klasifikasi-arsip.html">
+<title>Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari | SAD</title>
+<meta name="description" content="Panduan menyusun klasifikasi arsip digital untuk sekolah dan kantor: pilihan pola pengelompokan, contoh struktur folder, kode klasifikasi, langkah penerapan, dan kesalahan yang sering terjadi.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Klasifikasi arsip adalah cara mengelompokkan dokumen berdasarkan jenis, fungsi, atau masalah yang dibahas. Tujuannya sederhana: ketika seseorang membutuhkan suatu dokumen, ia tahu persis di mana mencarinya. Tanpa klasifikasi, folder digital akan berubah menjadi tumpukan file yang sulit dikendalikan.</p>
-<h2>Prinsip dasar klasifikasi</h2>
-<ul><li>Konsisten: gunakan aturan yang sama untuk semua dokumen.</li><li>Sederhana: jangan membuat tingkatan folder terlalu dalam, tiga sampai empat tingkat sudah cukup.</li><li>Mudah dipahami: nama kategori harus dimengerti oleh petugas baru.</li><li>Dapat berkembang: sisakan ruang untuk kategori baru di masa depan.</li></ul>
-<h2>Contoh struktur untuk sekolah</h2>
-<p>Salah satu pola yang umum adalah mengelompokkan berdasarkan bidang kerja, lalu tahun, lalu jenis dokumen. Contohnya: Kesiswaan, Kepegawaian, Keuangan, Kurikulum, Sarana Prasarana, dan Surat-Menyurat. Di dalam setiap bidang, buat folder per tahun ajaran, dan di dalamnya pisahkan lagi berdasarkan jenis, misalnya laporan, surat keputusan, dan notulen.</p>
-<h2>Contoh struktur untuk instansi atau kantor</h2>
-<p>Instansi dengan banyak unit kerja dapat memulai dari unit, kemudian fungsi. Misalnya Sekretariat, Keuangan, Umum, dan Program. Pengelompokan ini membantu setiap unit mengetahui folder mana yang menjadi tanggung jawabnya.</p>
-<h2>Tips menerapkan klasifikasi</h2>
-<ul><li>Tulis daftar kategori dalam satu halaman dan bagikan kepada semua petugas.</li><li>Hindari folder bernama Lain-lain atau Baru, karena cepat membengkak tanpa kendali.</li><li>Tinjau struktur setahun sekali dan rapikan jika ada kategori yang jarang dipakai.</li><li>Padukan klasifikasi dengan nomor register agar setiap dokumen punya identitas unik.</li></ul>
-<h2>Kesalahan yang sering terjadi</h2>
-<p>Kesalahan paling umum adalah membuat folder berdasarkan nama orang yang menyimpan, bukan berdasarkan isi dokumen. Ketika orang tersebut pindah tugas, struktur menjadi membingungkan. Selalu susun folder berdasarkan fungsi dokumen, bukan siapa yang mengelolanya. Dengan klasifikasi yang baik, pencarian dokumen menjadi pekerjaan beberapa detik, bukan beberapa jam.</p>
-<h2>Contoh kasus: kantor kecamatan dengan folder campur aduk</h2>
-<p>Sebuah kantor kecil menyimpan semua file di satu folder bernama Dokumen, berisi ratusan berkas dengan nama beragam. Ketika ada pemeriksaan, petugas kesulitan menemukan dokumen tahun lalu. Solusinya sederhana: buat folder per tahun, lalu per jenis dokumen seperti surat masuk, surat keluar, laporan, dan SK. Dalam dua hari kerja, ratusan file dipindahkan ke struktur baru, dan sejak itu pencarian berlangsung jauh lebih cepat.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Bolehkah satu dokumen masuk ke dua kategori? Sebaiknya tidak disalin ganda. Simpan di satu lokasi utama, lalu catat nomor registernya agar mudah ditemukan dari kategori lain. Berapa banyak kategori utama yang ideal? Umumnya lima sampai sepuluh. Jika lebih dari itu, pertimbangkan untuk menggabungkan kategori yang mirip.</p>
-<p>Kapan struktur perlu diubah? Jika petugas sering bingung menentukan lokasi sebuah dokumen, itu tanda bahwa kategori kurang jelas dan perlu disederhanakan.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-penamaan-file.html">Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</a></li><li><a href="/artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li><li><a href="/artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li></ul></div>
+  <h1>Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Hampir semua kantor dan sekolah pernah mengalami hal ini: dokumennya ada, tetapi tidak ada yang tahu di mana menyimpannya. Folder bernama "Baru", "Baru 2", dan "Fix Final" menumpuk, dan satu surat sederhana bisa memakan waktu setengah jam untuk ditemukan. Penyebabnya hampir selalu sama, yaitu arsip disimpan tanpa klasifikasi yang jelas.</p>
+
+  <p>Artikel ini membahas apa itu klasifikasi arsip, pilihan pola pengelompokan yang bisa dipakai, contoh struktur folder yang siap ditiru, dan langkah penerapannya agar semua petugas menyimpan dokumen dengan cara yang sama.</p>
+
+  <h2>Apa itu klasifikasi arsip?</h2>
+  <p>Klasifikasi arsip adalah cara mengelompokkan dokumen berdasarkan aturan tertentu, sehingga dokumen yang berkaitan berada di tempat yang sama dan mudah dicari kembali. Klasifikasi berbeda dengan sekadar membuat folder. Folder hanyalah wadah, sedangkan klasifikasi adalah aturan yang menentukan dokumen apa masuk ke folder mana.</p>
+  <p>Klasifikasi yang baik memberi tiga manfaat utama: dokumen cepat ditemukan, siapa pun petugasnya akan menyimpan di tempat yang sama, dan arsip lebih mudah dinilai atau dimusnahkan ketika masa simpannya habis.</p>
+
+  <h2>Tiga pola pengelompokan yang umum dipakai</h2>
+  <table>
+    <thead>
+      <tr><th>Pola</th><th>Cara kerja</th><th>Kelebihan</th><th>Kekurangan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Berdasarkan tahun</td><td>Folder utama per tahun, lalu dipecah lagi</td><td>Sangat mudah dibuat</td><td>Dokumen satu urusan tersebar di banyak tahun</td></tr>
+      <tr><td>Berdasarkan jenis dokumen</td><td>Folder per jenis: surat, laporan, kuitansi, dan seterusnya</td><td>Mudah dipahami petugas baru</td><td>Dokumen yang terkait satu kegiatan terpisah-pisah</td></tr>
+      <tr><td>Berdasarkan fungsi atau kegiatan</td><td>Folder per bidang: kurikulum, keuangan, kepegawaian, dan seterusnya</td><td>Dokumen satu urusan berkumpul dan sesuai tugas organisasi</td><td>Perlu disepakati dulu daftar fungsinya</td></tr>
+    </tbody>
+  </table>
+  <p>Untuk sekolah dan kantor kecil, pola yang paling praktis biasanya gabungan: tingkat pertama berdasarkan <strong>fungsi</strong>, tingkat kedua berdasarkan <strong>tahun</strong>, dan tingkat ketiga berdasarkan <strong>jenis dokumen</strong>.</p>
+
+  <h2>Contoh struktur folder tiga tingkat</h2>
+  <p>Berikut contoh yang bisa disesuaikan dengan kebutuhan sekolah atau kantor Anda:</p>
+<pre>ARSIP/
+  01-Kurikulum/
+    2026/
+      Surat-Masuk/
+      Surat-Keluar/
+      Laporan/
+  02-Kesiswaan/
+    2026/
+      ...
+  03-Kepegawaian/
+    2026/
+      ...
+  04-Keuangan/
+    2026/
+      Kuitansi/
+      Laporan/
+  05-Sarana-Prasarana/
+    2026/
+      ...</pre>
+  <p>Angka di depan nama folder utama menjaga urutan tetap konsisten, dan menunjukkan kode klasifikasi sederhana yang bisa dicantumkan juga pada nomor register dokumen.</p>
+
+  <h2>Langkah menyusun klasifikasi</h2>
+  <ol>
+    <li><strong>Daftar semua fungsi atau bidang kerja.</strong> Tuliskan tugas pokok organisasi Anda, misalnya pengajaran, kesiswaan, keuangan, kepegawaian, dan sarana. Jumlahnya sebaiknya tidak lebih dari sepuluh agar mudah diingat.</li>
+    <li><strong>Beri kode pada setiap fungsi.</strong> Gunakan angka dua digit (01, 02, 03) supaya urutannya selalu sama.</li>
+    <li><strong>Tentukan tingkat kedua dan ketiga.</strong> Biasanya tahun, lalu jenis dokumen. Jangan membuat lebih dari tiga atau empat tingkat, karena struktur yang terlalu dalam justru menyulitkan.</li>
+    <li><strong>Tulis dalam satu lembar panduan.</strong> Cantumkan daftar fungsi, kodenya, dan contoh dokumen yang masuk di tiap folder.</li>
+    <li><strong>Uji dengan dokumen nyata.</strong> Ambil dua puluh dokumen acak dan coba tempatkan. Jika ada yang membingungkan, perbaiki aturannya sebelum dipakai semua petugas.</li>
+    <li><strong>Pindahkan arsip lama secara bertahap.</strong> Mulai dari tahun berjalan, baru mundur ke tahun-tahun sebelumnya saat ada waktu.</li>
+  </ol>
+
+  <h2>Satu dokumen, satu tempat</h2>
+  <p>Aturan yang paling sering dilanggar adalah menyimpan satu dokumen di dua tempat "supaya mudah dicari". Akibatnya, ketika salah satu salinan diperbarui, salinan lainnya menjadi usang dan tidak ada yang tahu mana yang benar. Tetapkan satu lokasi resmi untuk setiap dokumen. Jika ada kebutuhan akses dari bidang lain, gunakan pintasan atau cukup catat lokasinya di nomor register.</p>
+
+  <h2>Menghubungkan klasifikasi dengan penamaan file</h2>
+  <p>Klasifikasi akan lebih kuat jika didukung penamaan file yang konsisten. Contohnya, surat undangan rapat bisa diberi nama <em>2026-10-14_undangan-rapat-kurikulum.pdf</em> dan disimpan di <em>01-Kurikulum / 2026 / Surat-Keluar</em>. Dari nama dan lokasinya saja, siapa pun sudah bisa menebak isi dan kegiatannya.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Membuat folder "Lain-lain".</strong> Folder ini cepat menjadi tempat sampah yang berisi separuh arsip. Jika ada dokumen yang tidak cocok, tambahkan kategori baru yang jelas.</li>
+    <li><strong>Struktur terlalu rumit.</strong> Puluhan kategori dan banyak tingkat membuat petugas malas mengikutinya.</li>
+    <li><strong>Nama folder berbeda-beda untuk hal yang sama.</strong> "Keuangan", "Keu", dan "Dana" bagi manusia sama, tetapi bagi komputer dan pencarian itu tiga folder berbeda.</li>
+    <li><strong>Tidak ada panduan tertulis.</strong> Tanpa panduan, aturan hanya ada di kepala satu orang dan hilang saat orang itu berganti tugas.</li>
+    <li><strong>Mengubah struktur tanpa pemberitahuan.</strong> Perubahan klasifikasi harus diumumkan dan dicatat supaya semua petugas ikut menyesuaikan.</li>
+  </ul>
+
+  <h2>Contoh kasus: sekolah yang kehilangan waktu mencari berkas</h2>
+  <p>Sebuah sekolah menyimpan dokumen di folder bernama sesuai selera masing-masing guru dan staf. Saat tim pengawas meminta bukti kegiatan setahun terakhir, petugas membutuhkan hampir dua hari untuk mengumpulkannya karena berkas tersebar di lima komputer. Setelah menyusun klasifikasi berbasis fungsi dan tahun, permintaan serupa pada tahun berikutnya selesai dalam hitungan jam, karena petugas langsung membuka folder fungsi dan tahun yang dimaksud.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> kelompokkan berdasarkan fungsi, lalu tahun, lalu jenis dokumen. Batasi kategori, tulis panduannya, dan pastikan satu dokumen hanya punya satu lokasi resmi.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah klasifikasi harus mengikuti pedoman resmi?</h3>
+  <p>Jika instansi Anda memiliki pedoman klasifikasi arsip yang berlaku, sebaiknya ikuti pedoman tersebut sebagai dasar. Untuk kebutuhan internal yang lebih sederhana, struktur di artikel ini bisa dipakai sebagai titik awal lalu disesuaikan.</p>
+
+  <h3>Bagaimana jika sebuah dokumen cocok di dua kategori?</h3>
+  <p>Pilih kategori yang paling menggambarkan tujuan utama dokumen, simpan hanya di sana, lalu catat keterkaitannya pada nomor register atau kolom keterangan.</p>
+
+  <h3>Berapa lama struktur klasifikasi sebaiknya ditinjau ulang?</h3>
+  <p>Cukup sekali setahun, misalnya di awal tahun ajaran atau tahun anggaran. Tinjau apakah ada kategori yang tidak terpakai atau kategori baru yang diperlukan.</p>
+
+  <h3>Apakah arsip lama harus langsung dirapikan semuanya?</h3>
+  <p>Tidak perlu sekaligus. Terapkan aturan baru pada dokumen yang masuk mulai sekarang, lalu rapikan arsip lama secara bertahap, dimulai dari tahun yang paling sering dicari.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-penamaan-file.html">Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</a></li>
+    <li><a href="artikel-nomor-register.html">Nomor Register Dokumen: Fungsi dan Cara Membuatnya</a></li>
+    <li><a href="artikel-retensi-arsip.html">Retensi Arsip: Menentukan Jadwal Simpan dan Kapan Boleh Dimusnahkan</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>
