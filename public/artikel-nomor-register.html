@@ -1,73 +1,171 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nomor Register Dokumen: Fungsi dan Cara Membuatnya | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Apa itu nomor register, mengapa penting untuk arsip, dan contoh cara membuat penomoran yang unik dan mudah dilacak.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-nomor-register.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Nomor Register Dokumen: Fungsi dan Cara Membuatnya">
-<meta property="og:description" content="Apa itu nomor register, mengapa penting untuk arsip, dan contoh cara membuat penomoran yang unik dan mudah dilacak.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-nomor-register.html">
+<title>Nomor Register Dokumen: Fungsi dan Cara Membuatnya | SAD</title>
+<meta name="description" content="Panduan membuat nomor register dokumen: fungsi, contoh format, isi buku register, langkah penerapan, dan kesalahan yang sering terjadi pada pencatatan arsip.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Nomor Register Dokumen: Fungsi dan Cara Membuatnya</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Nomor register adalah identitas unik yang diberikan kepada setiap dokumen atau berkas saat dicatat dalam sistem arsip. Fungsinya mirip nomor induk: dari satu nomor, kita dapat menelusuri dokumen tertentu tanpa harus membuka satu per satu.</p>
-<h2>Mengapa nomor register penting</h2>
-<ul><li>Memudahkan pencarian, terutama ketika jumlah dokumen sudah sangat banyak.</li><li>Menghindari kebingungan antara dokumen yang judulnya mirip.</li><li>Menjadi dasar buku register atau daftar arsip yang dapat diperiksa.</li><li>Mempermudah audit karena setiap dokumen dapat dilacak asal dan keberadaannya.</li></ul>
-<h2>Komponen nomor register</h2>
-<p>Format dapat disesuaikan dengan kebutuhan, tetapi umumnya memuat urutan, kode jenis dokumen, bulan, dan tahun. Contohnya 045/SK/X/2026, yang berarti dokumen urutan ke-45, berjenis surat keputusan, diterbitkan pada bulan Oktober tahun 2026.</p>
-<h2>Prinsip penomoran</h2>
-<ul><li>Setiap nomor hanya dipakai satu kali dan tidak boleh digunakan ulang.</li><li>Urutan berjalan berurutan tanpa melompat, sehingga celah nomor mudah terdeteksi.</li><li>Awali ulang urutan setiap tahun jika kebijakan lembaga menghendaki.</li><li>Catat nomor segera setelah dokumen dibuat atau diterima, bukan di kemudian hari.</li></ul>
-<h2>Nomor register dan nomor surat</h2>
-<p>Keduanya sering tertukar. Nomor surat adalah nomor yang tertera pada surat itu sendiri sesuai tata naskah lembaga, sedangkan nomor register adalah nomor internal untuk pencatatan arsip. Dalam beberapa kasus keduanya sama, tetapi untuk dokumen masuk dari pihak luar, nomor register tetap perlu dibuat karena nomor surat asalnya milik pengirim.</p>
-<h2>Saran praktis</h2>
-<p>Pilih satu format, tuliskan dalam panduan kerja, dan terapkan secara disiplin. Jika memakai aplikasi arsip digital, manfaatkan kolom nomor register agar tersimpan bersama berkasnya dan dapat dicari kapan saja.</p>
-<h2>Contoh buku register sederhana</h2>
-<p>Buku atau tabel register umumnya memiliki kolom nomor register, tanggal, jenis dokumen, perihal, pengirim atau penerima, dan lokasi penyimpanan. Dengan kolom lokasi, siapa pun dapat langsung menuju folder yang tepat. Dalam aplikasi arsip digital, kolom-kolom ini terhubung dengan berkas yang diunggah sehingga pencarian cukup memakai sebagian nomor atau kata kunci.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apa yang dilakukan jika ada nomor yang terlewat? Catat alasannya pada buku register, misalnya dokumen dibatalkan, dan jangan mengisi nomor tersebut dengan dokumen lain di kemudian hari. Bagaimana jika dokumen tidak memiliki nomor surat? Gunakan nomor register internal saja dan tambahkan keterangan singkat di kolom perihal.</p>
-<p>Perlukah memisahkan register surat masuk dan surat keluar? Sebaiknya ya, karena sifat dan alurnya berbeda, dan pemisahan memudahkan pelacakan masing-masing.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-arsip-dinamis-statis.html">Arsip Dinamis dan Arsip Statis: Apa Bedanya?</a></li><li><a href="/artikel-format-file-arsip.html">Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar?</a></li><li><a href="/artikel-digitalisasi-arsip-lama.html">Langkah Digitalisasi Arsip Kertas Lama secara Bertahap</a></li></ul></div>
+  <h1>Nomor Register Dokumen: Fungsi dan Cara Membuatnya</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Bayangkan sebuah surat penting diminta oleh atasan atau pemeriksa, dan Anda hanya ingat bahwa surat itu "masuk sekitar bulan lalu". Tanpa catatan yang rapi, mencarinya bisa memakan waktu berjam-jam. Nomor register dibuat untuk mencegah situasi seperti ini: setiap dokumen mendapat identitas yang unik, sehingga bisa dilacak kapan saja.</p>
+
+  <p>Artikel ini menjelaskan fungsi nomor register, contoh format yang praktis, cara membuat buku register, serta kebiasaan yang membuat nomor register benar-benar berguna.</p>
+
+  <h2>Apa itu nomor register?</h2>
+  <p>Nomor register adalah nomor urut yang diberikan pada setiap dokumen saat dicatat, baik dokumen masuk maupun keluar. Nomor ini berbeda dengan nomor surat. Nomor surat diberikan oleh pembuat surat dan mengikuti aturan penomoran instansi pengirimnya, sedangkan nomor register adalah penomoran internal Anda untuk keperluan pencatatan dan pencarian.</p>
+  <p>Dengan satu nomor register, Anda dapat menghubungkan tiga hal sekaligus: fisik atau file dokumennya, catatan di buku register, dan lokasi penyimpanannya.</p>
+
+  <h2>Fungsi nomor register</h2>
+  <ul>
+    <li><strong>Pelacakan.</strong> Dokumen dapat ditemukan hanya dengan menyebut nomornya.</li>
+    <li><strong>Bukti penerimaan dan pengiriman.</strong> Tanggal dan nomor register menjadi catatan kapan dokumen diterima atau dikirim.</li>
+    <li><strong>Pencegahan duplikasi.</strong> Dokumen yang sama tidak tercatat dua kali tanpa disadari.</li>
+    <li><strong>Pengendalian.</strong> Anda bisa melihat dokumen mana yang sudah ditindaklanjuti dan mana yang belum.</li>
+    <li><strong>Dasar pemeriksaan.</strong> Urutan nomor yang tidak terputus menunjukkan bahwa pencatatan berjalan tertib.</li>
+  </ul>
+
+  <h2>Contoh format nomor register</h2>
+  <p>Tidak ada satu format yang wajib dipakai. Yang penting konsisten dan mudah dibaca. Salah satu pola yang praktis untuk sekolah dan kantor kecil adalah gabungan jenis, tahun, dan nomor urut:</p>
+<pre>SM-2026-0001   (Surat Masuk, tahun 2026, urutan ke-1)
+SK-2026-0014   (Surat Keluar, tahun 2026, urutan ke-14)
+KU-2026-0230   (Dokumen Keuangan, tahun 2026, urutan ke-230)</pre>
+  <p>Nomor urut dimulai dari 0001 setiap awal tahun, dan empat digit membantu agar urutan di komputer tetap rapi.</p>
+
+  <table>
+    <thead>
+      <tr><th>Bagian</th><th>Contoh</th><th>Keterangan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Kode jenis</td><td>SM, SK, KU</td><td>Menunjukkan kelompok dokumen</td></tr>
+      <tr><td>Tahun</td><td>2026</td><td>Membuat nomor tidak bentrok antar tahun</td></tr>
+      <tr><td>Nomor urut</td><td>0001</td><td>Bertambah satu setiap dokumen baru</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Isi buku register</h2>
+  <p>Buku register bisa berupa buku tulis, lembar kerja digital, atau fitur aplikasi arsip. Apa pun medianya, kolom minimal yang disarankan adalah:</p>
+  <table>
+    <thead>
+      <tr><th>Kolom</th><th>Isi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Nomor register</td><td>Nomor unik dari Anda</td></tr>
+      <tr><td>Tanggal diterima / dikirim</td><td>Tanggal pencatatan</td></tr>
+      <tr><td>Nomor dan tanggal surat</td><td>Sesuai tertulis di dokumen asli</td></tr>
+      <tr><td>Asal / tujuan</td><td>Pengirim atau penerima dokumen</td></tr>
+      <tr><td>Perihal</td><td>Ringkasan isi dalam satu kalimat</td></tr>
+      <tr><td>Lokasi simpan</td><td>Nama folder atau rak tempat dokumen disimpan</td></tr>
+      <tr><td>Keterangan</td><td>Catatan tindak lanjut atau status</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Langkah membuat sistem register</h2>
+  <ol>
+    <li><strong>Tentukan jenis dokumen yang dicatat.</strong> Misalnya surat masuk, surat keluar, dan dokumen keuangan.</li>
+    <li><strong>Pilih format nomor.</strong> Gunakan pola yang sederhana seperti contoh di atas dan tuliskan dalam satu lembar panduan.</li>
+    <li><strong>Siapkan buku atau lembar register.</strong> Satu register untuk setiap jenis dokumen lebih mudah dikelola daripada satu register campur.</li>
+    <li><strong>Catat saat dokumen diterima atau dikirim.</strong> Jangan menunda sampai akhir pekan karena detailnya mudah terlupa.</li>
+    <li><strong>Tulis nomor register pada dokumen.</strong> Pada dokumen fisik, tulis di pojok kanan atas. Pada file digital, cantumkan di nama file.</li>
+    <li><strong>Simpan sesuai klasifikasi.</strong> Catat lokasi penyimpanan pada kolom register agar mudah dicari.</li>
+  </ol>
+
+  <h2>Menghubungkan nomor register dengan nama file</h2>
+  <p>Untuk arsip digital, jadikan nomor register bagian dari nama file, misalnya <em>SM-2026-0001_undangan-rapat-dinas.pdf</em>. Cara ini membuat file dapat dicari lewat nomor, dan sebaliknya, catatan di register mudah dicocokkan dengan file aslinya.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Melompati nomor.</strong> Nomor yang terlewat membuat pemeriksa curiga ada dokumen yang tidak dicatat. Jika ada nomor yang batal dipakai, tulis keterangannya.</li>
+    <li><strong>Memakai satu nomor untuk dua dokumen.</strong> Setiap dokumen harus memiliki nomor sendiri.</li>
+    <li><strong>Perihal terlalu singkat.</strong> Kata seperti "surat" atau "undangan" saja tidak cukup untuk dicari kemudian. Tulis siapa, apa, dan untuk keperluan apa.</li>
+    <li><strong>Lupa memperbarui lokasi simpan.</strong> Jika dokumen dipindahkan, register harus ikut diperbarui.</li>
+    <li><strong>Register hanya dipegang satu orang.</strong> Pastikan ada petugas pengganti yang memahami cara pengisiannya.</li>
+  </ul>
+
+  <h2>Contoh kasus: surat yang dicari dua kali</h2>
+  <p>Sebuah kantor menerima surat permohonan data dari instansi lain. Dua minggu kemudian, pimpinan menanyakan sudah dibalas atau belum. Petugas yang tidak memakai register harus membuka tumpukan map satu per satu. Setelah menerapkan nomor register, petugas cukup mencari kata kunci di buku register, menemukan nomor dan lokasinya dalam hitungan menit, lalu melihat bahwa kolom keterangan masih kosong sehingga surat tersebut langsung ditindaklanjuti.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> beri setiap dokumen satu nomor unik, catat di register saat dokumen diterima atau dikirim, dan hubungkan nomor itu dengan nama file serta lokasi simpannya.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah nomor register sama dengan nomor surat?</h3>
+  <p>Tidak. Nomor surat ditetapkan oleh pembuat surat, sedangkan nomor register adalah nomor internal untuk pencatatan Anda. Keduanya sebaiknya dicatat berdampingan di buku register.</p>
+
+  <h3>Apakah nomor urut harus mulai dari 1 setiap tahun?</h3>
+  <p>Itu praktik yang umum dan membuat nomor lebih ringkas. Selama tahun dicantumkan dalam nomor, tidak akan ada nomor yang bentrok.</p>
+
+  <h3>Bolehkah register dibuat di spreadsheet?</h3>
+  <p>Boleh, dan sering lebih praktis karena bisa dicari dan diurutkan. Pastikan file register itu ikut dicadangkan secara rutin dan hanya bisa diubah oleh petugas yang berwenang.</p>
+
+  <h3>Bagaimana jika salah menulis nomor?</h3>
+  <p>Jangan menghapus catatan. Coret dengan rapi atau beri keterangan koreksi beserta tanggal dan nama petugas, supaya riwayat pencatatan tetap bisa ditelusuri.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-klasifikasi-arsip.html">Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</a></li>
+    <li><a href="artikel-penamaan-file.html">Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</a></li>
+    <li><a href="artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>
