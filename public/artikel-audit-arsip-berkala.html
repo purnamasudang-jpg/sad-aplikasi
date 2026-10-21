@@ -1,74 +1,207 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Daftar periksa sederhana untuk meninjau kondisi arsip digital setiap tahun: kelengkapan, keamanan, cadangan, dan retensi.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-audit-arsip-berkala.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat">
-<meta property="og:description" content="Daftar periksa sederhana untuk meninjau kondisi arsip digital setiap tahun: kelengkapan, keamanan, cadangan, dan retensi.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-audit-arsip-berkala.html">
+<title>Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat | SAD</title>
+<meta name="description" content="Daftar periksa audit arsip tahunan: kelengkapan, penataan, hak akses, keamanan, pencadangan, retensi, cara melaksanakan audit, dan menindaklanjuti temuan.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Arsip yang baik tidak berhenti pada penataan awal. Seiring waktu, file bertambah, petugas berganti, dan aturan penamaan mulai longgar. Audit berkala membantu lembaga menemukan masalah sebelum membesar. Cukup dilakukan sekali setahun dengan daftar periksa yang sederhana.</p>
-<h2>1. Kelengkapan</h2>
-<ul><li>Apakah semua dokumen penting tahun ini sudah tercatat dalam register?</li><li>Adakah nomor register yang terlewat tanpa keterangan?</li><li>Apakah berkas dalam folder sesuai dengan catatan yang ada?</li></ul>
-<h2>2. Kerapian</h2>
-<ul><li>Apakah penamaan file masih mengikuti aturan yang disepakati?</li><li>Adakah folder yang terlalu penuh atau bernama tidak jelas?</li><li>Adakah file ganda atau versi lama yang tidak diperlukan?</li></ul>
-<h2>3. Keamanan</h2>
-<ul><li>Siapa saja yang masih memiliki akses, dan apakah masih sesuai tugasnya?</li><li>Apakah akun petugas yang sudah pindah telah dinonaktifkan?</li><li>Adakah aktivitas tidak wajar pada catatan log?</li><li>Apakah tautan bagikan yang sudah tidak diperlukan telah dicabut?</li></ul>
-<h2>4. Cadangan</h2>
-<ul><li>Kapan backup terakhir dilakukan?</li><li>Apakah hasil backup pernah diuji dibuka?</li><li>Apakah ada salinan di lokasi terpisah?</li></ul>
-<h2>5. Retensi</h2>
-<ul><li>Adakah arsip yang telah melewati masa retensi dan perlu diproses?</li><li>Adakah arsip bernilai sejarah yang perlu dilestarikan dengan lebih baik?</li></ul>
-<h2>Cara menjalankan audit</h2>
-<p>Tunjuk satu orang sebagai pemeriksa, sebaiknya bukan petugas yang setiap hari mengelola arsip agar penilaian lebih objektif. Ambil contoh acak dari beberapa folder, periksa sesuai daftar di atas, lalu catat temuan dan tindak lanjutnya beserta batas waktu perbaikan.</p>
-<h2>Contoh kasus</h2>
-<p>Dalam audit tahunan, sebuah kantor menemukan bahwa dua akun petugas lama masih aktif, dan backup terakhir dilakukan empat bulan sebelumnya. Kedua hal ini langsung diperbaiki. Tanpa audit, masalah tersebut mungkin baru diketahui setelah terjadi insiden.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Seberapa sering sebaiknya audit dilakukan? Minimal setahun sekali. Untuk lembaga dengan volume dokumen besar, pertimbangkan setiap semester.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a></li><li><a href="/artikel-retensi-arsip.html">Retensi Arsip</a></li><li><a href="/artikel-scan-dokumen.html">Scan Dokumen</a></li></ul></div>
+  <h1>Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Arsip yang rapi hari ini belum tentu rapi setahun lagi. Petugas berganti, dokumen baru menumpuk, aturan penamaan mulai dilanggar, dan akun lama lupa dinonaktifkan. Audit arsip berkala adalah pemeriksaan rutin untuk memastikan semuanya masih berjalan sesuai aturan, sekaligus menemukan masalah sebelum berubah menjadi kerugian.</p>
+
+  <p>Artikel ini menyediakan daftar periksa tahunan yang bisa langsung Anda pakai, beserta cara melaksanakan dan menindaklanjuti hasilnya.</p>
+
+  <h2>Apa itu audit arsip?</h2>
+  <p>Audit arsip adalah pemeriksaan sistematis terhadap cara arsip dikelola: apakah dokumen lengkap, tertata, aman, dan sesuai prosedur. Audit internal tidak perlu rumit atau menakutkan. Tujuannya bukan mencari siapa yang salah, melainkan memperbaiki sistem.</p>
+
+  <h2>Seberapa sering audit dilakukan?</h2>
+  <table>
+    <thead>
+      <tr><th>Jenis pemeriksaan</th><th>Frekuensi</th><th>Cakupan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Pemeriksaan ringan</td><td>Setiap bulan atau triwulan</td><td>Register, cadangan, akun pengguna</td></tr>
+      <tr><td>Audit menyeluruh</td><td>Setahun sekali</td><td>Seluruh daftar periksa di bawah</td></tr>
+      <tr><td>Pemeriksaan khusus</td><td>Saat ada kejadian</td><td>Misalnya setelah ada kehilangan dokumen atau pergantian petugas</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Daftar periksa audit tahunan</h2>
+
+  <h3>1. Kelengkapan dan keutuhan</h3>
+  <ul>
+    <li>Dokumen yang tercatat di register benar-benar ada di folder atau rak.</li>
+    <li>Nomor register tidak ada yang terlewat tanpa keterangan.</li>
+    <li>Dokumen penting memiliki salinan digital yang terbaca.</li>
+    <li>Tidak ada file rusak atau tidak dapat dibuka.</li>
+  </ul>
+
+  <h3>2. Penataan dan penamaan</h3>
+  <ul>
+    <li>Struktur folder masih sesuai dengan panduan klasifikasi.</li>
+    <li>Tidak ada folder bernama sembarangan seperti "Baru", "Lain-lain", atau "Copy".</li>
+    <li>Nama file mengikuti pola yang disepakati.</li>
+    <li>Tidak ada dokumen yang sama tersimpan di dua tempat.</li>
+  </ul>
+
+  <h3>3. Pengguna dan hak akses</h3>
+  <ul>
+    <li>Semua akun yang aktif dimiliki petugas yang masih bertugas.</li>
+    <li>Tidak ada akun bersama yang dipakai banyak orang.</li>
+    <li>Peran setiap pengguna (administrator, operator, pembaca) masih sesuai tugasnya.</li>
+    <li>Folder sensitif hanya bisa dibuka oleh pihak berwenang.</li>
+  </ul>
+
+  <h3>4. Keamanan</h3>
+  <ul>
+    <li>Kata sandi akun penting sudah diperbarui bila ada alasan.</li>
+    <li>Verifikasi dua langkah aktif pada akun administrator.</li>
+    <li>Perangkat yang digunakan memiliki pembaruan terbaru.</li>
+    <li>Catatan aktivitas tidak menunjukkan akses mencurigakan.</li>
+  </ul>
+
+  <h3>5. Pencadangan</h3>
+  <ul>
+    <li>Cadangan terakhir berhasil dan tanggalnya sesuai jadwal.</li>
+    <li>Salinan cadangan berada di lebih dari satu media dan lokasi.</li>
+    <li>Uji pemulihan sudah dilakukan dalam enam bulan terakhir.</li>
+  </ul>
+
+  <h3>6. Retensi dan pemusnahan</h3>
+  <ul>
+    <li>Arsip yang melewati masa simpan sudah diinventarisasi.</li>
+    <li>Pemusnahan yang dilakukan memiliki berita acara.</li>
+    <li>Jadwal retensi masih mencakup jenis dokumen yang baru muncul.</li>
+  </ul>
+
+  <h3>7. Prosedur dan petugas</h3>
+  <ul>
+    <li>Panduan kerja tertulis masih berlaku dan mudah dibaca.</li>
+    <li>Ada petugas pengganti yang paham cara kerja arsip.</li>
+    <li>Petugas baru sudah mendapat pengenalan prosedur.</li>
+  </ul>
+
+  <h2>Cara melaksanakan audit</h2>
+  <ol>
+    <li><strong>Tetapkan tim dan jadwal.</strong> Libatkan petugas arsip dan satu orang dari bidang lain agar penilaian lebih objektif.</li>
+    <li><strong>Siapkan daftar periksa.</strong> Gunakan daftar di atas dan sesuaikan dengan kondisi instansi Anda.</li>
+    <li><strong>Ambil sampel.</strong> Untuk arsip yang besar, periksa sampel acak per kelompok dokumen, misalnya sepuluh persen.</li>
+    <li><strong>Catat temuan.</strong> Tulis apa yang ditemukan, di mana, dan seberapa serius.</li>
+    <li><strong>Susun rekomendasi.</strong> Untuk setiap temuan, tentukan langkah perbaikannya.</li>
+    <li><strong>Tetapkan penanggung jawab dan tenggat.</strong> Perbaikan tanpa penanggung jawab jarang terlaksana.</li>
+    <li><strong>Pantau tindak lanjut.</strong> Periksa kembali pada pemeriksaan ringan berikutnya.</li>
+  </ol>
+
+  <h2>Contoh pencatatan temuan</h2>
+  <table>
+    <thead>
+      <tr><th>Temuan</th><th>Tingkat</th><th>Tindak lanjut</th><th>Penanggung jawab</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dua akun milik staf yang sudah pindah masih aktif</td><td>Tinggi</td><td>Nonaktifkan akun dan periksa log akses</td><td>Administrator</td></tr>
+      <tr><td>Folder "Lain-lain" berisi 80 file</td><td>Sedang</td><td>Pilah dan pindahkan sesuai klasifikasi</td><td>Petugas arsip</td></tr>
+      <tr><td>Uji pemulihan terakhir 10 bulan lalu</td><td>Sedang</td><td>Jadwalkan uji pemulihan bulan ini</td><td>Petugas cadangan</td></tr>
+      <tr><td>Beberapa nama file tidak mengikuti pola</td><td>Rendah</td><td>Ganti nama bertahap dan ingatkan petugas</td><td>Operator</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Menyusun laporan singkat</h2>
+  <p>Hasil audit cukup dituangkan dalam laporan satu sampai dua halaman: tanggal dan cakupan audit, ringkasan temuan berdasarkan tingkat, daftar tindak lanjut beserta tenggat, dan hal baik yang perlu dipertahankan. Laporan ini juga menjadi arsip, dan menjadi bahan perbandingan dengan audit tahun berikutnya.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Audit hanya formalitas.</strong> Daftar periksa diisi tanpa benar-benar memeriksa isi folder.</li>
+    <li><strong>Hanya mencari kesalahan orang.</strong> Fokus pada perbaikan sistem, bukan menyalahkan petugas.</li>
+    <li><strong>Tidak ada tindak lanjut.</strong> Temuan yang tidak diperbaiki akan muncul lagi tahun depan.</li>
+    <li><strong>Terlalu jarang.</strong> Masalah kecil yang dibiarkan setahun penuh bisa menjadi masalah besar.</li>
+    <li><strong>Tidak melibatkan pimpinan.</strong> Perbaikan yang membutuhkan keputusan atau anggaran tidak akan berjalan tanpa dukungan.</li>
+  </ul>
+
+  <h2>Contoh kasus: audit yang menemukan akun terlupakan</h2>
+  <p>Sebuah kantor melakukan audit tahunan pertamanya. Dari daftar pengguna, ditemukan tiga akun milik pegawai yang sudah pindah tugas masih aktif dengan hak akses penuh. Satu di antaranya tercatat membuka folder keuangan pada malam hari. Tim langsung menonaktifkan akun tersebut, memeriksa dokumen yang diakses, dan menambahkan langkah pencabutan akses ke prosedur pergantian petugas. Pada audit berikutnya, temuan serupa tidak muncul lagi.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> periksa kelengkapan, penataan, akses, keamanan, cadangan, dan retensi secara berkala. Catat temuan, tentukan penanggung jawab, dan pastikan perbaikannya benar-benar dikerjakan.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah audit harus dilakukan oleh orang dari luar?</h3>
+  <p>Tidak wajib. Audit internal yang rutin sudah sangat membantu. Pihak luar berguna bila Anda membutuhkan penilaian yang lebih objektif atau ada tuntutan pemeriksaan resmi.</p>
+
+  <h3>Bagaimana jika arsip kami masih kecil?</h3>
+  <p>Cukup gunakan versi ringkas daftar periksa dan lakukan setiap enam bulan. Yang terpenting adalah kebiasaan memeriksa, bukan panjangnya dokumen audit.</p>
+
+  <h3>Apa yang harus dilakukan jika menemukan dokumen hilang?</h3>
+  <p>Catat dokumen apa yang hilang, kapan terakhir terlihat, dan siapa yang terakhir menanganinya. Cari ke lokasi lain dan cadangan, lalu laporkan kepada pimpinan jika memang tidak ditemukan.</p>
+
+  <h3>Berapa lama audit tahunan biasanya berlangsung?</h3>
+  <p>Untuk arsip skala sekolah atau kantor kecil, audit dengan sampel biasanya selesai dalam satu sampai tiga hari kerja, termasuk penyusunan laporan.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-klasifikasi-arsip.html">Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</a></li>
+    <li><a href="artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li>
+    <li><a href="artikel-retensi-arsip.html">Retensi Arsip: Menentukan Jadwal Simpan dan Kapan Boleh Dimusnahkan</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

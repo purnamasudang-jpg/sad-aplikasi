@@ -1,69 +1,184 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mengelola Dokumen Keuangan Sekolah secara Tertib dan Aman | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Cara menata bukti transaksi, laporan, dan dokumen keuangan sekolah agar mudah ditelusuri saat pemeriksaan atau pelaporan.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-arsip-keuangan-sekolah.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Mengelola Dokumen Keuangan Sekolah secara Tertib dan Aman">
-<meta property="og:description" content="Cara menata bukti transaksi, laporan, dan dokumen keuangan sekolah agar mudah ditelusuri saat pemeriksaan atau pelaporan.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-arsip-keuangan-sekolah.html">
+<title>Mengelola Dokumen Keuangan Sekolah agar Tertib dan Aman | SAD</title>
+<meta name="description" content="Panduan menata dokumen keuangan sekolah secara digital: paket bukti per transaksi, struktur folder bulanan, pencocokan dengan pembukuan, keamanan, dan persiapan pemeriksaan.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Mengelola Dokumen Keuangan Sekolah secara Tertib dan Aman</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Dokumen keuangan adalah salah satu arsip yang paling sering diminta saat pelaporan, pemeriksaan, maupun akreditasi. Bukti pembelian, kuitansi, daftar hadir kegiatan, dan laporan pertanggungjawaban harus bisa ditunjukkan kapan pun dibutuhkan. Ketika dokumen tersebut tercecer, bendahara sekolah biasanya harus menghabiskan banyak waktu hanya untuk mengumpulkannya kembali.</p>
-<h2>Jenis dokumen keuangan yang perlu diarsipkan</h2>
-<ul><li>Bukti transaksi seperti kuitansi, nota, dan faktur.</li><li>Buku kas dan catatan pembukuan.</li><li>Laporan pertanggungjawaban kegiatan beserta lampirannya.</li><li>Surat keputusan atau surat tugas yang menjadi dasar pengeluaran.</li><li>Rekening koran atau bukti setoran jika ada.</li></ul>
-<h2>Susunan folder yang disarankan</h2>
-<p>Kelompokkan berdasarkan tahun anggaran, lalu bulan, lalu jenis dokumen. Dengan pola ini, satu kegiatan dapat ditelusuri dari rencana hingga laporan akhir. Pada setiap kegiatan, simpan bukti-buktinya dalam satu folder yang sama agar tidak berpencar.</p>
-<h2>Kebiasaan yang membantu</h2>
-<ul><li>Pindai bukti transaksi segera setelah transaksi selesai, jangan menumpuknya hingga akhir bulan.</li><li>Beri nama file dengan tanggal dan keterangan singkat, misalnya 2026-10-05 Kuitansi ATK Perpustakaan.</li><li>Catat nomor register pada setiap berkas agar dapat dicocokkan dengan pembukuan.</li><li>Simpan dokumen asli yang bertanda tangan basah di tempat yang aman dan terkunci.</li></ul>
-<h2>Contoh kasus: persiapan pelaporan akhir tahun</h2>
-<p>Seorang bendahara yang menyimpan bukti per bulan dalam folder digital dapat menyiapkan laporan akhir tahun dalam waktu singkat karena setiap bukti sudah terkelompok. Sebaliknya, bendahara yang hanya mengandalkan tumpukan kertas sering harus mencocokkan satu per satu, dan risiko ada bukti yang terlewat jauh lebih besar.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apakah dokumen keuangan digital dianggap sah? Keabsahan bergantung pada ketentuan yang berlaku di lembaga dan instansi pengawasnya, jadi dokumen asli sebaiknya tetap disimpan sesuai aturan. Versi digital berfungsi memudahkan pencarian dan menjadi cadangan jika dokumen fisik rusak.</p>
-<p>Siapa yang boleh mengakses folder keuangan? Batasi hanya kepada pihak yang berkepentingan, misalnya bendahara dan kepala sekolah, serta aktifkan catatan aktivitas untuk melihat siapa yang membuka berkas.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-arsip-kepegawaian.html">Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman</a></li><li><a href="/artikel-agenda-ekspedisi-surat.html">Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Digitalnya</a></li><li><a href="/artikel-dokumentasi-kegiatan.html">Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk</a></li></ul></div>
+  <h1>Mengelola Dokumen Keuangan Sekolah agar Tertib dan Aman</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Dokumen keuangan adalah arsip yang paling sering diperiksa. Setiap pembelian, pembayaran honor, perjalanan dinas, hingga laporan pertanggungjawaban meninggalkan jejak berupa bukti tertulis. Ketika bukti itu rapi, pemeriksaan berjalan lancar. Ketika bukti tercecer atau tidak lengkap, proses sederhana bisa berubah menjadi pekerjaan berminggu-minggu.</p>
+
+  <p>Artikel ini membahas cara menata dokumen keuangan sekolah secara digital agar tertib, mudah ditelusuri, dan aman dari kehilangan maupun akses yang tidak berhak.</p>
+
+  <h2>Jenis dokumen keuangan yang perlu diarsipkan</h2>
+  <table>
+    <thead>
+      <tr><th>Kelompok</th><th>Contoh</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Perencanaan</td><td>Rencana kegiatan dan anggaran, revisi anggaran</td></tr>
+      <tr><td>Bukti penerimaan</td><td>Tanda terima dana, bukti setoran, kuitansi penerimaan</td></tr>
+      <tr><td>Bukti pengeluaran</td><td>Kuitansi, nota, faktur, daftar penerima honor</td></tr>
+      <tr><td>Dokumen pendukung kegiatan</td><td>Surat tugas, undangan, daftar hadir, dokumentasi</td></tr>
+      <tr><td>Pembukuan</td><td>Buku kas, buku bank, rekapitulasi bulanan</td></tr>
+      <tr><td>Pelaporan</td><td>Laporan pertanggungjawaban, laporan realisasi</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Satu transaksi, satu paket bukti</h2>
+  <p>Prinsip yang paling membantu adalah menyimpan semua dokumen satu transaksi dalam satu paket. Misalnya, untuk satu kegiatan pelatihan, paketnya berisi surat tugas, daftar hadir, kuitansi, nota, dan foto kegiatan. Saat diperiksa, petugas cukup membuka satu paket, bukan mencari dokumen pendukung di lima tempat berbeda.</p>
+
+  <h2>Struktur folder yang disarankan</h2>
+<pre>KEUANGAN/
+  2026/
+    01-Januari/
+      001_Pelatihan-Guru/
+        surat-tugas.pdf
+        kuitansi.pdf
+        nota-konsumsi.pdf
+        daftar-hadir.pdf
+      002_Pembelian-ATK/
+        ...
+    02-Februari/
+      ...
+    Laporan-Bulanan/
+    Laporan-Tahunan/</pre>
+  <p>Pengelompokan per bulan memudahkan pencocokan dengan buku kas, dan nomor urut transaksi membuat setiap paket mudah dirujuk dalam pembukuan.</p>
+
+  <h2>Alur mendokumentasikan setiap transaksi</h2>
+  <ol>
+    <li><strong>Pastikan bukti lengkap saat transaksi terjadi.</strong> Minta nota atau kuitansi yang memuat tanggal, nama penjual, rincian barang, dan jumlah, bukan melengkapinya belakangan.</li>
+    <li><strong>Pindai bukti pada hari yang sama.</strong> Nota cetak termal cepat memudar, jadi pindai sebelum tulisannya hilang.</li>
+    <li><strong>Beri nama file yang jelas.</strong> Cantumkan tanggal, jenis bukti, dan keterangan singkat.</li>
+    <li><strong>Masukkan ke paket transaksi.</strong> Letakkan di folder transaksi yang sesuai.</li>
+    <li><strong>Catat di pembukuan.</strong> Cantumkan nomor transaksi agar buku kas dan arsip saling merujuk.</li>
+    <li><strong>Periksa kecocokan bulanan.</strong> Di akhir bulan, cocokkan jumlah bukti dengan catatan pembukuan.</li>
+  </ol>
+
+  <h2>Contoh penamaan file</h2>
+<pre>2026-01-15_kuitansi_pelatihan-guru.pdf
+2026-01-15_nota_konsumsi-pelatihan.pdf
+2026-01-20_bukti-setor_dana-operasional.pdf</pre>
+
+  <h2>Pencocokan bukti dengan pembukuan</h2>
+  <p>Arsip yang rapi baru berguna jika cocok dengan pembukuan. Setiap akhir bulan, lakukan pemeriksaan sederhana:</p>
+  <ul>
+    <li>Jumlah transaksi di buku kas sama dengan jumlah paket bukti di folder.</li>
+    <li>Nominal pada bukti sama dengan nominal yang dicatat.</li>
+    <li>Setiap pengeluaran memiliki dokumen pendukung kegiatan.</li>
+    <li>Tidak ada nomor transaksi yang terlewat.</li>
+  </ul>
+
+  <h2>Pembagian tugas yang jelas</h2>
+  <p>Idealnya, orang yang mencatat, menyetujui, dan menyimpan bukti tidak sepenuhnya orang yang sama. Pembagian tugas mengurangi risiko kesalahan dan membuat pengendalian lebih kuat. Di sekolah kecil yang petugasnya terbatas, minimal tetapkan siapa yang membuat bukti, siapa yang memeriksa, dan siapa pimpinan yang mengesahkan.</p>
+
+  <h2>Keamanan dokumen keuangan</h2>
+  <ul>
+    <li>Batasi akses folder keuangan hanya untuk bendahara, pimpinan, dan petugas yang berwenang.</li>
+    <li>Gunakan akun pribadi, bukan akun bersama, agar jejak perubahan jelas.</li>
+    <li>Jangan membagikan laporan keuangan lewat grup obrolan terbuka.</li>
+    <li>Cadangkan folder keuangan lebih sering dibanding arsip biasa, dan uji pemulihannya.</li>
+    <li>Lindungi file yang berisi data rekening atau data penerima honor dengan kata sandi.</li>
+  </ul>
+
+  <h2>Menyiapkan diri menghadapi pemeriksaan</h2>
+  <p>Pemeriksaan akan jauh lebih mudah jika Anda menyiapkan beberapa hal sejak awal tahun: daftar transaksi lengkap beserta nomor paketnya, rekapitulasi bulanan, dan catatan tentang dokumen yang belum lengkap beserta alasannya. Jangan membuat bukti baru untuk menutup kekurangan. Lebih baik mencatat apa adanya dan menjelaskan kronologinya.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Mengumpulkan bukti di akhir tahun.</strong> Banyak bukti hilang atau lupa konteksnya ketika dikumpulkan belakangan.</li>
+    <li><strong>Menyimpan dokumen terpisah dari pendukungnya.</strong> Kuitansi tanpa surat tugas sulit dibuktikan keperluannya.</li>
+    <li><strong>Hanya menyimpan foto nota yang buram.</strong> Pastikan hasil pindai terbaca jelas, terutama angka dan tanggal.</li>
+    <li><strong>Tidak ada rekap bulanan.</strong> Selisih kecil yang menumpuk bisa sulit dilacak di akhir tahun.</li>
+    <li><strong>Menimpa file lama.</strong> Jika ada revisi, simpan sebagai versi baru dengan keterangan.</li>
+  </ul>
+
+  <h2>Contoh kasus: nota yang memudar</h2>
+  <p>Sebuah sekolah menyimpan nota belanja dalam bentuk kertas termal di dalam map. Setahun kemudian, saat pemeriksaan, tulisan pada sebagian nota sudah memudar dan tidak terbaca. Setelah itu, sekolah membuat kebiasaan memindai setiap nota pada hari yang sama dan menyimpannya dalam paket transaksi, sehingga bukti tetap jelas walau kertas aslinya rusak.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> satu transaksi satu paket bukti, pindai pada hari yang sama, cocokkan dengan pembukuan setiap bulan, batasi akses, dan cadangkan secara rutin.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah bukti digital sudah cukup tanpa fisik?</h3>
+  <p>Itu tergantung aturan pemeriksa dan instansi Anda. Selama belum ada kepastian, simpan dokumen asli sesuai masa simpannya dan jadikan salinan digital sebagai pendamping serta cadangan.</p>
+
+  <h3>Berapa lama dokumen keuangan disimpan?</h3>
+  <p>Ikuti jadwal retensi dan ketentuan pemeriksaan yang berlaku untuk instansi Anda. Dokumen keuangan biasanya memiliki masa simpan yang lebih panjang dibanding surat biasa.</p>
+
+  <h3>Bagaimana jika ada bukti yang hilang?</h3>
+  <p>Catat kejadiannya, minta duplikat dari penerbit bukti bila memungkinkan, dan laporkan kepada pimpinan. Jangan membuat bukti pengganti tanpa dasar.</p>
+
+  <h3>Apakah satu orang boleh memegang semua dokumen keuangan?</h3>
+  <p>Sebaiknya tidak. Bagi peran dan sediakan petugas pengganti agar proses tidak bergantung pada satu orang saja.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-scan-dokumen.html">Scan Dokumen: Tips Memindai Dokumen agar Hasilnya Jelas dan Bermanfaat</a></li>
+    <li><a href="artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li>
+    <li><a href="artikel-retensi-arsip.html">Retensi Arsip: Menentukan Jadwal Simpan dan Kapan Boleh Dimusnahkan</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

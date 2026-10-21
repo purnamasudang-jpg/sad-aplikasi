@@ -1,77 +1,196 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Langkah Digitalisasi Arsip Kertas Lama secara Bertahap | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Panduan bertahap mengubah arsip kertas menjadi arsip digital: memilah, memindai, menamai, dan menyimpan dengan rapi.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-digitalisasi-arsip-lama.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Langkah Digitalisasi Arsip Kertas Lama secara Bertahap">
-<meta property="og:description" content="Panduan bertahap mengubah arsip kertas menjadi arsip digital: memilah, memindai, menamai, dan menyimpan dengan rapi.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-digitalisasi-arsip-lama.html">
+<title>Langkah Digitalisasi Arsip Kertas Lama dari Awal sampai Akhir | SAD</title>
+<meta name="description" content="Langkah digitalisasi arsip kertas lama: inventarisasi, prioritas, peralatan, persiapan dokumen, pengaturan pindai, kontrol kualitas, pencadangan, dan nasib dokumen fisik.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Langkah Digitalisasi Arsip Kertas Lama secara Bertahap</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Banyak lembaga memiliki tumpukan arsip kertas bertahun-tahun yang ingin didigitalkan, tetapi bingung harus mulai dari mana. Kuncinya adalah bekerja bertahap, tidak mencoba menyelesaikan semuanya sekaligus. Berikut urutan yang dapat dipakai.</p>
-<h2>1. Pilah dan tentukan prioritas</h2>
-<p>Jangan memindai semua dokumen. Pisahkan mana yang masih bernilai guna, mana yang sudah melewati masa retensi, dan mana yang rusak. Dahulukan dokumen yang paling sering dicari atau paling penting, seperti surat keputusan dan dokumen keuangan.</p>
-<h2>2. Siapkan dokumen</h2>
-<ul><li>Lepaskan staples dan klip agar kertas dapat dipindai rata.</li><li>Luruskan lipatan dan bersihkan debu.</li><li>Beri penanda pada dokumen yang halamannya banyak agar urutannya tidak tertukar.</li></ul>
-<h2>3. Pindai dengan pengaturan yang tepat</h2>
-<p>Gunakan resolusi sekitar 200 sampai 300 dpi untuk teks. Pastikan hasil tidak miring dan terbaca jelas. Simpan sebagai PDF, dan gabungkan halaman dalam satu dokumen menjadi satu file.</p>
-<h2>4. Beri nama dan nomor register</h2>
-<p>Terapkan aturan penamaan yang sama untuk semua file. Catat nomor register atau nomor surat agar dokumen mudah dilacak, dan simpan dalam folder sesuai klasifikasi.</p>
-<h2>5. Periksa hasilnya</h2>
-<p>Buka beberapa file secara acak untuk memastikan semua halaman terbawa dan terbaca. Dokumen yang gagal dipindai dengan baik sebaiknya diulang selagi aslinya masih tersedia.</p>
-<h2>6. Cadangkan dan tetapkan nasib dokumen asli</h2>
-<p>Buat cadangan di lebih dari satu tempat sebelum mengambil keputusan apa pun tentang dokumen kertas. Dokumen asli yang bernilai hukum tetap harus disimpan. Untuk dokumen yang sudah melewati masa retensi, ikuti prosedur pemusnahan yang berlaku di lembaga Anda.</p>
-<h2>Bekerja sedikit demi sedikit</h2>
-<p>Targetkan jumlah kecil yang realistis, misalnya satu lemari per minggu. Kemajuan yang stabil jauh lebih berhasil daripada proyek besar yang berhenti di tengah jalan.</p>
-<h2>Contoh rencana kerja untuk satu lemari arsip</h2>
-<p>Misalkan sebuah lemari berisi arsip keuangan lima tahun. Minggu pertama dipakai untuk memilah dan menyiapkan dokumen. Minggu kedua memindai satu tahun arsip. Minggu ketiga menamai dan memeriksa hasilnya. Minggu keempat mencatat ke register dan membuat cadangan. Dengan ritme ini, lima tahun arsip bisa selesai dalam beberapa bulan tanpa mengganggu pekerjaan harian.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apakah perlu pemindai khusus? Tidak harus. Untuk jumlah kecil, kamera ponsel dengan aplikasi pemindai sudah memadai, asalkan pencahayaan merata dan kertas rata. Untuk jumlah besar, pemindai dengan pengumpan otomatis akan menghemat waktu.</p>
-<p>Bolehkah dokumen asli langsung dibuang setelah dipindai? Jangan terburu-buru. Pastikan hasil pindaian lengkap, cadangan sudah ada, dan dokumen tersebut tidak memiliki nilai hukum yang mengharuskan fisiknya disimpan.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-kesalahan-arsip-digital.html">Delapan Kesalahan Umum dalam Mengelola Arsip Digital</a></li><li><a href="/artikel-arsip-keuangan-sekolah.html">Mengelola Dokumen Keuangan Sekolah secara Tertib dan Aman</a></li><li><a href="/artikel-arsip-kepegawaian.html">Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman</a></li></ul></div>
+  <h1>Langkah Digitalisasi Arsip Kertas Lama dari Awal sampai Akhir</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Hampir setiap kantor dan sekolah memiliki gudang atau lemari berisi arsip kertas lama yang menguning dan jarang dibuka. Dokumen itu mungkin masih penting, tetapi mencarinya sulit, kertasnya rapuh, dan risikonya besar: terkena lembap, rayap, atau musibah lain. Digitalisasi adalah cara mengubah arsip kertas menjadi file digital agar lebih aman, mudah dicari, dan mudah dibagikan.</p>
+
+  <p>Artikel ini memandu langkah demi langkah dari persiapan sampai hasil akhir, termasuk cara menentukan prioritas, memilih pengaturan pindai, dan menjaga kualitas.</p>
+
+  <h2>Digitalisasi bukan sekadar memotret dokumen</h2>
+  <p>Foto dokumen dari ponsel mungkin cukup untuk keperluan cepat, tetapi untuk arsip yang akan dijaga jangka panjang diperlukan proses yang lebih terkontrol: pemindaian dengan kualitas konsisten, penamaan yang seragam, pencatatan metadata, dan penyimpanan dengan cadangan. Tanpa itu, Anda hanya memindahkan kekacauan dari kertas ke komputer.</p>
+
+  <h2>Langkah 1: inventarisasi</h2>
+  <p>Sebelum memindai, ketahui dulu apa yang Anda miliki.</p>
+  <ul>
+    <li>Hitung perkiraan jumlah dokumen dan lembarnya.</li>
+    <li>Catat jenis dokumen dan rentang tahunnya.</li>
+    <li>Periksa kondisi fisik: kertas rapuh, berjamur, terlipat, atau berukuran khusus.</li>
+    <li>Tandai dokumen yang sudah melewati masa retensi dan mungkin tidak perlu dipindai.</li>
+  </ul>
+
+  <h2>Langkah 2: tentukan prioritas</h2>
+  <p>Tidak semua arsip harus dipindai sekaligus. Mulailah dari yang paling bernilai atau paling berisiko.</p>
+  <table>
+    <thead>
+      <tr><th>Prioritas</th><th>Contoh</th><th>Alasan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tinggi</td><td>Dokumen legal, ijazah, surat keputusan, aset</td><td>Bernilai hukum dan sulit digantikan</td></tr>
+      <tr><td>Sedang</td><td>Laporan tahunan, dokumen keuangan</td><td>Sering dicari dan penting untuk bukti</td></tr>
+      <tr><td>Rendah</td><td>Surat rutin, undangan, edaran lama</td><td>Jarang dibutuhkan dan masa simpannya pendek</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Langkah 3: siapkan peralatan</h2>
+  <table>
+    <thead>
+      <tr><th>Peralatan</th><th>Fungsi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Pemindai (scanner) datar atau berumpan otomatis</td><td>Menghasilkan gambar yang rata dan konsisten</td></tr>
+      <tr><td>Komputer dengan ruang penyimpanan cukup</td><td>Menampung file hasil pindai yang berukuran besar</td></tr>
+      <tr><td>Hard disk eksternal</td><td>Cadangan selama proses berlangsung</td></tr>
+      <tr><td>Sarung tangan dan kuas lembut</td><td>Membersihkan debu dan menjaga kertas rapuh</td></tr>
+      <tr><td>Penjepit dan pembatas</td><td>Menjaga urutan lembar dan dokumen</td></tr>
+    </tbody>
+  </table>
+  <p>Jika jumlah dokumen sangat banyak, pertimbangkan menggunakan pemindai berumpan otomatis. Untuk dokumen rapuh atau bersampul tebal, gunakan pemindai datar agar kertas tidak rusak.</p>
+
+  <h2>Langkah 4: siapkan dokumen</h2>
+  <ul>
+    <li>Lepaskan staples dan klip logam yang bisa merusak pemindai atau kertas.</li>
+    <li>Luruskan lipatan dan bersihkan debu.</li>
+    <li>Urutkan lembar sesuai aslinya.</li>
+    <li>Pisahkan dokumen yang berbeda dengan lembar pembatas.</li>
+    <li>Foto atau catat dokumen yang sangat rapuh sebelum dipindai.</li>
+  </ul>
+
+  <h2>Langkah 5: atur pengaturan pindai</h2>
+  <p>Pengaturan umum yang seimbang antara kejelasan dan ukuran file untuk dokumen teks adalah sebagai berikut. Sesuaikan jika dokumen Anda berisi gambar atau tulisan sangat kecil.</p>
+  <table>
+    <thead>
+      <tr><th>Pengaturan</th><th>Saran umum</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Resolusi</td><td>Sekitar 300 dpi untuk dokumen teks</td></tr>
+      <tr><td>Warna</td><td>Hitam-putih atau skala abu-abu untuk teks biasa, berwarna untuk dokumen bercap atau bertanda tangan basah</td></tr>
+      <tr><td>Format</td><td>PDF, dan PDF yang teksnya dapat dicari bila memungkinkan</td></tr>
+      <tr><td>Lembar bolak-balik</td><td>Pindai kedua sisi bila ada isi di kedua sisinya</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Langkah 6: pindai, periksa, dan beri nama</h2>
+  <ol>
+    <li>Pindai satu dokumen penuh, lalu periksa halaman per halaman.</li>
+    <li>Pastikan tidak ada halaman terlewat, miring, terpotong, atau buram.</li>
+    <li>Beri nama file sesuai pola yang seragam.</li>
+    <li>Simpan di folder sesuai klasifikasi, bukan di folder sementara.</li>
+    <li>Catat di register bahwa dokumen tersebut sudah dialihmediakan, lengkap dengan tanggal dan petugasnya.</li>
+  </ol>
+
+  <h2>Kontrol kualitas</h2>
+  <p>Ambil sampel acak, misalnya satu dari setiap sepuluh dokumen, lalu periksa kembali. Hal yang dicek: keterbacaan, kelengkapan halaman, kecocokan nama file, dan lokasi penyimpanan. Jika sampel menunjukkan banyak kesalahan, hentikan dulu proses dan perbaiki cara kerjanya sebelum melanjutkan.</p>
+
+  <h2>Bagaimana dengan dokumen fisik setelah dipindai?</h2>
+  <p>Jangan langsung membuang atau memusnahkan dokumen asli. Dokumen yang bernilai hukum, memiliki tanda tangan asli, atau masih dalam masa simpan sebaiknya tetap dipertahankan. Keputusan memusnahkan dokumen fisik harus mengikuti jadwal retensi dan prosedur pemusnahan instansi Anda, dengan berita acara.</p>
+
+  <h2>Mengamankan hasil digitalisasi</h2>
+  <ul>
+    <li>Terapkan aturan backup 3-2-1 untuk hasil pindai.</li>
+    <li>Batasi akses ke folder dokumen sensitif.</li>
+    <li>Simpan file dalam format yang umum agar tetap bisa dibuka di masa depan.</li>
+    <li>Uji pemulihan dari cadangan secara berkala.</li>
+  </ul>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Memindai tanpa rencana.</strong> Hasilnya tumpukan file bernama acak yang sama sulitnya dicari seperti kertasnya.</li>
+    <li><strong>Resolusi terlalu rendah.</strong> Tulisan kecil menjadi tidak terbaca dan harus dipindai ulang.</li>
+    <li><strong>Tidak ada cadangan.</strong> File hasil pindai yang hanya ada di satu komputer berisiko hilang.</li>
+    <li><strong>Memusnahkan dokumen asli terlalu cepat.</strong> Hasil pindai bisa rusak atau tidak diakui untuk keperluan tertentu.</li>
+    <li><strong>Mengerjakan sekaligus.</strong> Pekerjaan besar sebaiknya dipecah per kelompok dokumen dan per minggu.</li>
+  </ul>
+
+  <h2>Contoh kasus: arsip tahun 1990-an</h2>
+  <p>Sebuah sekolah menemukan dokumen dasar pendirian dan data siswa lama di lemari besi yang mulai berjamur. Petugas membersihkan dokumen, memprioritaskan surat keputusan dan data induk, lalu memindainya dengan resolusi seragam. Dalam delapan minggu, bagian terpenting sudah terdigitalisasi dan tercadangkan di dua tempat. Dokumen asli tetap disimpan di ruang kering sampai ada keputusan resmi mengenai masa simpannya.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> inventarisasi, tentukan prioritas, siapkan dokumen dan peralatan, pindai dengan pengaturan seragam, periksa kualitas, beri nama dan catat, lalu cadangkan.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Berapa lama waktu yang dibutuhkan?</h3>
+  <p>Tergantung jumlah dan kondisi dokumen. Hitung dari uji coba: pindai 50 lembar, catat waktunya termasuk persiapan dan pemeriksaan, lalu kalikan untuk memperkirakan total pekerjaan.</p>
+
+  <h3>Apakah perlu pemindai khusus?</h3>
+  <p>Untuk jumlah kecil, pemindai meja biasa sudah cukup. Untuk ribuan lembar, pemindai berumpan otomatis akan sangat menghemat waktu.</p>
+
+  <h3>Apakah hasil pindai bisa dicari lewat kata kunci?</h3>
+  <p>Bisa, jika file diproses dengan pengenalan teks (OCR). Hasilnya tidak selalu sempurna, terutama pada dokumen lama atau tulisan tangan, jadi tetap beri nama file yang jelas.</p>
+
+  <h3>Apakah dokumen hasil pindai sah menggantikan aslinya?</h3>
+  <p>Itu tergantung ketentuan hukum dan aturan instansi. Jangan memusnahkan dokumen asli sebelum memastikan ketentuannya.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-scan-dokumen.html">Scan Dokumen: Tips Memindai Dokumen agar Hasilnya Jelas dan Bermanfaat</a></li>
+    <li><a href="artikel-format-file-arsip.html">Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar?</a></li>
+    <li><a href="artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

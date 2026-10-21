@@ -1,68 +1,185 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Panduan mengelola dokumen kepegawaian secara digital, termasuk cara melindungi data pribadi pegawai.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-arsip-kepegawaian.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman">
-<meta property="og:description" content="Panduan mengelola dokumen kepegawaian secara digital, termasuk cara melindungi data pribadi pegawai.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-arsip-kepegawaian.html">
+<title>Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman | SAD</title>
+<meta name="description" content="Cara menyimpan berkas kepegawaian digital dengan aman: jenis dokumen, struktur folder per pegawai, penamaan, daftar periksa kelengkapan, pembatasan akses, dan cadangan.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Berkas kepegawaian memuat informasi yang sangat pribadi: identitas, riwayat pendidikan, riwayat jabatan, surat keputusan, hingga data keluarga. Karena itu, pengelolaannya harus lebih hati-hati dibanding arsip umum. Di sisi lain, berkas ini juga paling sering dibutuhkan, misalnya untuk kenaikan pangkat, mutasi, atau pengajuan tunjangan.</p>
-<h2>Dokumen yang biasanya ada dalam berkas pegawai</h2>
-<ul><li>Surat keputusan pengangkatan dan penempatan.</li><li>Ijazah, sertifikat pelatihan, dan dokumen pendidikan.</li><li>Riwayat jabatan dan kenaikan pangkat.</li><li>Surat tugas dan penilaian kinerja.</li><li>Dokumen pendukung administrasi lainnya.</li></ul>
-<h2>Satu folder untuk satu pegawai</h2>
-<p>Cara paling mudah adalah membuat satu folder per pegawai, lalu membaginya menjadi subfolder berdasarkan jenis dokumen. Gunakan penamaan yang konsisten, misalnya nama pegawai diikuti nomor induk internal lembaga, agar tidak tertukar antara dua orang bernama sama.</p>
-<h2>Melindungi data pribadi</h2>
-<ul><li>Batasi akses hanya kepada petugas kepegawaian dan pimpinan.</li><li>Hindari membagikan berkas lengkap lewat grup percakapan.</li><li>Jika harus mengirim dokumen, kirim hanya lembar yang diperlukan.</li><li>Simpan cadangan di media yang dilindungi kata sandi.</li><li>Tinjau secara berkala siapa saja yang masih memiliki akses.</li></ul>
-<h2>Contoh kasus: pengajuan kenaikan pangkat</h2>
-<p>Ketika seorang guru mengajukan kenaikan pangkat, petugas harus mengumpulkan SK terakhir, ijazah, dan sertifikat. Jika semuanya sudah dipindai dan tersimpan dalam folder pegawai tersebut, berkas dapat dilengkapi dalam hitungan menit. Tanpa itu, pencarian dokumen bisa berlangsung berhari-hari dan sering menimbulkan keterlambatan.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Bagaimana jika ada dokumen pegawai yang sudah tidak berlaku? Jangan dibuang begitu saja. Pindahkan ke folder riwayat atau inaktif sesuai jadwal retensi lembaga. Bagaimana mengelola dokumen pegawai yang sudah pensiun atau pindah? Tetap simpan sesuai masa retensi, tetapi batasi aksesnya lebih ketat.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-agenda-ekspedisi-surat.html">Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Digitalnya</a></li><li><a href="/artikel-dokumentasi-kegiatan.html">Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk</a></li><li><a href="/artikel-pemusnahan-arsip.html">Prosedur Umum Pemusnahan Arsip yang Sudah Melewati Masa Retensi</a></li></ul></div>
+  <h1>Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Berkas kepegawaian adalah salah satu arsip yang paling sensitif di sekolah dan kantor. Di dalamnya ada identitas, riwayat pendidikan, riwayat jabatan, dan dokumen pribadi lain yang tidak boleh dibaca sembarang orang. Di sisi lain, berkas ini juga paling sering dibutuhkan: untuk administrasi kenaikan pangkat, pengajuan tunjangan, pemeriksaan, hingga pengisian data.</p>
+
+  <p>Artikel ini membahas cara menyimpan berkas pegawai secara digital supaya tetap lengkap, mudah dicari, dan terlindungi.</p>
+
+  <h2>Jenis dokumen dalam berkas pegawai</h2>
+  <table>
+    <thead>
+      <tr><th>Kelompok</th><th>Contoh dokumen</th><th>Tingkat kerahasiaan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Identitas</td><td>Kartu identitas, kartu keluarga, pas foto</td><td>Tinggi</td></tr>
+      <tr><td>Pendidikan</td><td>Ijazah, transkrip, sertifikat pelatihan</td><td>Sedang</td></tr>
+      <tr><td>Pengangkatan dan jabatan</td><td>Surat keputusan, surat tugas, riwayat jabatan</td><td>Sedang</td></tr>
+      <tr><td>Penilaian kinerja</td><td>Hasil penilaian, catatan evaluasi</td><td>Tinggi</td></tr>
+      <tr><td>Keuangan pribadi</td><td>Data rekening, potongan, tunjangan</td><td>Tinggi</td></tr>
+      <tr><td>Kesehatan dan cuti</td><td>Surat keterangan, pengajuan cuti</td><td>Tinggi</td></tr>
+    </tbody>
+  </table>
+  <p>Penggolongan tingkat kerahasiaan membantu Anda menentukan siapa yang boleh mengakses setiap kelompok. Tidak semua orang yang boleh melihat riwayat jabatan perlu melihat data keuangan pribadi atau data kesehatan.</p>
+
+  <h2>Struktur folder yang disarankan</h2>
+  <p>Satu folder untuk satu pegawai, dengan subfolder per kelompok dokumen:</p>
+<pre>KEPEGAWAIAN/
+  001_Nama-Pegawai/
+    01-Identitas/
+    02-Pendidikan/
+    03-Pengangkatan-Jabatan/
+    04-Penilaian-Kinerja/
+    05-Cuti-dan-Izin/
+  002_Nama-Pegawai/
+    ...</pre>
+  <p>Nomor urut di depan nama pegawai menjaga urutan tetap konsisten. Jika ada dua pegawai dengan nama sama, nomor urut membedakannya.</p>
+
+  <h2>Penamaan file</h2>
+  <p>Gunakan pola yang sama untuk semua pegawai agar pencarian mudah:</p>
+<pre>2026-03-01_sk-pengangkatan.pdf
+2024-07-15_ijazah-s1.pdf
+2026-06-20_cuti-tahunan.pdf</pre>
+  <p>Tanggal di depan membuat dokumen terurut kronologis, sehingga riwayat pegawai terbaca dari atas ke bawah.</p>
+
+  <h2>Memastikan kelengkapan berkas</h2>
+  <p>Buat daftar periksa standar yang dipakai untuk semua pegawai, lalu tandai dokumen mana yang sudah ada dan mana yang masih kurang.</p>
+  <table>
+    <thead>
+      <tr><th>Dokumen</th><th>Ada?</th><th>Tanggal diperbarui</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Identitas</td><td>&#9633;</td><td>&nbsp;</td></tr>
+      <tr><td>Ijazah terakhir</td><td>&#9633;</td><td>&nbsp;</td></tr>
+      <tr><td>Surat pengangkatan</td><td>&#9633;</td><td>&nbsp;</td></tr>
+      <tr><td>Riwayat jabatan terbaru</td><td>&#9633;</td><td>&nbsp;</td></tr>
+      <tr><td>Penilaian kinerja tahun berjalan</td><td>&#9633;</td><td>&nbsp;</td></tr>
+    </tbody>
+  </table>
+  <p>Lakukan pemeriksaan kelengkapan sekali setahun, misalnya di awal tahun anggaran, supaya kekurangan ketahuan sebelum dibutuhkan mendadak.</p>
+
+  <h2>Membatasi akses</h2>
+  <p>Terapkan aturan "perlu tahu". Hanya petugas kepegawaian dan pimpinan yang boleh membuka seluruh berkas. Pegawai yang bersangkutan boleh melihat berkasnya sendiri bila diperlukan, tetapi tidak berkas orang lain. Beberapa langkah praktis:</p>
+  <ul>
+    <li>Simpan folder kepegawaian di lokasi terpisah dari arsip umum.</li>
+    <li>Berikan akun tersendiri kepada setiap petugas yang berhak, jangan memakai akun bersama.</li>
+    <li>Aktifkan catatan aktivitas supaya terlihat siapa yang membuka berkas.</li>
+    <li>Jangan mengirim berkas lengkap lewat grup obrolan, cukup kirim dokumen yang diminta saja.</li>
+  </ul>
+
+  <h2>Memperbarui berkas secara berkala</h2>
+  <p>Berkas kepegawaian harus hidup, bukan sekadar tempat menyimpan dokumen lama. Perbarui setiap ada kejadian penting: pengangkatan baru, kenaikan jabatan, pelatihan, perubahan data keluarga, atau pensiun. Simpan versi lama dengan keterangan, jangan ditimpa, agar riwayatnya tetap terbaca.</p>
+
+  <h2>Menjaga ketersediaan lewat cadangan</h2>
+  <p>Kehilangan berkas pegawai bisa menyulitkan banyak urusan. Cadangkan folder kepegawaian secara rutin, simpan salinannya di media dan lokasi berbeda, dan lindungi cadangan itu sama ketatnya dengan data utama.</p>
+
+  <h2>Saat pegawai pindah atau berhenti</h2>
+  <ul>
+    <li>Pastikan berkasnya lengkap dan terakhir diperbarui.</li>
+    <li>Cabut akses akun pegawai tersebut ke sistem arsip.</li>
+    <li>Pindahkan berkas ke bagian arsip inaktif sesuai jadwal retensi.</li>
+    <li>Jika berkas harus diserahkan ke instansi lain, serahkan salinan sesuai prosedur dan catat serah terimanya.</li>
+  </ul>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Menyimpan berkas pegawai di komputer pribadi petugas.</strong> Saat petugas pindah atau komputer rusak, berkas ikut hilang.</li>
+    <li><strong>Memberi akses ke semua staf.</strong> Informasi gaji atau penilaian kinerja seharusnya tidak terbuka luas.</li>
+    <li><strong>Nama file asal-asalan.</strong> Nama seperti "scan1" atau "ijazah baru" menyulitkan pencarian.</li>
+    <li><strong>Tidak ada pembaruan.</strong> Berkas yang berhenti di data tiga tahun lalu tidak bisa dipakai untuk kebutuhan terkini.</li>
+    <li><strong>Memusnahkan atau menghapus tanpa mengikuti jadwal retensi.</strong> Tentukan dulu masa simpannya sebelum mengambil keputusan.</li>
+  </ul>
+
+  <h2>Contoh kasus: berkas yang diminta mendadak</h2>
+  <p>Sebuah kantor menerima permintaan mendadak untuk melengkapi data pegawai yang akan mengikuti seleksi jabatan. Petugas sebelumnya menyimpan dokumen di beberapa folder dengan nama berbeda-beda, sehingga pengumpulan memakan waktu dua hari. Setelah folder dirapikan per pegawai dengan daftar periksa kelengkapan, permintaan serupa berikutnya selesai dalam beberapa jam, dan petugas juga bisa langsung melihat dokumen apa yang masih kurang.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> satu folder per pegawai dengan subfolder yang seragam, penamaan konsisten, akses dibatasi, daftar periksa kelengkapan tahunan, dan cadangan yang aman.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah berkas fisik harus tetap disimpan setelah dipindai?</h3>
+  <p>Umumnya ya, terutama dokumen asli yang bernilai hukum. Keputusan menyimpan atau memusnahkan fisik setelah dialihmediakan perlu mengikuti ketentuan instansi dan jadwal retensi.</p>
+
+  <h3>Boleh tidak pegawai melihat berkasnya sendiri?</h3>
+  <p>Pada umumnya boleh, melalui petugas yang berwenang. Yang perlu dihindari adalah akses ke berkas pegawai lain.</p>
+
+  <h3>Bagaimana mengelola dokumen yang berisi data keluarga pegawai?</h3>
+  <p>Perlakukan sama dengan data pribadi lain: simpan di folder dengan akses terbatas dan jangan dibagikan di luar keperluan administrasi.</p>
+
+  <h3>Apakah perlu enkripsi untuk folder kepegawaian?</h3>
+  <p>Sangat disarankan jika berkas disimpan di laptop atau perangkat yang bisa dibawa keluar. Enkripsi membuat data tetap tidak terbaca walau perangkat hilang.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li>
+    <li><a href="artikel-peran-admin-operator.html">Membagi Peran Pengguna: Administrator dan Operator</a></li>
+    <li><a href="artikel-retensi-arsip.html">Retensi Arsip: Menentukan Jadwal Simpan dan Kapan Boleh Dimusnahkan</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>
