@@ -1,72 +1,178 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Cara menamai file dokumen secara konsisten agar mudah diurutkan, dicari, dan dipahami tanpa harus membukanya.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-penamaan-file.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital">
-<meta property="og:description" content="Cara menamai file dokumen secara konsisten agar mudah diurutkan, dicari, dan dipahami tanpa harus membukanya.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-penamaan-file.html">
+<title>Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital | SAD</title>
+<meta name="description" content="Aturan penamaan file dokumen untuk arsip digital: pola nama yang konsisten, contoh nama baik dan buruk, karakter yang dihindari, penulisan tanggal dan versi, serta cara menyepakatinya.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Nama file sering dianggap sepele, padahal inilah petunjuk pertama saat mencari dokumen. File bernama scan001 atau dokumen baru final2 tidak memberi informasi apa pun. Dengan aturan penamaan yang konsisten, ribuan file tetap mudah dikelola.</p>
-<h2>Komponen nama file yang disarankan</h2>
-<ul><li>Tanggal dalam format tahun-bulan-tanggal, misalnya 2026-10-20, agar file otomatis terurut menurut waktu.</li><li>Jenis dokumen, misalnya Surat Keluar, Notulen, atau SK.</li><li>Nomor register atau nomor surat jika ada.</li><li>Perihal singkat yang menjelaskan isi dokumen.</li></ul>
-<p>Contoh: 2026-10-20 Surat Keluar 045 Undangan Rapat Komite. Dari nama itu saja, siapa pun sudah tahu isi dan waktunya.</p>
-<h2>Hal yang sebaiknya dihindari</h2>
-<ul><li>Karakter khusus seperti garis miring, tanda tanya, atau tanda bintang karena dapat menimbulkan masalah di sebagian sistem.</li><li>Nama yang terlalu panjang, usahakan di bawah sekitar seratus karakter.</li><li>Kata yang ambigu seperti final, baru, atau revisi tanpa keterangan tanggal.</li><li>Singkatan yang hanya dipahami oleh satu orang.</li></ul>
-<h2>Menangani versi dokumen</h2>
-<p>Jika dokumen mengalami revisi, tambahkan nomor versi di akhir nama, misalnya v1, v2, dan v3. Simpan versi akhir yang resmi dengan penanda yang jelas, dan jangan menimpa versi lama jika masih diperlukan sebagai bukti proses.</p>
-<h2>Biasakan sejak awal</h2>
-<p>Aturan penamaan paling efektif jika disepakati bersama dan ditulis dalam satu halaman panduan internal. Bagikan contoh yang benar dan salah kepada seluruh petugas. Saat mengunggah dokumen ke aplikasi arsip, isi kolom nama atau keterangan dengan pola yang sama. Kebiasaan kecil ini akan sangat terasa manfaatnya ketika jumlah dokumen sudah mencapai ribuan.</p>
-<h2>Contoh perbandingan nama file</h2>
-<p>Bandingkan dua nama berikut. Nama pertama: scan_baru2.pdf. Nama kedua: 2026-09-14 Notulen Rapat Dewan Guru Semester Ganjil.pdf. Nama pertama tidak memberi petunjuk apa pun dan membuat petugas harus membuka file satu per satu. Nama kedua langsung menjelaskan jenis, topik, dan waktunya, serta otomatis terurut di dalam folder.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Perlukah memakai huruf besar semua? Tidak. Gunakan huruf kapital di awal kata seperti kalimat biasa agar mudah dibaca. Bolehkah memakai spasi? Boleh, selama aplikasi yang digunakan mendukungnya. Jika file akan dibagikan lewat tautan web, garis bawah atau tanda hubung lebih aman sebagai pengganti spasi.</p>
-<p>Bagaimana jika nama file menjadi terlalu panjang? Pindahkan sebagian informasi ke folder. Misalnya jenis dokumen dan tahun cukup berada pada nama folder, sehingga nama file bisa lebih ringkas.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li><li><a href="/artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li><li><a href="/artikel-nomor-register.html">Nomor Register Dokumen: Fungsi dan Cara Membuatnya</a></li></ul></div>
+  <h1>Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Buka folder dokumen di komputer kantor mana pun, dan Anda mungkin akan menemukan nama seperti "scan1.pdf", "surat fix.docx", "Surat fix revisi 2 (baru).docx", atau "laporan final final.pdf". Pembuatnya paham isinya saat itu, tetapi enam bulan kemudian tidak ada yang ingat. Nama file adalah cara paling sederhana sekaligus paling sering diabaikan untuk membuat arsip mudah dicari.</p>
+
+  <p>Artikel ini membahas aturan penamaan yang praktis, contoh nama yang baik dan buruk, serta cara membuat seluruh petugas mengikutinya.</p>
+
+  <h2>Ciri nama file yang baik</h2>
+  <ul>
+    <li><strong>Deskriptif.</strong> Orang yang belum pernah melihat file itu bisa menebak isinya dari namanya.</li>
+    <li><strong>Konsisten.</strong> Polanya sama untuk semua dokumen sejenis.</li>
+    <li><strong>Terurut.</strong> Saat diurutkan, dokumen tersusun secara masuk akal, misalnya kronologis.</li>
+    <li><strong>Ringkas.</strong> Tidak terlalu panjang, cukup memuat informasi kunci.</li>
+    <li><strong>Aman dipakai di sistem apa pun.</strong> Tidak mengandung karakter yang menimbulkan masalah di komputer atau saat diunggah.</li>
+  </ul>
+
+  <h2>Pola yang mudah dipakai</h2>
+  <p>Salah satu pola yang sederhana dan fleksibel adalah:</p>
+<pre>TANGGAL_JENIS-NOMOR_PERIHAL-SINGKAT.pdf
+
+2026-10-14_sm-0042_undangan-sosialisasi-kurikulum.pdf
+2026-10-16_sk-0108_balasan-undangan-sosialisasi.pdf
+2026-09-30_laporan_realisasi-dana-triwulan-3.pdf</pre>
+  <p>Penjelasannya:</p>
+  <table>
+    <thead>
+      <tr><th>Bagian</th><th>Isi</th><th>Alasan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tanggal</td><td>Tahun-bulan-tanggal (2026-10-14)</td><td>Terurut kronologis secara otomatis</td></tr>
+      <tr><td>Jenis dan nomor</td><td>Kode jenis dan nomor register</td><td>Menghubungkan file dengan catatan di buku register</td></tr>
+      <tr><td>Perihal singkat</td><td>Dua sampai lima kata kunci</td><td>Memudahkan pengenalan dan pencarian</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Mengapa tanggal ditulis tahun dulu?</h2>
+  <p>Format 2026-10-14 membuat daftar file terurut dari yang terlama ke terbaru tanpa perlu pengaturan tambahan. Jika ditulis 14-10-2026, file akan terurut berdasarkan tanggal dulu sehingga dokumen bulan dan tahun berbeda tercampur.</p>
+
+  <h2>Contoh nama yang buruk dan perbaikannya</h2>
+  <table>
+    <thead>
+      <tr><th>Nama buruk</th><th>Masalah</th><th>Perbaikan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>scan1.pdf</td><td>Tidak menjelaskan apa-apa</td><td>2026-10-14_sm-0042_undangan-rapat.pdf</td></tr>
+      <tr><td>Surat Undangan Rapat Dinas Pendidikan Kabupaten Tentang Sosialisasi Kurikulum Terbaru Tahun 2026 FIX.pdf</td><td>Terlalu panjang dan ada kata "FIX"</td><td>2026-10-14_sm-0042_undangan-sosialisasi-kurikulum.pdf</td></tr>
+      <tr><td>laporan final final.pdf</td><td>Tidak diketahui laporan apa dan versi mana</td><td>2026-09-30_laporan_kegiatan-triwulan-3_v2.pdf</td></tr>
+      <tr><td>Dokumen baru (2).docx</td><td>Nama bawaan sistem</td><td>2026-10-02_notulen_rapat-guru.docx</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Aturan yang perlu disepakati</h2>
+  <ol>
+    <li><strong>Gunakan huruf kecil dan tanda hubung.</strong> Pisahkan kata dengan tanda hubung (-) dan bagian dengan garis bawah (_), bukan spasi.</li>
+    <li><strong>Hindari karakter khusus.</strong> Jangan memakai karakter seperti / \ : * ? " &lt; &gt; | karena dapat menimbulkan masalah di sistem komputer.</li>
+    <li><strong>Hindari singkatan yang tidak dipahami umum.</strong> Singkatan boleh dipakai jika daftarnya tercantum dalam panduan.</li>
+    <li><strong>Jangan memakai kata seperti "baru", "final", atau "revisi" saja.</strong> Gunakan nomor versi atau tanggal yang jelas.</li>
+    <li><strong>Batasi panjang nama.</strong> Sekitar 40 sampai 60 karakter sudah cukup untuk sebagian besar dokumen.</li>
+    <li><strong>Satu pola untuk satu jenis dokumen.</strong> Tentukan pola setiap jenis dan tuliskan contohnya.</li>
+  </ol>
+
+  <h2>Penamaan versi dokumen</h2>
+  <p>Dokumen yang direvisi berkali-kali, seperti proposal atau laporan, perlu penanda versi. Gunakan akhiran <em>_v1</em>, <em>_v2</em>, dan seterusnya, atau cantumkan tanggal revisi. Versi yang sudah disetujui dapat diberi tanda <em>_final-disahkan</em> sekali saja, dan versi-versi lama dipindahkan ke subfolder "versi-lama" agar tidak membingungkan.</p>
+
+  <h2>Menamai folder</h2>
+  <p>Aturan yang sama berlaku untuk folder. Folder utama diberi nomor urut agar urutannya tetap (01-Kurikulum, 02-Kesiswaan), dan subfolder berikutnya diberi tahun atau kegiatan. Hindari folder bernama "Baru", "Lain-lain", atau "Misc".</p>
+
+  <h2>Cara memastikan semua petugas mengikuti</h2>
+  <ul>
+    <li>Tulis aturan dalam satu halaman dan tempel di ruang kerja atau simpan di folder utama.</li>
+    <li>Sertakan lima sampai sepuluh contoh nyata, karena contoh lebih mudah diingat daripada aturan.</li>
+    <li>Latih petugas baru pada hari pertama.</li>
+    <li>Periksa sampel nama file setiap bulan, dan ingatkan dengan baik jika ada yang melenceng.</li>
+    <li>Jika perlu mengganti banyak nama file lama, lakukan bertahap dan gunakan fitur penggantian nama massal di komputer.</li>
+  </ul>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Mengubah pola di tengah jalan tanpa pemberitahuan.</strong> Arsip menjadi campuran dua aturan.</li>
+    <li><strong>Memakai nama orang sebagai satu-satunya penanda.</strong> Misalnya "file-pak-budi.pdf", yang tidak berguna bagi orang lain.</li>
+    <li><strong>Tidak mencantumkan tahun.</strong> Dokumen sejenis dari tahun berbeda saling tertukar.</li>
+    <li><strong>Mengganti nama file yang sudah dirujuk.</strong> Jika file dirujuk di register atau dokumen lain, perubahan nama bisa memutus rujukan itu.</li>
+  </ul>
+
+  <h2>Contoh kasus: mencari satu kuitansi</h2>
+  <p>Seorang bendahara diminta menunjukkan kuitansi pembelian perlengkapan kegiatan bulan Maret. Di folder lama, ada puluhan file bernama "kuitansi", "kuitansi baru", dan "scan". Setelah menerapkan pola penamaan dengan tanggal dan keterangan, bendahara cukup mengetik kata "perlengkapan" di kolom pencarian dan menemukan file yang tepat dalam hitungan detik.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> tanggal di depan, jenis dan nomor register, lalu perihal singkat. Pakai huruf kecil dan tanda hubung, hindari karakter khusus, dan tuliskan aturannya agar semua petugas mengikuti.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah spasi pada nama file boleh dipakai?</h3>
+  <p>Secara teknis boleh, tetapi tanda hubung atau garis bawah lebih aman, terutama ketika file diunggah ke aplikasi atau dibuka melalui tautan.</p>
+
+  <h3>Bagaimana dengan file yang sudah terlanjur bernama acak?</h3>
+  <p>Ganti secara bertahap, mulai dari dokumen yang paling sering dicari. Jangan mengganti semua sekaligus kecuali ada alat bantu dan cadangan yang aman.</p>
+
+  <h3>Apakah huruf besar dan kecil berpengaruh?</h3>
+  <p>Pada sebagian sistem, ya. Karena itu, pakai huruf kecil secara konsisten agar tidak terjadi dua file yang dianggap berbeda karena huruf.</p>
+
+  <h3>Perlukah menulis nama pembuat di nama file?</h3>
+  <p>Umumnya tidak perlu, karena informasi pembuat sudah tercatat di pengaturan file atau di register. Yang lebih penting adalah isi dan tanggalnya.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-klasifikasi-arsip.html">Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</a></li>
+    <li><a href="artikel-nomor-register.html">Nomor Register Dokumen: Fungsi dan Cara Membuatnya</a></li>
+    <li><a href="artikel-format-file-arsip.html">Memilih Format File untuk Arsip Digital: PDF, Word, Excel, atau Gambar?</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

@@ -1,70 +1,188 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Digitalnya | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Penjelasan fungsi buku agenda dan buku ekspedisi dalam pengelolaan surat, serta cara memindahkannya ke format digital.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-agenda-ekspedisi-surat.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Digitalnya">
-<meta property="og:description" content="Penjelasan fungsi buku agenda dan buku ekspedisi dalam pengelolaan surat, serta cara memindahkannya ke format digital.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-agenda-ekspedisi-surat.html">
+<title>Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Mendigitalkannya | SAD</title>
+<meta name="description" content="Fungsi buku agenda dan buku ekspedisi surat, contoh kolom pencatatan, cara mendigitalkannya dengan spreadsheet, alur kerja, pengendalian tanda terima, dan kesalahan yang perlu dihindari.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Digitalnya</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Dalam tata kelola surat-menyurat, ada dua catatan yang sering dipakai: buku agenda dan buku ekspedisi. Keduanya membantu lembaga mengetahui surat apa yang masuk atau keluar, kapan, dan ke mana surat itu diteruskan. Bila dikelola dengan baik, kedua catatan ini mencegah surat hilang dan mempercepat tindak lanjut.</p>
-<h2>Buku agenda</h2>
-<p>Buku agenda mencatat setiap surat yang masuk atau keluar secara berurutan. Isinya biasanya nomor urut, tanggal diterima atau dikirim, nomor surat, asal atau tujuan, perihal, dan keterangan. Dengan catatan ini, lembaga memiliki daftar lengkap seluruh surat dalam satu periode.</p>
-<h2>Buku ekspedisi</h2>
-<p>Buku ekspedisi mencatat pengiriman atau penyerahan surat dari satu pihak ke pihak lain di dalam maupun luar lembaga. Ada kolom tanda terima yang diisi penerima, sehingga terbukti kapan dan oleh siapa surat diterima.</p>
-<h2>Mengapa perlu dipindahkan ke digital</h2>
-<ul><li>Pencarian lebih cepat dengan kata kunci atau nomor surat.</li><li>Tidak ada halaman yang robek, luntur, atau hilang.</li><li>Rekap bulanan dan tahunan dapat dibuat dengan cepat.</li><li>Dapat dihubungkan langsung dengan berkas surat yang telah dipindai.</li></ul>
-<h2>Langkah beralih ke versi digital</h2>
-<ul><li>Susun kolom yang sama dengan buku fisik agar petugas tidak kebingungan.</li><li>Isi data baru secara digital mulai dari awal tahun, agar tidak terpotong di tengah periode.</li><li>Hubungkan setiap baris dengan file pindaian suratnya.</li><li>Cetak rekap berkala jika lembaga masih memerlukan bukti fisik.</li></ul>
-<h2>Contoh kasus: surat undangan yang terlambat ditindaklanjuti</h2>
-<p>Sebuah sekolah menerima surat undangan dari dinas, tetapi tidak segera diteruskan kepada kepala sekolah. Karena ada catatan agenda dan ekspedisi, petugas dapat melihat bahwa surat sudah diterima tiga hari sebelumnya, lalu menelusuri di titik mana ia tertahan. Catatan ini membantu memperbaiki alur, bukan sekadar mencari siapa yang salah.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apakah buku fisik masih perlu dipertahankan? Itu bergantung pada kebijakan lembaga. Banyak lembaga menjalankan keduanya selama masa peralihan, lalu berhenti mencatat ganda setelah sistem digital berjalan stabil.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-dokumentasi-kegiatan.html">Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk</a></li><li><a href="/artikel-pemusnahan-arsip.html">Prosedur Umum Pemusnahan Arsip yang Sudah Melewati Masa Retensi</a></li><li><a href="/artikel-peran-admin-operator.html">Membagi Peran Petugas Arsip: Administrator dan Operator</a></li></ul></div>
+  <h1>Buku Agenda dan Ekspedisi Surat: Fungsi dan Cara Mendigitalkannya</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Di kantor dan sekolah, dua buku ini sering disebut dalam urusan surat-menyurat: buku agenda dan buku ekspedisi. Keduanya sudah dipakai puluhan tahun dan masih sangat berguna, tetapi di era dokumen digital banyak orang bertanya apakah masih diperlukan, dan bagaimana mengubahnya menjadi bentuk digital. Jawabannya: fungsinya tetap penting, hanya medianya yang bisa berubah.</p>
+
+  <p>Artikel ini menjelaskan fungsi masing-masing buku, contoh kolom yang dipakai, dan langkah mendigitalkannya agar lebih cepat dan mudah dicari.</p>
+
+  <h2>Apa itu buku agenda?</h2>
+  <p>Buku agenda adalah catatan kronologis semua surat yang masuk dan keluar. Setiap surat dicatat dalam satu baris dengan nomor urut, tanggal, asal atau tujuan, dan perihalnya. Fungsi utamanya adalah sebagai sarana pengendalian dan pencarian: dari buku agenda, Anda tahu surat apa saja yang pernah diterima atau dikirim dan kapan.</p>
+
+  <h2>Apa itu buku ekspedisi?</h2>
+  <p>Buku ekspedisi adalah catatan pengiriman surat kepada pihak tertentu, baik di dalam maupun di luar instansi. Isinya antara lain tanggal pengiriman, nomor surat, tujuan, dan tanda tangan penerima. Fungsi utamanya adalah sebagai bukti bahwa surat benar-benar telah dikirim dan diterima oleh yang bersangkutan.</p>
+
+  <h2>Perbedaan keduanya</h2>
+  <table>
+    <thead>
+      <tr><th>Aspek</th><th>Buku agenda</th><th>Buku ekspedisi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Fungsi utama</td><td>Mencatat surat masuk dan keluar</td><td>Mencatat pengiriman dan bukti terima</td></tr>
+      <tr><td>Siapa yang memakai</td><td>Petugas arsip atau tata usaha</td><td>Petugas pengantar surat atau kurir internal</td></tr>
+      <tr><td>Bukti yang dihasilkan</td><td>Riwayat surat</td><td>Tanda terima oleh penerima</td></tr>
+      <tr><td>Contoh kegunaan</td><td>Mencari surat bulan lalu dari instansi tertentu</td><td>Membuktikan surat sudah sampai ke bidang atau pihak tujuan</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Contoh kolom buku agenda</h2>
+  <table>
+    <thead>
+      <tr><th>Kolom</th><th>Contoh isi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Nomor agenda</td><td>AG-2026-0150</td></tr>
+      <tr><td>Tanggal</td><td>14 Oktober 2026</td></tr>
+      <tr><td>Jenis</td><td>Masuk / Keluar</td></tr>
+      <tr><td>Asal atau tujuan</td><td>Dinas Pendidikan Kabupaten</td></tr>
+      <tr><td>Nomor dan tanggal surat</td><td>Sesuai yang tertulis di surat</td></tr>
+      <tr><td>Perihal</td><td>Undangan sosialisasi kurikulum</td></tr>
+      <tr><td>Keterangan</td><td>Sudah diteruskan ke wakil kepala sekolah</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Contoh kolom buku ekspedisi</h2>
+  <table>
+    <thead>
+      <tr><th>Kolom</th><th>Contoh isi</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Nomor</td><td>EX-2026-0087</td></tr>
+      <tr><td>Tanggal kirim</td><td>16 Oktober 2026</td></tr>
+      <tr><td>Nomor surat</td><td>SK-2026-0108</td></tr>
+      <tr><td>Perihal</td><td>Balasan undangan sosialisasi</td></tr>
+      <tr><td>Tujuan</td><td>Dinas Pendidikan Kabupaten</td></tr>
+      <tr><td>Dikirim oleh</td><td>Nama petugas</td></tr>
+      <tr><td>Penerima, tanggal, dan paraf</td><td>Diisi saat surat diterima</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Cara mendigitalkannya</h2>
+  <ol>
+    <li><strong>Pilih medianya.</strong> Untuk sekolah atau kantor kecil, lembar kerja digital (spreadsheet) sudah sangat memadai. Aplikasi arsip dengan fitur register bisa dipakai jika tersedia.</li>
+    <li><strong>Buat satu berkas per tahun.</strong> Satu berkas untuk agenda dan satu untuk ekspedisi, dengan satu lembar per bulan atau satu lembar untuk setahun.</li>
+    <li><strong>Pakai kolom yang sama dengan buku fisik.</strong> Dengan begitu petugas tidak perlu belajar ulang dan arsip lama mudah dicocokkan.</li>
+    <li><strong>Kunci tampilan baris judul.</strong> Fitur ini membuat judul kolom tetap terlihat saat menggulir ke bawah.</li>
+    <li><strong>Tambahkan kolom tautan.</strong> Cantumkan nama file atau lokasi folder hasil pindai pada kolom tersendiri agar surat dapat langsung dibuka.</li>
+    <li><strong>Batasi siapa yang boleh mengubah.</strong> Cukup petugas arsip yang boleh mengedit, yang lain hanya melihat.</li>
+    <li><strong>Cadangkan berkas register.</strong> File ini sama pentingnya dengan arsip yang dicatat di dalamnya.</li>
+  </ol>
+
+  <h2>Keunggulan versi digital</h2>
+  <ul>
+    <li>Dapat dicari dengan kata kunci, bukan dengan membuka halaman satu per satu.</li>
+    <li>Dapat disaring berdasarkan tanggal, asal surat, atau status tindak lanjut.</li>
+    <li>Tidak habis halaman dan tidak lapuk.</li>
+    <li>Mudah dicadangkan dan dibagikan kepada pihak yang berwenang.</li>
+  </ul>
+
+  <h2>Hal yang perlu tetap dijaga</h2>
+  <ul>
+    <li><strong>Tanda terima tetap penting.</strong> Untuk surat yang membutuhkan bukti penerimaan, tetap minta paraf atau tanda terima, lalu pindai dan simpan.</li>
+    <li><strong>Jangan menghapus baris.</strong> Jika ada kesalahan, koreksi dengan keterangan dan simpan riwayatnya, bukan menghapus catatan.</li>
+    <li><strong>Pencatatan harus segera.</strong> Catat saat surat diterima atau dikirim, bukan menumpuknya dulu.</li>
+    <li><strong>Nomor urut tidak boleh terlewat.</strong> Jika ada yang batal dipakai, tulis keterangan alasannya.</li>
+  </ul>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Dua register berbeda untuk hal yang sama.</strong> Misalnya satu di buku dan satu di komputer tanpa sinkronisasi, sehingga datanya tidak cocok.</li>
+    <li><strong>Perihal terlalu singkat.</strong> "Surat dinas" tidak berguna saat dicari.</li>
+    <li><strong>Tidak ada tautan ke file.</strong> Catatan ada, tetapi dokumennya sulit dilacak.</li>
+    <li><strong>Berkas register tidak dicadangkan.</strong> Kehilangan register berarti kehilangan peta seluruh arsip.</li>
+    <li><strong>Satu orang saja yang bisa mengisi.</strong> Saat petugas berhalangan, pencatatan berhenti.</li>
+  </ul>
+
+  <h2>Contoh kasus: surat yang diklaim belum diterima</h2>
+  <p>Sebuah instansi mengaku belum menerima surat permohonan dari sebuah sekolah. Karena sekolah mencatat setiap pengiriman di buku ekspedisi dengan tanggal dan paraf penerima, petugas dapat menunjukkan bahwa surat telah diterima pada tanggal tertentu oleh staf instansi tersebut. Perselisihan selesai tanpa perdebatan panjang, dan surat yang tertunda segera diproses.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> agenda mencatat surat, ekspedisi membuktikan pengiriman. Keduanya bisa didigitalkan dalam spreadsheet dengan kolom yang sama, asalkan dicatat segera, tidak dihapus, dan dicadangkan.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah buku agenda sama dengan nomor register?</h3>
+  <p>Keduanya berkaitan. Nomor register adalah nomor unik tiap dokumen, sedangkan buku agenda adalah tempat nomor itu dicatat bersama keterangan lainnya.</p>
+
+  <h3>Apakah buku fisik boleh ditinggalkan sama sekali?</h3>
+  <p>Itu tergantung aturan instansi Anda. Selama belum ada kepastian, jalankan versi digital dan fisik berdampingan untuk beberapa waktu, lalu tanyakan ketentuan resminya.</p>
+
+  <h3>Bagaimana dengan surat elektronik?</h3>
+  <p>Catat juga di register jika isinya berfungsi sebagai surat dinas. Simpan dalam bentuk PDF dan perlakukan seperti surat lain.</p>
+
+  <h3>Seberapa lama register disimpan?</h3>
+  <p>Ikuti jadwal retensi yang berlaku. Register biasanya disimpan cukup lama karena menjadi dasar penelusuran arsip lainnya.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-surat-masuk-keluar.html">Arsip Surat Masuk dan Keluar: Cara Mencatat dan Menyimpan agar Mudah Dicari</a></li>
+    <li><a href="artikel-nomor-register.html">Nomor Register Dokumen: Fungsi dan Cara Membuatnya</a></li>
+    <li><a href="artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

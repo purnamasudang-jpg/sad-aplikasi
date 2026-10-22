@@ -1,72 +1,184 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Cara menyimpan, menamai, dan memilah foto serta video dokumentasi kegiatan sekolah atau instansi secara rapi.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-dokumentasi-kegiatan.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk">
-<meta property="og:description" content="Cara menyimpan, menamai, dan memilah foto serta video dokumentasi kegiatan sekolah atau instansi secara rapi.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-dokumentasi-kegiatan.html">
+<title>Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk | SAD</title>
+<meta name="description" content="Cara mengelola foto dan video dokumentasi kegiatan sekolah dan kantor: struktur folder per kegiatan, seleksi, penamaan, ukuran file, izin dan privasi, serta pencadangan.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Foto dan video kegiatan sering menjadi arsip yang paling cepat membengkak. Satu acara bisa menghasilkan ratusan foto, dan jika dibiarkan tersebar di ponsel beberapa orang, hasilnya sulit dikumpulkan ketika diperlukan untuk laporan, publikasi, atau akreditasi.</p>
-<h2>Kumpulkan di satu tempat</h2>
-<p>Tetapkan satu lokasi utama untuk dokumentasi. Setelah kegiatan, minta semua pengambil gambar mengirim hasilnya ke satu folder yang sama. Jangan menunggu berminggu-minggu karena foto di ponsel mudah terhapus atau tertimpa.</p>
-<h2>Struktur folder</h2>
-<p>Gunakan pola tahun, lalu nama kegiatan. Misalnya 2026, kemudian 2026-08-17 Upacara Kemerdekaan. Di dalamnya, pisahkan foto dan video agar tidak bercampur.</p>
-<h2>Memilah hasil</h2>
-<ul><li>Buang foto yang buram, tertutup, atau mirip satu sama lain.</li><li>Pilih sekitar dua puluh hingga lima puluh foto terbaik untuk disimpan permanen.</li><li>Simpan versi asli resolusi tinggi hanya untuk foto yang benar-benar penting.</li><li>Kompres sisanya agar tidak memenuhi penyimpanan.</li></ul>
-<h2>Beri keterangan</h2>
-<p>Foto tanpa keterangan akan sulit dipahami beberapa tahun kemudian. Catat tanggal, nama kegiatan, tempat, dan siapa yang tampil jika perlu. Keterangan ini juga berguna saat foto dipakai untuk laporan.</p>
-<h2>Perhatikan izin dan privasi</h2>
-<p>Jika foto memuat peserta didik atau orang lain, pertimbangkan izin pemakaian, terutama bila akan dipublikasikan di media sosial atau situs. Hindari mengunggah gambar yang memuat data pribadi seperti identitas atau alamat.</p>
-<h2>Contoh kasus: kebutuhan bukti untuk akreditasi</h2>
-<p>Saat penilaian akreditasi, sekolah diminta menunjukkan bukti pelaksanaan beberapa kegiatan selama tiga tahun. Sekolah yang menyimpan foto per kegiatan lengkap dengan keterangan dapat menyiapkannya dalam satu hari. Sekolah yang hanya mengandalkan galeri ponsel guru harus mengumpulkan ulang dari banyak orang.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Berapa lama foto kegiatan perlu disimpan? Itu mengikuti kebijakan lembaga. Foto kegiatan penting yang bernilai sejarah sebaiknya disimpan jangka panjang dengan cadangan.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-pemusnahan-arsip.html">Prosedur Umum Pemusnahan Arsip yang Sudah Melewati Masa Retensi</a></li><li><a href="/artikel-peran-admin-operator.html">Membagi Peran Petugas Arsip: Administrator dan Operator</a></li><li><a href="/artikel-audit-arsip-berkala.html">Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat</a></li></ul></div>
+  <h1>Mengelola Foto dan Video Dokumentasi Kegiatan agar Tidak Menumpuk</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Setiap kegiatan sekolah menghasilkan foto dan video: upacara, lomba, rapat, kunjungan, hingga pelatihan. Dalam satu tahun, jumlahnya bisa mencapai ribuan file. Tanpa pengelolaan, galeri ponsel dan hard disk penuh, foto yang dibutuhkan sulit ditemukan, dan bukti kegiatan untuk laporan baru dicari di saat-saat terakhir.</p>
+
+  <p>Artikel ini membahas cara menata dokumentasi kegiatan agar mudah dicari, hemat ruang, dan aman, termasuk hal yang sering terlupa: izin dan privasi.</p>
+
+  <h2>Mengapa dokumentasi perlu diarsipkan dengan baik?</h2>
+  <ul>
+    <li><strong>Bukti kegiatan.</strong> Foto dan video sering diminta sebagai lampiran laporan dan pertanggungjawaban.</li>
+    <li><strong>Bahan publikasi.</strong> Materi untuk media sosial, buletin, dan laman sekolah.</li>
+    <li><strong>Kenangan dan sejarah.</strong> Dokumentasi menjadi catatan perjalanan lembaga.</li>
+    <li><strong>Pendukung akreditasi.</strong> Bukti pelaksanaan program lebih kuat bila disertai dokumentasi yang tertata.</li>
+  </ul>
+
+  <h2>Satu kegiatan, satu folder</h2>
+  <p>Prinsip utamanya sederhana: setiap kegiatan memiliki folder tersendiri, diberi nama dengan tanggal dan nama kegiatan.</p>
+<pre>DOKUMENTASI/
+  2026/
+    2026-08-17_upacara-hut-ri/
+      foto/
+      video/
+      terpilih/
+    2026-09-05_lomba-literasi/
+      foto/
+      video/
+      terpilih/
+    2026-10-14_sosialisasi-kurikulum/
+      ...</pre>
+  <p>Subfolder <em>terpilih</em> berisi foto dan video terbaik yang sudah diseleksi untuk laporan dan publikasi, sedangkan folder <em>foto</em> dan <em>video</em> menyimpan materi asli.</p>
+
+  <h2>Memilih dan menyaring</h2>
+  <p>Tidak semua foto layak disimpan selamanya. Setelah kegiatan selesai, luangkan waktu singkat untuk menyeleksi.</p>
+  <ol>
+    <li>Hapus foto yang buram, tertutup, atau terduplikasi.</li>
+    <li>Pilih sekitar sepuluh sampai dua puluh foto terbaik yang mewakili jalannya kegiatan: persiapan, pelaksanaan, dan penutup.</li>
+    <li>Pastikan ada foto yang memperlihatkan tanggal, tempat, dan papan nama kegiatan sebagai bukti.</li>
+    <li>Salin pilihan itu ke subfolder <em>terpilih</em>.</li>
+    <li>Simpan video dengan hanya bagian yang diperlukan jika video aslinya terlalu panjang.</li>
+  </ol>
+
+  <h2>Penamaan file</h2>
+  <p>File dari kamera biasanya bernama acak seperti IMG_4821. Beri nama pada foto terpilih agar mudah dikenali:</p>
+<pre>2026-09-05_lomba-literasi_pembukaan.jpg
+2026-09-05_lomba-literasi_penyerahan-piagam.jpg
+2026-09-05_lomba-literasi_video-ringkasan.mp4</pre>
+  <p>Foto asli yang jumlahnya banyak tidak perlu diganti satu per satu, cukup nama foldernya yang jelas.</p>
+
+  <h2>Mengendalikan ukuran file</h2>
+  <p>Foto dan video adalah penyumbang terbesar penuhnya penyimpanan. Beberapa cara menghematnya:</p>
+  <table>
+    <thead>
+      <tr><th>Cara</th><th>Keterangan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Seleksi sejak awal</td><td>Buang foto yang tidak dipakai segera setelah kegiatan</td></tr>
+      <tr><td>Kecilkan ukuran foto untuk laporan</td><td>Foto laporan tidak perlu resolusi penuh dari kamera</td></tr>
+      <tr><td>Simpan asli di satu tempat</td><td>Foto beresolusi penuh cukup satu salinan utama plus cadangan</td></tr>
+      <tr><td>Pangkas video</td><td>Potong bagian yang tidak diperlukan</td></tr>
+      <tr><td>Pindahkan dokumentasi lama ke penyimpanan cadangan</td><td>Kosongkan komputer kerja dari materi tahun lalu</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Izin dan privasi, terutama untuk anak</h2>
+  <p>Foto dan video yang memperlihatkan wajah siswa termasuk data pribadi yang perlu diperlakukan hati-hati. Beberapa kebiasaan yang disarankan:</p>
+  <ul>
+    <li>Minta izin tertulis dari orang tua atau wali untuk penggunaan foto siswa dalam publikasi, misalnya lewat formulir di awal tahun ajaran.</li>
+    <li>Hindari mengunggah foto siswa yang memperlihatkan data pribadi, seperti nama lengkap bersama alamat atau nomor identitas.</li>
+    <li>Jangan membagikan dokumentasi lewat grup terbuka tanpa kebutuhan yang jelas.</li>
+    <li>Tentukan siapa yang boleh memotret dan menyimpan dokumentasi, dan di perangkat mana.</li>
+    <li>Hormati permintaan orang tua yang tidak menghendaki foto anaknya dipublikasikan.</li>
+  </ul>
+
+  <h2>Menyimpan dengan aman</h2>
+  <ul>
+    <li>Pindahkan dokumentasi dari ponsel pribadi ke penyimpanan lembaga secara berkala.</li>
+    <li>Terapkan cadangan berlapis, karena foto kegiatan tidak bisa diambil ulang.</li>
+    <li>Batasi akses ke folder yang berisi foto siswa.</li>
+    <li>Gunakan penyimpanan daring dengan kata sandi kuat dan verifikasi dua langkah jika dokumentasi disimpan di sana.</li>
+  </ul>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Menyimpan semua di galeri ponsel pribadi.</strong> Saat ponsel hilang atau rusak, dokumentasi ikut hilang.</li>
+    <li><strong>Folder campur.</strong> Foto beberapa kegiatan dalam satu folder besar sulit dipilah.</li>
+    <li><strong>Menyimpan semua foto tanpa seleksi.</strong> Penyimpanan cepat penuh dan foto yang bagus tertimbun.</li>
+    <li><strong>Mengunggah tanpa memeriksa izin.</strong> Bisa menimbulkan masalah dengan orang tua atau pihak lain.</li>
+    <li><strong>Tidak ada petugas dokumentasi.</strong> Setiap orang memotret, tetapi tidak ada yang bertanggung jawab mengumpulkannya.</li>
+  </ul>
+
+  <h2>Contoh kasus: foto kegiatan yang hilang bersama ponsel</h2>
+  <p>Seorang guru yang menjadi dokumentator berbagai lomba menyimpan semua foto di ponselnya. Ketika ponsel itu rusak, foto-foto kegiatan satu semester hilang dan sekolah kesulitan menyusun laporan. Setelah itu, sekolah menetapkan aturan: setiap selesai kegiatan, dokumentator menyalin foto ke folder kegiatan di komputer sekolah, memilih foto terbaik, dan mencadangkannya ke hard disk eksternal.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> satu kegiatan satu folder, seleksi segera setelah acara, beri nama yang jelas, hormati izin dan privasi, serta cadangkan karena dokumentasi tidak bisa diulang.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Berapa foto yang sebaiknya disimpan untuk satu kegiatan?</h3>
+  <p>Tergantung kegiatannya, tetapi sekitar sepuluh sampai dua puluh foto terbaik sudah cukup untuk laporan. Foto asli dalam jumlah lebih banyak boleh disimpan selama ruang memungkinkan.</p>
+
+  <h3>Apakah dokumentasi perlu dicatat di register?</h3>
+  <p>Disarankan mencatat kegiatan dan lokasi foldernya dalam daftar kegiatan, sehingga dokumentasi mudah dilacak dan dikaitkan dengan laporan.</p>
+
+  <h3>Bagaimana dengan video berukuran besar?</h3>
+  <p>Simpan video asli di penyimpanan eksternal atau daring, dan gunakan versi yang sudah dipangkas atau dikecilkan untuk laporan dan publikasi.</p>
+
+  <h3>Berapa lama dokumentasi harus disimpan?</h3>
+  <p>Ikuti jadwal retensi lembaga Anda. Dokumentasi yang bernilai sejarah, seperti peristiwa penting sekolah, layak dipertahankan jangka panjang.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li>
+    <li><a href="artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li>
+    <li><a href="artikel-arsip-dinamis-statis.html">Arsip Dinamis dan Arsip Statis: Apa Bedanya?</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

@@ -1,74 +1,175 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arsip Dinamis dan Arsip Statis: Apa Bedanya? | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Penjelasan sederhana tentang arsip dinamis, arsip statis, serta arsip aktif dan inaktif, lengkap dengan contohnya.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-arsip-dinamis-statis.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Arsip Dinamis dan Arsip Statis: Apa Bedanya?">
-<meta property="og:description" content="Penjelasan sederhana tentang arsip dinamis, arsip statis, serta arsip aktif dan inaktif, lengkap dengan contohnya.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-arsip-dinamis-statis.html">
+<title>Arsip Dinamis dan Arsip Statis: Apa Bedanya? | SAD</title>
+<meta name="description" content="Penjelasan arsip dinamis dan arsip statis: pengertian, ciri arsip aktif, inaktif, dan vital, kapan arsip menjadi statis, contoh dari sekolah dan kantor, serta cara mengelolanya.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Arsip Dinamis dan Arsip Statis: Apa Bedanya?</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Dalam dunia kearsipan, dokumen tidak dipandang sama sepanjang waktu. Nilai dan frekuensi penggunaannya berubah seiring waktu, sehingga cara pengelolaannya juga berbeda. Dua istilah yang paling sering muncul adalah arsip dinamis dan arsip statis. Pengelompokan ini mengacu pada Undang-Undang Nomor 43 Tahun 2009 tentang Kearsipan.</p>
-<h2>Arsip dinamis</h2>
-<p>Arsip dinamis adalah arsip yang masih digunakan secara langsung untuk kegiatan sehari-hari lembaga pencipta arsip. Arsip ini dibagi menjadi dua:</p>
-<ul><li>Arsip aktif: masih sering dipakai dan disimpan di unit kerja pengolah, misalnya surat dan laporan tahun berjalan.</li><li>Arsip inaktif: frekuensi penggunaannya sudah menurun dan biasanya dipindahkan ke tempat penyimpanan khusus, tetapi masih mungkin dibutuhkan sewaktu-waktu.</li></ul>
-<h2>Arsip statis</h2>
-<p>Arsip statis adalah arsip yang sudah tidak dipakai untuk kegiatan harian, tetapi memiliki nilai guna kesejarahan atau nilai penting lain sehingga disimpan secara permanen oleh lembaga kearsipan. Contohnya dokumen pendirian lembaga, naskah bersejarah, dan foto kegiatan penting.</p>
-<h2>Peran jadwal retensi</h2>
-<p>Perpindahan arsip dari aktif ke inaktif, lalu dimusnahkan atau diserahkan sebagai arsip statis, ditentukan oleh jadwal retensi arsip. Setiap jenis dokumen memiliki masa simpan yang berbeda, sehingga lembaga perlu memiliki jadwal yang jelas dan dijalankan secara konsisten.</p>
-<h2>Hubungannya dengan arsip digital</h2>
-<p>Konsep ini tetap berlaku untuk dokumen digital. File yang masih sering dipakai bisa ditempatkan di folder kerja yang mudah dijangkau, sedangkan file inaktif dipindahkan ke folder tersendiri yang lebih tertata. Dokumen bernilai sejarah sebaiknya dipertahankan dengan format dan cadangan yang tahan lama.</p>
-<h2>Intinya</h2>
-<p>Memahami perbedaan ini membantu lembaga memutuskan dokumen mana yang harus tetap mudah diakses, mana yang bisa disimpan lebih jauh, dan mana yang layak dilestarikan. Hasilnya adalah ruang penyimpanan yang lebih efisien dan arsip yang lebih terkelola.</p>
-<h2>Contoh pada sekolah</h2>
-<p>Di sekolah, surat dan laporan tahun ajaran berjalan termasuk arsip aktif karena sering dibuka. Setelah beberapa tahun, dokumen itu jarang diperlukan sehingga masuk kategori inaktif dan dipindahkan ke folder terpisah. Sementara dokumen seperti piagam pendirian sekolah atau foto upacara peresmian dapat dianggap bernilai kesejarahan dan dilestarikan dalam jangka panjang.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Siapa yang menentukan sebuah arsip aktif atau inaktif? Penentuannya mengacu pada jadwal retensi yang berlaku di lembaga dan ketentuan perundang-undangan. Apakah arsip inaktif boleh dibuang? Tidak langsung. Pemusnahan harus melalui prosedur resmi, termasuk penilaian dan pencatatan.</p>
-<p>Apakah dokumen digital ikut diklasifikasikan seperti ini? Ya. Perlakuannya mengikuti nilai dan masa simpan dokumennya, bukan bentuk fisiknya.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-format-file-arsip.html">Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar?</a></li><li><a href="/artikel-digitalisasi-arsip-lama.html">Langkah Digitalisasi Arsip Kertas Lama secara Bertahap</a></li><li><a href="/artikel-kesalahan-arsip-digital.html">Delapan Kesalahan Umum dalam Mengelola Arsip Digital</a></li></ul></div>
+  <h1>Arsip Dinamis dan Arsip Statis: Apa Bedanya?</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Dalam dunia kearsipan, Anda akan sering mendengar dua istilah: arsip dinamis dan arsip statis. Keduanya bukan soal kertas versus digital, melainkan soal fase kehidupan sebuah arsip. Memahami perbedaannya membantu Anda menentukan di mana arsip disimpan, berapa lama, dan apa yang terjadi setelahnya.</p>
+
+  <p>Artikel ini menjelaskan kedua jenis arsip tersebut dengan bahasa sederhana, lengkap dengan contoh dari sekolah dan kantor.</p>
+
+  <h2>Arsip dinamis</h2>
+  <p>Arsip dinamis adalah arsip yang masih digunakan dalam kegiatan sehari-hari organisasi, atau masih diperlukan untuk keperluan administrasi, keuangan, hukum, dan pertanggungjawaban. Kata "dinamis" menunjukkan bahwa arsip ini masih bergerak: dipakai, diubah, dan diacu.</p>
+  <p>Arsip dinamis dibagi menjadi tiga kelompok:</p>
+  <table>
+    <thead>
+      <tr><th>Jenis</th><th>Ciri</th><th>Contoh</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Aktif</td><td>Masih sering digunakan dalam kegiatan harian</td><td>Surat yang sedang ditindaklanjuti, laporan tahun berjalan</td></tr>
+      <tr><td>Inaktif</td><td>Frekuensi penggunaannya menurun, tetapi masih harus disimpan</td><td>Dokumen keuangan tahun-tahun sebelumnya</td></tr>
+      <tr><td>Vital</td><td>Sangat penting bagi kelangsungan organisasi dan sulit tergantikan jika hilang</td><td>Dokumen pendirian, sertifikat aset, data induk</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Arsip statis</h2>
+  <p>Arsip statis adalah arsip yang sudah tidak lagi dipakai untuk kegiatan harian organisasi, tetapi dinilai memiliki nilai guna jangka panjang, misalnya sebagai bukti sejarah, identitas organisasi, atau bahan penelitian. Arsip ini dipertahankan secara permanen dan dikelola untuk dilestarikan, bukan lagi untuk dipakai dalam pekerjaan rutin.</p>
+  <p>Contoh arsip yang berpotensi menjadi statis di sebuah sekolah: dokumen pendirian sekolah, catatan sejarah sekolah, foto-foto kegiatan bersejarah, dan keputusan penting terkait perkembangan lembaga.</p>
+
+  <h2>Perbedaan singkat</h2>
+  <table>
+    <thead>
+      <tr><th>Aspek</th><th>Arsip dinamis</th><th>Arsip statis</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Penggunaan</td><td>Untuk kegiatan organisasi dan pertanggungjawaban</td><td>Untuk bukti sejarah dan penelitian</td></tr>
+      <tr><td>Masa simpan</td><td>Terbatas, ditentukan jadwal retensi</td><td>Permanen</td></tr>
+      <tr><td>Nasib akhir</td><td>Dimusnahkan atau dinilai untuk dipertahankan</td><td>Dilestarikan</td></tr>
+      <tr><td>Pengelolaan</td><td>Oleh unit pencipta atau bagian arsip</td><td>Oleh unit kearsipan atau lembaga arsip yang berwenang</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Perjalanan sebuah arsip</h2>
+  <p>Sebagian besar arsip mengikuti alur berikut:</p>
+  <ol>
+    <li><strong>Dibuat atau diterima</strong> dan segera dicatat.</li>
+    <li><strong>Aktif</strong>, dipakai untuk kegiatan sehari-hari.</li>
+    <li><strong>Inaktif</strong>, dipindahkan ke penyimpanan yang lebih jarang dibuka.</li>
+    <li><strong>Penilaian.</strong> Saat masa simpan berakhir, arsip dinilai: apakah dimusnahkan atau memiliki nilai jangka panjang.</li>
+    <li><strong>Dimusnahkan</strong> dengan prosedur dan berita acara, atau <strong>diserahkan sebagai arsip statis</strong>.</li>
+  </ol>
+  <p>Hanya sebagian kecil arsip yang akhirnya menjadi statis. Mayoritas akan dimusnahkan setelah masa simpannya selesai.</p>
+
+  <h2>Mengapa pembedaan ini penting?</h2>
+  <ul>
+    <li><strong>Menghemat ruang.</strong> Arsip yang masa simpannya habis tidak dibiarkan menumpuk.</li>
+    <li><strong>Melindungi arsip bernilai.</strong> Dokumen bersejarah tidak ikut dimusnahkan secara tidak sengaja.</li>
+    <li><strong>Mengarahkan perlakuan.</strong> Arsip vital membutuhkan perlindungan ekstra, sedangkan arsip rutin cukup dikelola secara sederhana.</li>
+    <li><strong>Memudahkan jadwal retensi.</strong> Penentuan masa simpan dan nasib akhir menjadi lebih jelas.</li>
+  </ul>
+
+  <h2>Contoh penerapan di sekolah</h2>
+  <table>
+    <thead>
+      <tr><th>Dokumen</th><th>Penggolongan</th><th>Perlakuan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Undangan rapat bulan ini</td><td>Dinamis aktif</td><td>Disimpan di folder tahun berjalan</td></tr>
+      <tr><td>Laporan keuangan tiga tahun lalu</td><td>Dinamis inaktif</td><td>Dipindahkan ke arsip inaktif, dijaga sampai masa simpan habis</td></tr>
+      <tr><td>Akta atau dokumen pendirian</td><td>Dinamis vital, berpotensi statis</td><td>Dipindai, dicadangkan, dan disimpan permanen</td></tr>
+      <tr><td>Foto peresmian gedung lama</td><td>Berpotensi statis</td><td>Dilestarikan dengan salinan digital dan cadangan</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Bagaimana dengan arsip digital?</h2>
+  <p>Klasifikasi dinamis dan statis berlaku juga bagi file digital. Arsip dinamis digital dikelola dengan jadwal retensi dan akses yang sesuai. Arsip statis digital memerlukan perhatian pelestarian: format file yang umum dan tahan lama, cadangan di beberapa lokasi, dan pemeriksaan berkala agar file tetap bisa dibuka seiring berubahnya teknologi.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Menganggap arsip lama pasti statis.</strong> Umur bukan satu-satunya ukuran, nilai guna jangka panjang yang menentukan.</li>
+    <li><strong>Memusnahkan tanpa penilaian.</strong> Dokumen yang tampak biasa bisa saja memiliki nilai sejarah.</li>
+    <li><strong>Mencampur arsip aktif dan inaktif.</strong> Folder kerja menjadi penuh dan pencarian melambat.</li>
+    <li><strong>Mengabaikan arsip vital.</strong> Dokumen yang sulit tergantikan tidak dilengkapi cadangan dan perlindungan tambahan.</li>
+  </ul>
+
+  <h2>Contoh kasus: foto lama yang hampir terbuang</h2>
+  <p>Saat membereskan ruang arsip, sebuah sekolah hampir membuang kotak berisi foto dan dokumen acara peresmian sekolah dari puluhan tahun lalu karena dianggap sudah tidak berguna. Petugas yang memahami konsep arsip statis menahan pemusnahan, melakukan penilaian, dan memutuskan memindai seluruh isinya serta menyimpannya sebagai arsip permanen. Beberapa tahun kemudian, materi itu dipakai untuk buku peringatan ulang tahun sekolah.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> arsip dinamis masih dipakai dan punya masa simpan, sedangkan arsip statis bernilai jangka panjang dan disimpan permanen. Nilailah dulu sebelum memusnahkan.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Siapa yang menentukan sebuah arsip menjadi statis?</h3>
+  <p>Penentuannya mengikuti penilaian berdasarkan jadwal retensi dan ketentuan kearsipan yang berlaku. Untuk instansi tertentu, ini melibatkan unit kearsipan atau lembaga arsip yang berwenang.</p>
+
+  <h3>Apakah semua arsip pada akhirnya menjadi statis?</h3>
+  <p>Tidak. Sebagian besar dimusnahkan ketika masa simpannya habis. Hanya arsip yang memiliki nilai guna jangka panjang yang dipertahankan.</p>
+
+  <h3>Apa bedanya arsip vital dengan arsip statis?</h3>
+  <p>Arsip vital adalah arsip dinamis yang sangat penting bagi kelangsungan organisasi saat ini. Arsip statis adalah arsip yang sudah tidak dipakai harian tetapi dilestarikan karena nilai jangka panjangnya. Satu dokumen bisa berpindah dari vital menjadi statis seiring waktu.</p>
+
+  <h3>Bagaimana jika sekolah kami tidak punya unit kearsipan?</h3>
+  <p>Mulailah dengan menyusun jadwal retensi sederhana dan menetapkan petugas yang bertanggung jawab. Untuk arsip yang diduga bernilai sejarah, konsultasikan dengan dinas terkait mengenai cara penyimpanannya.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-retensi-arsip.html">Retensi Arsip: Menentukan Jadwal Simpan dan Kapan Boleh Dimusnahkan</a></li>
+    <li><a href="artikel-pemusnahan-arsip.html">Prosedur Pemusnahan Arsip yang Sudah Melewati Masa Retensi</a></li>
+    <li><a href="artikel-klasifikasi-arsip.html">Klasifikasi Arsip: Cara Menyusun Folder yang Rapi dan Mudah Dicari</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

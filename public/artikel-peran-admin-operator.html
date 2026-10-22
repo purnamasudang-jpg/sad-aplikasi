@@ -1,70 +1,182 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Membagi Peran Petugas Arsip: Administrator dan Operator | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Penjelasan pembagian peran administrator dan operator dalam pengelolaan arsip digital agar tanggung jawab jelas dan data aman.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-peran-admin-operator.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Membagi Peran Petugas Arsip: Administrator dan Operator">
-<meta property="og:description" content="Penjelasan pembagian peran administrator dan operator dalam pengelolaan arsip digital agar tanggung jawab jelas dan data aman.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-peran-admin-operator.html">
+<title>Membagi Peran Arsip: Administrator dan Operator | SAD</title>
+<meta name="description" content="Cara membagi peran pengelola arsip digital: tugas administrator, operator, dan pembaca, prinsip hak akses minimal, pemisahan tugas, pergantian petugas, dan kesalahan yang perlu dihindari.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Membagi Peran Petugas Arsip: Administrator dan Operator</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Arsip yang dikelola banyak orang tanpa pembagian peran cenderung berantakan. Siapa yang boleh menghapus? Siapa yang boleh mengubah nama folder? Siapa yang bertanggung jawab jika file hilang? Pembagian peran menjawab pertanyaan-pertanyaan tersebut dan membuat kerja tim lebih tertib.</p>
-<h2>Peran administrator</h2>
-<p>Administrator memiliki kewenangan penuh atas sistem. Biasanya ia mengelola akun pengguna, menentukan struktur folder, meninjau catatan aktivitas, dan mengatur pencadangan. Karena kewenangannya besar, jumlah administrator sebaiknya dibatasi satu atau dua orang.</p>
-<h2>Peran operator</h2>
-<p>Operator adalah petugas harian yang mengunggah, memberi nama, dan mencatat dokumen. Operator hanya memiliki akses sebatas tugasnya. Misalnya, ia bisa melihat dan mengelola berkas yang diunggahnya sendiri, tetapi tidak dapat mengubah pengaturan sistem atau menghapus seluruh riwayat.</p>
-<h2>Prinsip akses minimum</h2>
-<p>Berikan hak akses sekecil mungkin yang masih memungkinkan seseorang bekerja. Jika kebutuhan bertambah, tambahkan secara bertahap. Pendekatan ini mengurangi risiko kesalahan penghapusan dan kebocoran data.</p>
-<h2>Tanggung jawab bersama</h2>
-<ul><li>Setiap orang memakai akun sendiri dan tidak berbagi kata sandi.</li><li>Operator melaporkan kesalahan unggah atau nama file kepada administrator.</li><li>Administrator meninjau catatan aktivitas secara berkala.</li><li>Ada pengganti jika petugas utama berhalangan.</li></ul>
-<h2>Contoh kasus: pergantian petugas</h2>
-<p>Ketika petugas arsip lama dipindahtugaskan, administrator menonaktifkan akunnya dan membuat akun baru untuk penggantinya. Karena setiap aktivitas tercatat atas nama masing-masing, riwayat kerja petugas lama tetap utuh dan petugas baru dapat memahami pekerjaan yang sudah berjalan.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apakah lembaga kecil perlu membagi peran? Ya, meski sederhana. Cukup satu administrator dan beberapa operator. Pembagian ini tetap membantu menjaga ketertiban dan keamanan data.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-audit-arsip-berkala.html">Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat</a></li><li><a href="/artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a></li><li><a href="/artikel-retensi-arsip.html">Retensi Arsip</a></li></ul></div>
+  <h1>Membagi Peran Arsip: Administrator dan Operator</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Arsip digital yang bisa diubah oleh semua orang sama berisikonya dengan lemari arsip tanpa kunci. Ketika siapa saja boleh menambah, mengubah, dan menghapus dokumen, kesalahan kecil bisa berakibat besar: file terhapus, folder berpindah, atau dokumen sensitif terbaca orang yang tidak berhak. Karena itu, pengelolaan arsip yang baik selalu disertai pembagian peran yang jelas.</p>
+
+  <p>Artikel ini membahas peran yang umum dipakai, yaitu administrator, operator, dan pembaca, serta cara menerapkannya di sekolah atau kantor.</p>
+
+  <h2>Mengapa peran perlu dibagi?</h2>
+  <ul>
+    <li><strong>Mengurangi kesalahan.</strong> Orang hanya bisa mengubah hal yang menjadi tugasnya.</li>
+    <li><strong>Melindungi dokumen sensitif.</strong> Akses dibatasi sesuai kebutuhan.</li>
+    <li><strong>Memperjelas tanggung jawab.</strong> Jika terjadi masalah, jelas siapa yang bertanggung jawab atas bagian mana.</li>
+    <li><strong>Memudahkan penelusuran.</strong> Catatan aktivitas lebih bermakna ketika setiap orang memiliki akun dan peran sendiri.</li>
+  </ul>
+
+  <h2>Tiga peran yang umum</h2>
+  <table>
+    <thead>
+      <tr><th>Peran</th><th>Tugas utama</th><th>Yang tidak boleh</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Administrator</td><td>Mengelola pengguna dan hak akses, mengatur struktur folder dan pengaturan sistem, memeriksa catatan aktivitas, mengelola cadangan</td><td>Mengubah isi dokumen sesuka hati tanpa alasan dan catatan</td></tr>
+      <tr><td>Operator</td><td>Memasukkan dokumen baru, mencatat register, memindai, memberi nama file, dan memperbarui dokumen pada bidangnya</td><td>Mengubah pengaturan sistem atau hak akses orang lain</td></tr>
+      <tr><td>Pembaca</td><td>Melihat dan mengunduh dokumen yang diizinkan</td><td>Menambah, mengubah, atau menghapus dokumen</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Tugas administrator secara rinci</h2>
+  <ul>
+    <li>Membuat dan menonaktifkan akun pengguna.</li>
+    <li>Menetapkan peran dan folder yang boleh diakses setiap pengguna.</li>
+    <li>Menjaga struktur klasifikasi tetap seragam.</li>
+    <li>Memastikan pencadangan berjalan dan diuji.</li>
+    <li>Meninjau catatan aktivitas secara berkala untuk mendeteksi hal yang tidak wajar.</li>
+    <li>Memperbarui sistem dan menjaga keamanan akun.</li>
+  </ul>
+  <p>Sebaiknya jumlah administrator dibatasi, misalnya dua orang: satu utama dan satu pengganti. Semakin banyak administrator, semakin besar risiko kesalahan dan penyalahgunaan.</p>
+
+  <h2>Tugas operator secara rinci</h2>
+  <ul>
+    <li>Menerima dokumen dan mencatatnya di register.</li>
+    <li>Memindai dan memeriksa hasilnya.</li>
+    <li>Memberi nama file sesuai aturan dan menyimpannya di folder yang benar.</li>
+    <li>Memperbarui status tindak lanjut dokumen.</li>
+    <li>Melaporkan kepada administrator jika menemukan masalah, misalnya file rusak atau struktur folder yang tidak sesuai.</li>
+  </ul>
+
+  <h2>Prinsip hak akses minimal</h2>
+  <p>Berikan setiap orang akses sekecil mungkin yang masih cukup untuk menjalankan tugasnya. Contohnya, operator bidang kurikulum tidak perlu mengakses folder kepegawaian atau keuangan. Bendahara perlu akses ke folder keuangan tetapi tidak harus ke dokumen kesiswaan. Jika kebutuhan akses bertambah, tambahkan secara terbatas dan catat alasannya.</p>
+
+  <h2>Contoh pembagian akses di sekolah</h2>
+  <table>
+    <thead>
+      <tr><th>Folder</th><th>Administrator</th><th>Operator bidang terkait</th><th>Pembaca</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Kurikulum</td><td>Penuh</td><td>Tambah dan ubah</td><td>Lihat</td></tr>
+      <tr><td>Keuangan</td><td>Penuh</td><td>Hanya bendahara</td><td>Hanya pimpinan</td></tr>
+      <tr><td>Kepegawaian</td><td>Penuh</td><td>Hanya petugas kepegawaian</td><td>Hanya pimpinan</td></tr>
+      <tr><td>Dokumentasi kegiatan</td><td>Penuh</td><td>Tambah oleh dokumentator</td><td>Lihat sebagian</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Pemisahan tugas</h2>
+  <p>Untuk dokumen sensitif, terutama keuangan, hindari satu orang memegang seluruh siklus: membuat, menyetujui, mencatat, dan menyimpan. Pembagian tugas membuat kesalahan lebih mudah terdeteksi dan mengurangi peluang penyalahgunaan. Di lembaga yang petugasnya terbatas, minimal pisahkan antara yang membuat catatan dan yang memeriksanya.</p>
+
+  <h2>Saat petugas berganti</h2>
+  <ol>
+    <li>Tentukan tanggal serah terima dan siapa penggantinya.</li>
+    <li>Buat akun baru untuk petugas baru dengan peran yang sesuai.</li>
+    <li>Nonaktifkan akun petugas lama pada hari terakhirnya, jangan menunggu.</li>
+    <li>Serahkan panduan kerja, daftar kata sandi yang harus diganti, dan catatan tugas yang belum selesai.</li>
+    <li>Ganti kata sandi akun bersama jika masih ada, dan segera hapus kebiasaan berbagi akun.</li>
+    <li>Catat serah terima dalam berita acara singkat.</li>
+  </ol>
+
+  <h2>Menggunakan catatan aktivitas</h2>
+  <p>Catatan aktivitas menunjukkan siapa melakukan apa dan kapan. Administrator sebaiknya meninjaunya secara berkala, misalnya sebulan sekali. Hal yang perlu diperhatikan: penghapusan dokumen dalam jumlah besar, akses di luar jam kerja, percobaan masuk yang gagal berulang kali, dan akun yang tidak lagi dipakai tetapi masih aktif.</p>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Semua orang menjadi administrator.</strong> Hak akses besar dibagikan demi kemudahan dan akhirnya sulit dikendalikan.</li>
+    <li><strong>Berbagi satu akun.</strong> Tidak ada jejak yang bisa ditelusuri ke satu orang.</li>
+    <li><strong>Akun petugas lama dibiarkan aktif.</strong> Akun terlupakan adalah celah keamanan yang sering muncul.</li>
+    <li><strong>Peran tidak pernah ditinjau.</strong> Seiring pergantian tugas, hak akses seseorang bisa tidak lagi sesuai.</li>
+    <li><strong>Administrator hanya satu orang tanpa pengganti.</strong> Jika ia berhalangan, tidak ada yang bisa mengelola akses.</li>
+  </ul>
+
+  <h2>Contoh kasus: folder yang tiba-tiba kosong</h2>
+  <p>Di sebuah kantor, semua pegawai memiliki akses penuh ke folder bersama. Suatu pagi, satu folder berisi dokumen keuangan setahun kedapatan kosong karena seseorang tanpa sengaja memindahkannya. Karena semua orang memiliki akses yang sama dan tidak ada catatan aktivitas, butuh waktu lama untuk menemukannya. Setelah membagi peran dan mengaktifkan catatan aktivitas, kejadian serupa bisa ditelusuri dalam hitungan menit, dan operator tidak lagi bisa memindahkan folder di luar bidangnya.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> bagi peran menjadi administrator, operator, dan pembaca. Berikan akses sekecil mungkin, gunakan akun pribadi, nonaktifkan akun petugas yang pindah, dan tinjau catatan aktivitas secara berkala.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Berapa jumlah administrator yang ideal?</h3>
+  <p>Dua orang biasanya cukup: satu utama dan satu pengganti. Lebih dari itu perlu alasan yang jelas.</p>
+
+  <h3>Apakah pimpinan harus menjadi administrator?</h3>
+  <p>Tidak harus. Pimpinan cukup memiliki akses baca ke dokumen yang diperlukan dan wewenang menyetujui perubahan, sedangkan pengelolaan teknis diserahkan kepada administrator.</p>
+
+  <h3>Bagaimana jika petugasnya hanya satu orang?</h3>
+  <p>Tetap pisahkan akun kerja harian dari akun administrator, dan tunjuk satu orang lain sebagai pengganti darurat. Catat juga cara menghubunginya.</p>
+
+  <h3>Seberapa sering hak akses perlu ditinjau?</h3>
+  <p>Minimal setahun sekali, dan juga setiap ada pergantian petugas atau perubahan tugas.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-keamanan-dokumen.html">Menjaga Keamanan dan Kerahasiaan Dokumen Digital</a></li>
+    <li><a href="artikel-arsip-kepegawaian.html">Arsip Kepegawaian Digital: Menyimpan Data Pegawai dengan Aman</a></li>
+    <li><a href="artikel-audit-arsip-berkala.html">Audit Arsip Berkala: Daftar Periksa Tahunan untuk Menjaga Arsip Tetap Sehat</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>

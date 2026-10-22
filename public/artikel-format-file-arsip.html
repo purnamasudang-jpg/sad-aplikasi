@@ -1,74 +1,170 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar? | SAD - Sistem Arsip Digital</title>
-<meta name="description" content="Perbandingan format file PDF, Word, Excel, dan gambar untuk arsip digital, serta rekomendasi penggunaannya.">
-<link rel="canonical" href="https://sad-aplikasi.vercel.app/artikel-format-file-arsip.html">
-<meta name="google-site-verification" content="Cc7mLZ38FxNHChZVM-ISJuYcOcrT2pCBWBUK1_qio6Q">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="SAD - Sistem Arsip Digital">
-<meta property="og:title" content="Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar?">
-<meta property="og:description" content="Perbandingan format file PDF, Word, Excel, dan gambar untuk arsip digital, serta rekomendasi penggunaannya.">
-<meta property="og:url" content="https://sad-aplikasi.vercel.app/artikel-format-file-arsip.html">
+<title>Memilih Format File untuk Arsip Digital: PDF, Word, Excel, atau Gambar? | SAD</title>
+<meta name="description" content="Panduan memilih format file arsip digital: kapan memakai PDF, Word, Excel, atau gambar, kelebihan dan kekurangan masing-masing, aturan menyimpan jangka panjang, dan kesalahan yang perlu dihindari.">
 <style>
-:root{--bg:#f6f8fb;--card:#fff;--ink:#1d2733;--muted:#5b6876;--brand:#1a5fb4;--line:#e3e8ef}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
-header{background:var(--brand);color:#fff}
-.wrap{max-width:820px;margin:0 auto;padding:0 18px}
-header .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 18px}
-header a{color:#fff;text-decoration:none}
-.logo{font-weight:700;font-size:1.2rem}
-nav a{margin-left:14px;font-size:.95rem;opacity:.95}
-main{padding:28px 0 40px}
-article,.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:26px 24px}
-h1{font-size:1.65rem;line-height:1.3;margin:0 0 6px}
-h2{font-size:1.2rem;margin:26px 0 8px;color:#12365f}
-.meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
-ul{padding-left:22px}li{margin:5px 0}
-a{color:var(--brand)}
-.related{margin-top:24px}
-.related h3{margin:0 0 8px;font-size:1.05rem}
-.grid{display:grid;gap:14px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.item h2{margin:0 0 4px;font-size:1.08rem}
-.item p{margin:0;color:var(--muted);font-size:.95rem}
-footer{border-top:1px solid var(--line);background:#fff;padding:20px 0;font-size:.9rem;color:var(--muted);text-align:center}
-footer a{margin:0 6px}
-@media(max-width:520px){h1{font-size:1.4rem}article,.card{padding:20px 16px}nav a{margin:0 10px 0 0}}
+  :root { --biru:#1a56b8; --teks:#1f2937; --abu:#6b7280; --garis:#e5e7eb; --latar:#f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--latar); color:var(--teks); line-height:1.75; }
+  header.bar { background:var(--biru); color:#fff; }
+  header.bar .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  header.bar strong { font-size:1.1rem; letter-spacing:.5px; }
+  header.bar nav a { color:#fff; text-decoration:none; font-size:.9rem; margin-left:14px; }
+  main { max-width:860px; margin:20px auto; padding:0 12px; }
+  article { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:28px 24px; }
+  h1 { font-size:1.6rem; line-height:1.3; margin:0 0 6px; }
+  .meta { color:var(--abu); font-size:.85rem; margin-bottom:22px; }
+  h2 { font-size:1.2rem; margin:30px 0 8px; }
+  h3 { font-size:1.02rem; margin:20px 0 6px; }
+  p { margin:0 0 14px; }
+  ul, ol { margin:0 0 16px; padding-left:22px; }
+  li { margin-bottom:6px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:.93rem; }
+  th, td { border:1px solid var(--garis); padding:9px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef3fb; }
+  pre { background:#f6f8fa; border:1px solid var(--garis); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:.88rem; line-height:1.6; }
+  .catatan { background:#fff8e6; border-left:4px solid #f0b429; padding:12px 14px; border-radius:6px; margin:16px 0; }
+  .baca-juga a { color:var(--biru); }
+  footer { text-align:center; color:var(--abu); font-size:.85rem; padding:24px 12px 36px; }
+  footer a { color:var(--biru); text-decoration:none; margin:0 4px; }
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/">SAD</a><nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav></div></header>
-<main><div class="wrap">
+
+<header class="bar">
+  <div class="in">
+    <strong>SAD</strong>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="artikel.html">Artikel</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="panduan.html">Panduan</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <article>
-<h1>Memilih Format File untuk Arsip Digital: PDF, Word, atau Gambar?</h1>
-<div class="meta">Diterbitkan 20 Oktober 2026 &middot; Tim SAD</div>
-<p>Format file memengaruhi seberapa lama sebuah dokumen dapat dibuka, seberapa besar ukurannya, dan seberapa mudah diedit. Memilih format yang tepat sejak awal akan menghindarkan masalah di kemudian hari, misalnya file yang tidak dapat dibuka atau tampilan yang berubah di perangkat lain.</p>
-<h2>PDF</h2>
-<p>PDF adalah pilihan utama untuk arsip karena tampilannya tetap sama di berbagai perangkat dan sulit berubah tanpa sengaja. Cocok untuk surat final, laporan, SK, dan dokumen hasil pemindaian. Untuk arsip jangka panjang, tersedia varian PDF/A, yaitu standar internasional yang dirancang untuk pelestarian dokumen.</p>
-<h2>Word dan format dokumen lain</h2>
-<p>File Word atau sejenisnya cocok untuk dokumen yang masih sering direvisi, misalnya draf surat atau proposal. Setelah dokumen final dan ditandatangani, simpan versi PDF-nya sebagai arsip resmi, dan simpan file Word sebagai bahan kerja jika perlu.</p>
-<h2>Excel dan lembar kerja</h2>
-<p>Gunakan Excel untuk data yang perlu dihitung atau diolah, seperti anggaran dan daftar inventaris. Untuk keperluan arsip final, simpan juga salinan PDF agar tampilan tabel dan angka tidak bergeser.</p>
-<h2>Gambar dan foto</h2>
-<p>Format JPG cocok untuk foto dan dokumentasi kegiatan karena ukurannya ringan. PNG lebih sesuai untuk gambar dengan teks atau garis tajam. Hindari menyimpan dokumen teks panjang sebagai gambar, karena tidak dapat dicari dan ukurannya cenderung besar.</p>
-<h2>Tips menjaga ukuran tetap ringan</h2>
-<ul><li>Pindai dokumen dengan resolusi sedang, sekitar 200 sampai 300 dpi sudah cukup untuk dokumen teks.</li><li>Kompres foto sebelum diunggah jika resolusinya terlalu besar.</li><li>Gabungkan beberapa halaman pindaian menjadi satu file PDF per dokumen.</li><li>Gunakan fitur pengenalan teks agar isi PDF hasil pindaian dapat dicari.</li></ul>
-<p>Dengan kombinasi format yang tepat, arsip digital akan ringan, mudah dibuka, dan tetap terbaca bertahun-tahun ke depan.</p>
-<h2>Contoh pemilihan format dalam praktik</h2>
-<p>Surat undangan rapat disusun di Word, dikirim sebagai PDF kepada peserta, lalu disimpan dalam arsip sebagai PDF final bersama file Word-nya sebagai bahan revisi. Foto kegiatan disimpan sebagai JPG dalam folder dokumentasi. Anggaran kegiatan tetap dalam Excel untuk dihitung, sementara versi final yang ditandatangani dipindai sebagai PDF. Pola ini memisahkan dokumen kerja dari dokumen resmi.</p>
-<h2>Pertanyaan yang sering muncul</h2>
-<p>Apakah PDF hasil pindaian dapat dicari katanya? Hanya jika sudah melalui pengenalan teks. Tanpa itu, PDF hanyalah gambar. Berapa ukuran file yang wajar? Untuk dokumen teks, satu halaman umumnya cukup di bawah beberapa ratus kilobita jika dipindai dengan pengaturan yang tepat.</p>
-<p>Apakah format lama masih bisa dibuka di masa depan? Format terbuka dan populer seperti PDF dan JPG memiliki peluang terbaik. Periksa arsip penting setiap beberapa tahun dan konversikan jika ada format yang mulai ditinggalkan.</p>
-<div class="related"><h3>Baca juga</h3><ul><li><a href="/artikel-digitalisasi-arsip-lama.html">Langkah Digitalisasi Arsip Kertas Lama secara Bertahap</a></li><li><a href="/artikel-kesalahan-arsip-digital.html">Delapan Kesalahan Umum dalam Mengelola Arsip Digital</a></li><li><a href="/artikel-arsip-keuangan-sekolah.html">Mengelola Dokumen Keuangan Sekolah secara Tertib dan Aman</a></li></ul></div>
+  <h1>Memilih Format File untuk Arsip Digital: PDF, Word, Excel, atau Gambar?</h1>
+  <div class="meta">Diterbitkan 20 Oktober 2026 · Diperbarui 21 Oktober 2026 · Tim SAD</div>
+
+  <p>Setiap dokumen digital memiliki format: PDF, Word, Excel, JPG, dan seterusnya. Memilih format yang salah bisa membuat dokumen sulit dibuka beberapa tahun kemudian, berubah tampilannya di komputer lain, atau mudah diubah tanpa sengaja. Memilih format yang tepat adalah bagian dari menjaga keandalan arsip.</p>
+
+  <p>Artikel ini membandingkan format yang paling sering dipakai di sekolah dan kantor, lalu memberi panduan sederhana tentang kapan memakai masing-masing.</p>
+
+  <h2>Dua kebutuhan yang sering bertabrakan</h2>
+  <p>Sebuah dokumen biasanya memiliki dua fase. Pada fase kerja, dokumen masih sering diedit sehingga membutuhkan format yang mudah diubah. Pada fase arsip, dokumen sudah final dan tujuannya adalah dilestarikan sehingga membutuhkan format yang stabil, tampil sama di perangkat mana pun, dan sulit diubah. Karena itu, banyak kantor menyimpan dua versi: versi kerja dan versi arsip.</p>
+
+  <h2>Perbandingan format umum</h2>
+  <table>
+    <thead>
+      <tr><th>Format</th><th>Kelebihan</th><th>Kekurangan</th><th>Cocok untuk</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PDF</td><td>Tampilan tetap sama di perangkat mana pun, sulit diubah tanpa sengaja, bisa memuat banyak halaman</td><td>Kurang nyaman untuk diedit</td><td>Arsip final: surat, laporan, SK, hasil pindai</td></tr>
+      <tr><td>Word (DOCX)</td><td>Mudah diedit, cocok untuk penulisan dan revisi</td><td>Tampilan bisa bergeser di komputer lain, mudah berubah</td><td>Konsep dan versi kerja dokumen teks</td></tr>
+      <tr><td>Excel (XLSX)</td><td>Cocok untuk data, perhitungan, dan rekap</td><td>Rumus dan format bisa berubah, mudah terhapus tanpa sengaja</td><td>Data kerja, rekap, daftar</td></tr>
+      <tr><td>Gambar (JPG)</td><td>Ukuran file kecil, mudah dibuat dari ponsel</td><td>Kualitas turun jika dikompres berulang, tulisan tidak bisa dicari</td><td>Foto dokumentasi</td></tr>
+      <tr><td>Gambar (PNG)</td><td>Tajam untuk teks dan gambar garis, tanpa kehilangan kualitas</td><td>Ukuran file lebih besar</td><td>Tangkapan layar, bagan, tanda tangan digital</td></tr>
+      <tr><td>Teks biasa (TXT, CSV)</td><td>Sangat ringan, dapat dibuka di mana saja, tahan lama</td><td>Tanpa pemformatan</td><td>Data mentah dan catatan sederhana</td></tr>
+    </tbody>
+  </table>
+
+  <h2>PDF sebagai format arsip utama</h2>
+  <p>Untuk sebagian besar dokumen final, PDF adalah pilihan terbaik. Dokumennya terlihat sama di komputer, ponsel, maupun hasil cetak. Hasil pindai pun biasanya disimpan sebagai PDF. Ada varian PDF yang dirancang khusus untuk pelestarian jangka panjang (sering disebut PDF/A). Jika instansi Anda menyimpan arsip bernilai jangka panjang, varian ini patut dipertimbangkan.</p>
+  <p>Jika dokumen dibuat dari Word, simpan atau ekspor ke PDF saat sudah final. Jika dokumen berasal dari pemindai, pilih keluaran PDF dengan teks yang dapat dicari bila tersedia.</p>
+
+  <h2>Kapan menyimpan file Word atau Excel?</h2>
+  <ul>
+    <li>Saat dokumen masih konsep atau akan terus direvisi.</li>
+    <li>Saat dokumen berfungsi sebagai templat, misalnya format surat atau lembar rekap.</li>
+    <li>Saat Anda membutuhkan data mentah untuk diolah, seperti daftar siswa atau rekap anggaran.</li>
+  </ul>
+  <p>Setelah dokumen final dan disahkan, buat versi PDF-nya sebagai arsip, lalu simpan file sumbernya di subfolder terpisah.</p>
+
+  <h2>Menyimpan gambar dan dokumentasi</h2>
+  <p>Foto kegiatan umumnya disimpan sebagai JPG. Untuk foto yang bernilai tinggi, simpan juga salinan aslinya tanpa dikompres ulang. Hindari menyimpan dokumen teks sebagai foto, karena tulisan di dalamnya tidak dapat dicari dan ukurannya lebih besar dibanding PDF.</p>
+
+  <h2>Menjaga keterbacaan jangka panjang</h2>
+  <p>Teknologi berubah. Format yang jarang dipakai atau bergantung pada aplikasi tertentu berisiko tidak bisa dibuka beberapa tahun lagi. Beberapa kebiasaan yang membantu:</p>
+  <ul>
+    <li>Pilih format yang umum dan terbuka, seperti PDF, JPG, PNG, TXT, dan CSV.</li>
+    <li>Hindari format bawaan aplikasi khusus yang hanya bisa dibuka dengan satu program.</li>
+    <li>Periksa sampel arsip lama setiap tahun untuk memastikan masih bisa dibuka.</li>
+    <li>Jika format mulai usang, ubah ke format yang lebih umum dan simpan catatannya.</li>
+  </ul>
+
+  <h2>Dokumen dengan kata sandi dan tanda tangan digital</h2>
+  <p>File PDF dapat diberi kata sandi untuk membatasi pembukaan. Berhati-hatilah: jika kata sandi hilang, dokumen mungkin tidak bisa dipulihkan. Catat kata sandi di tempat yang aman dan terpisah. Untuk dokumen yang memakai tanda tangan digital, pastikan file disimpan utuh tanpa diubah, karena perubahan sekecil apa pun dapat membatalkan tanda tangannya.</p>
+
+  <h2>Pedoman cepat memilih format</h2>
+  <table>
+    <thead>
+      <tr><th>Situasi</th><th>Format yang disarankan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Surat atau laporan yang sudah final</td><td>PDF</td></tr>
+      <tr><td>Hasil pindai dokumen kertas</td><td>PDF</td></tr>
+      <tr><td>Konsep surat yang masih direvisi</td><td>Word (DOCX)</td></tr>
+      <tr><td>Rekap atau data yang diolah</td><td>Excel (XLSX), dan CSV untuk data mentah</td></tr>
+      <tr><td>Foto kegiatan</td><td>JPG</td></tr>
+      <tr><td>Bagan atau tangkapan layar</td><td>PNG</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Kesalahan umum yang sebaiknya dihindari</h2>
+  <ul>
+    <li><strong>Mengarsipkan dokumen final dalam bentuk Word.</strong> Tampilan bisa berubah dan isinya mudah terubah tanpa sengaja.</li>
+    <li><strong>Memotret dokumen dengan ponsel lalu menyimpannya sebagai JPG.</strong> Hasilnya sering miring dan tulisannya tidak dapat dicari.</li>
+    <li><strong>Satu halaman satu file.</strong> Dokumen banyak halaman sebaiknya digabung dalam satu PDF.</li>
+    <li><strong>Menyimpan hanya dalam format khusus aplikasi.</strong> Jika aplikasinya tidak dipakai lagi, file ikut sulit dibuka.</li>
+    <li><strong>Mengompres foto berulang kali.</strong> Kualitas gambar turun setiap kali dikompres.</li>
+  </ul>
+
+  <h2>Contoh kasus: laporan yang berantakan di komputer lain</h2>
+  <p>Seorang staf mengirim laporan dalam bentuk file Word kepada atasannya. Saat dibuka di komputer lain, tabel bergeser dan nomor halaman berantakan karena perbedaan huruf yang terpasang. Sejak kejadian itu, kantor menetapkan aturan sederhana: dokumen yang dikirim atau diarsipkan harus dalam bentuk PDF, sedangkan file Word hanya disimpan sebagai sumber di folder kerja.</p>
+
+  <div class="catatan">
+    <strong>Ringkasnya:</strong> gunakan Word atau Excel untuk bekerja, PDF untuk mengarsipkan dokumen final, JPG untuk foto, dan pilih format yang umum agar tetap terbaca bertahun-tahun kemudian.
+  </div>
+
+  <h2>Pertanyaan yang sering muncul</h2>
+
+  <h3>Apakah perlu menyimpan file Word setelah dibuat PDF-nya?</h3>
+  <p>Disarankan, terutama jika dokumen mungkin direvisi atau dipakai sebagai templat. Simpan di folder terpisah agar tidak tercampur dengan versi arsip.</p>
+
+  <h3>Mana yang lebih baik, JPG atau PDF untuk hasil pindai?</h3>
+  <p>PDF lebih baik karena dapat memuat banyak halaman, ukurannya efisien, dan dapat dilengkapi teks yang bisa dicari.</p>
+
+  <h3>Apakah format dokumen terbuka lebih aman?</h3>
+  <p>Format yang umum dan terbuka lebih kecil risikonya menjadi tidak terbaca di masa depan, karena banyak aplikasi mendukungnya.</p>
+
+  <h3>Bagaimana jika file lama tidak bisa dibuka?</h3>
+  <p>Coba buka dengan aplikasi lain yang mendukung format itu, atau cari alat konversi tepercaya. Setelah berhasil, simpan ulang dalam format yang lebih umum dan cadangkan.</p>
+
+  <h2 style="margin-top:34px">Baca juga</h2>
+  <ul class="baca-juga">
+    <li><a href="artikel-scan-dokumen.html">Scan Dokumen: Tips Memindai Dokumen agar Hasilnya Jelas dan Bermanfaat</a></li>
+    <li><a href="artikel-penamaan-file.html">Aturan Penamaan File Dokumen yang Baik untuk Arsip Digital</a></li>
+    <li><a href="artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1 untuk Arsip Penting</a></li>
+  </ul>
 </article>
-</div></main>
-<footer><div class="wrap">
-<a href="/tentang.html">Tentang SAD</a>·<a href="/panduan.html">Panduan</a>·<a href="/faq.html">FAQ</a>·<a href="/kebijakan-privasi.html">Kebijakan Privasi</a>·<a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
-<p>&copy; 2026 SAD - Sistem Arsip Digital</p>
-</div></footer>
+</main>
+
+<footer>
+  <div>
+    <a href="tentang.html">Tentang SAD</a> ·
+    <a href="panduan.html">Panduan</a> ·
+    <a href="faq.html">FAQ</a> ·
+    <a href="kebijakan-privasi.html">Kebijakan Privasi</a> ·
+    <a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a>
+  </div>
+  <div style="margin-top:8px">© 2026 SAD - Sistem Arsip Digital</div>
+</footer>
+
 </body>
 </html>
