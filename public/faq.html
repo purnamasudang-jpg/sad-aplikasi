@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ SAD - Pertanyaan yang Sering Diajukan tentang Arsip Digital</title>
-    <meta name="description" content="Kumpulan pertanyaan dan jawaban seputar SAD (Sistem Arsip Digital): keamanan data, biaya, cara upload dokumen, akses multi perangkat, dan hal lain yang paling sering ditanyakan pengguna.">
+    <meta name="description" content="Kumpulan pertanyaan dan jawaban seputar SAD (Sistem Arsip Digital): penggunaan, keamanan data, biaya, serta pertanyaan umum tentang kearsipan seperti penamaan file, folder, retensi, dan digitalisasi.">
     <meta name="keywords" content="faq arsip digital, pertanyaan aplikasi kearsipan, keamanan arsip online, cara pakai aplikasi arsip">
     <link rel="canonical" href="https://sad-aplikasi.vercel.app/faq.html">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
@@ -13,179 +13,283 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <meta property="og:title" content="FAQ SAD - Pertanyaan yang Sering Diajukan" />
-    <meta property="og:description" content="Jawaban atas pertanyaan paling sering diajukan seputar penggunaan dan keamanan SAD." />
+    <meta property="og:description" content="Jawaban atas pertanyaan paling sering diajukan seputar penggunaan, keamanan, dan kearsipan di SAD." />
     <meta property="og:url" content="https://sad-aplikasi.vercel.app/faq.html" />
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="SAD - Aplikasi Arsip Digital" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SAD - Sistem Arsip Digital" />
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337" crossorigin="anonymous"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --bg-body:#f5f2eb; --bg-header:#3e2723; --accent-gold:#d4af37; --text-dark:#3e2723; }
+        :root { --bg-body:#f5f2eb; --bg-header:#3e2723; --accent-gold:#d4af37; --text-dark:#3e2723; --garis:#e0d7c8; }
         body { background:var(--bg-body); color:var(--text-dark); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.7; }
-        header.topbar { background:var(--bg-header); color:#fff; padding:18px 0; }
-        header.topbar a { color:#fff; text-decoration:none; font-weight:700; font-size:20px; }
-        header.topbar a span { color:var(--accent-gold); }
+        header.topbar { background:var(--bg-header); color:#fff; padding:14px 0; }
+        header.topbar .wrap { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+        header.topbar a.brand { color:#fff; text-decoration:none; font-weight:700; font-size:20px; }
+        header.topbar a.brand span { color:var(--accent-gold); }
+        header.topbar nav a { color:#f1e9e4; text-decoration:none; font-size:14px; margin-left:16px; }
+        header.topbar nav a:hover, header.topbar nav a.aktif { color:var(--accent-gold); }
         .hero { padding:48px 0 24px; }
         .hero h1 { font-weight:800; font-size:32px; margin-bottom:12px; }
         .hero p.lead { color:#6d4c41; font-size:17px; }
-        section { padding:36px 0; border-top:1px solid #e0d7c8; }
+        section { padding:36px 0; border-top:1px solid var(--garis); }
         section h2 { font-weight:800; font-size:24px; margin-bottom:16px; }
-        .accordion-item { background:#fff; border:1px solid #e0d7c8; border-radius:12px !important; margin-bottom:12px; overflow:hidden; }
+        section h3.sub { font-size:18px; font-weight:700; margin:20px 0 8px; }
+        a { color:#6d4c41; }
+        .card-fitur { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; height:100%; }
+        .card-fitur i { color:var(--accent-gold); font-size:26px; margin-bottom:10px; }
+        .card-fitur h3 { font-size:18px; font-weight:700; }
+        .langkah { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; margin-bottom:18px; }
+        .langkah h3 { font-size:18px; font-weight:700; margin-bottom:10px; }
+        .langkah .nomor { display:inline-block; background:var(--bg-header); color:var(--accent-gold); width:32px; height:32px; border-radius:50%; text-align:center; line-height:32px; font-weight:800; margin-right:10px; }
+        .tabel { width:100%; border-collapse:collapse; background:#fff; margin:8px 0 18px; font-size:15px; }
+        .tabel th, .tabel td { border:1px solid var(--garis); padding:10px 12px; text-align:left; vertical-align:top; }
+        .tabel th { background:#efe8d8; }
+        pre.contoh { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:14px; line-height:1.6; }
+        .catatan { background:#fff8e6; border-left:4px solid var(--accent-gold); padding:12px 16px; border-radius:6px; margin:16px 0; }
+        .bacaan a { display:block; background:#fff; border:1px solid var(--garis); border-radius:10px; padding:12px 16px; margin-bottom:10px; text-decoration:none; font-weight:600; color:var(--text-dark); }
+        .bacaan a small { display:block; font-weight:400; color:#8d6e63; }
+        .bacaan a:hover { border-color:var(--accent-gold); }
+        .accordion-item { background:#fff; border:1px solid var(--garis); border-radius:12px !important; margin-bottom:12px; overflow:hidden; }
         .accordion-button { background:#fff; color:var(--text-dark); font-weight:700; }
         .accordion-button:not(.collapsed) { background:#f5f2eb; color:var(--text-dark); box-shadow:none; }
-        .accordion-button:focus { box-shadow:none; border-color:#e0d7c8; }
+        .accordion-button:focus { box-shadow:none; border-color:var(--garis); }
         .btn-cta { background:var(--bg-header); color:#fff; border:none; padding:12px 28px; border-radius:8px; font-weight:700; text-decoration:none; display:inline-block; }
         .btn-cta:hover { background:#2d1e18; color:#fff; }
         footer { background:var(--bg-header); color:#d7ccc8; padding:24px 0; font-size:13px; text-align:center; }
         footer a { color:var(--accent-gold); text-decoration:none; }
+        footer p { margin-bottom:8px; }
     </style>
 </head>
 <body>
 
     <header class="topbar">
-        <div class="container">
-            <a href="/">SAD <span>Sistem Arsip Digital</span></a>
+        <div class="container wrap">
+            <a href="/" class="brand">SAD <span>Sistem Arsip Digital</span></a>
+            <nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html" class="aktif">FAQ</a></nav>
         </div>
     </header>
 
     <div class="hero container">
         <h1>Pertanyaan yang Sering Diajukan (FAQ) tentang SAD</h1>
-        <p class="lead">Kami mengumpulkan pertanyaan-pertanyaan yang paling sering diajukan pengguna seputar penggunaan, keamanan, dan ketentuan SAD (Sistem Arsip Digital). Jika pertanyaan Anda belum terjawab di sini, silakan baca <a href="/panduan.html">panduan penggunaan</a> atau halaman <a href="/tentang.html">tentang SAD</a>.</p>
+        <p class="lead">Kami mengumpulkan pertanyaan yang paling sering diajukan seputar penggunaan, keamanan, ketentuan SAD (Sistem Arsip Digital), dan kearsipan secara umum. Jika pertanyaan Anda belum terjawab di sini, silakan baca <a href="/panduan.html">panduan penggunaan</a> atau halaman <a href="/tentang.html">tentang SAD</a>.</p>
     </div>
-
     <section class="container">
         <h2>Seputar Penggunaan</h2>
         <div class="accordion" id="faq1">
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q1">Apa itu SAD?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q1" aria-expanded="false" aria-controls="q1">Apa itu SAD?</button>
                 </h3>
                 <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faq1">
-                    <div class="accordion-body">SAD (Sistem Arsip Digital) adalah aplikasi web untuk menyimpan dan mengelola dokumen secara digital: dokumen dikelompokkan dalam folder, dapat dicari cepat, dan bisa dibuka kembali dari perangkat mana saja. Cocok untuk sekolah, instansi pemerintahan, perkantoran, dan perorangan.</div>
+                    <div class="accordion-body">SAD (Sistem Arsip Digital) adalah aplikasi web untuk menyimpan dan mengelola dokumen secara digital: dokumen dikelompokkan dalam folder, dapat dicari cepat, dan bisa dibuka kembali dari perangkat mana saja. Cocok untuk sekolah, instansi pemerintahan, perkantoran, dan perorangan. Penjelasan lengkapnya ada di halaman <a href="/tentang.html">Tentang SAD</a>.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">Apakah saya perlu memasang aplikasi di HP atau komputer?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2" aria-expanded="false" aria-controls="q2">Apakah saya perlu memasang aplikasi di HP atau komputer?</button>
                 </h3>
                 <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faq1">
-                    <div class="accordion-body">Tidak perlu. SAD berjalan sepenuhnya di browser. Cukup buka sad-aplikasi.vercel.app lewat HP, tablet, atau laptop — tanpa instalasi apa pun.</div>
+                    <div class="accordion-body">Tidak perlu. SAD berjalan sepenuhnya di browser. Cukup buka sad-aplikasi.vercel.app lewat HP, tablet, atau laptop - tanpa instalasi apa pun. Koneksi internet tetap diperlukan karena data tersimpan di cloud.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">Jenis file apa saja yang bisa diunggah?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3" aria-expanded="false" aria-controls="q3">Bagaimana cara mulai memakai SAD?</button>
                 </h3>
                 <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faq1">
-                    <div class="accordion-body">Dokumen umum seperti PDF, DOCX, XLSX, serta berkas gambar seperti JPG dan PNG dapat diunggah ke dalam folder arsip Anda.</div>
+                    <div class="accordion-body">Daftar akun, buat folder pertama, lalu unggah dokumen. Langkah lengkapnya dijelaskan di halaman <a href="/panduan.html">Panduan Penggunaan SAD</a>.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">Apakah dokumen yang saya unggah memakan memori HP saya?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q4" aria-expanded="false" aria-controls="q4">Jenis file apa saja yang bisa diunggah?</button>
                 </h3>
                 <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faq1">
+                    <div class="accordion-body">Dokumen umum seperti PDF, DOCX, XLSX, serta berkas gambar seperti JPG dan PNG dapat diunggah ke dalam folder arsip Anda. Untuk arsip final, PDF umumnya pilihan terbaik; pembahasannya ada di <a href="/artikel-format-file-arsip.html">artikel format file arsip</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q5" aria-expanded="false" aria-controls="q5">Apakah dokumen yang saya unggah memakan memori HP saya?</button>
+                </h3>
+                <div id="q5" class="accordion-collapse collapse" data-bs-parent="#faq1">
                     <div class="accordion-body">Tidak. Semua dokumen tersimpan di cloud (server daring), bukan di memori perangkat Anda. Itulah keunggulan SAD: arsip bisa menumpuk tanpa membuat memori HP penuh.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">Bagaimana cara mencari dokumen yang pernah diunggah?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q6" aria-expanded="false" aria-controls="q6">Bagaimana cara mencari dokumen yang pernah diunggah?</button>
                 </h3>
-                <div id="q5" class="accordion-collapse collapse" data-bs-parent="#faq1">
+                <div id="q6" class="accordion-collapse collapse" data-bs-parent="#faq1">
                     <div class="accordion-body">Gunakan fitur pencarian di dalam aplikasi. Anda dapat mencari berdasarkan judul dokumen, nomor surat, atau kata kunci lain. SAD juga memiliki fitur deteksi nomor surat otomatis saat dokumen diunggah, sehingga pencarian berdasarkan nomor register menjadi lebih akurat.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q6">Apa itu fitur register arsip fisik?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q7" aria-expanded="false" aria-controls="q7">Apa itu fitur register arsip fisik?</button>
                 </h3>
-                <div id="q6" class="accordion-collapse collapse" data-bs-parent="#faq1">
+                <div id="q7" class="accordion-collapse collapse" data-bs-parent="#faq1">
                     <div class="accordion-body">Fitur ini untuk mencatat dokumen fisik yang disimpan di depo arsip atau lemari kantor. Anda mencatat lokasi penyimpanannya (misalnya boks dan rak), sehingga saat dokumen aslinya dibutuhkan, lokasinya langsung ketahuan tanpa harus mencari satu per satu.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q8" aria-expanded="false" aria-controls="q8">Bisakah SAD dipakai oleh beberapa petugas sekaligus?</button>
+                </h3>
+                <div id="q8" class="accordion-collapse collapse" data-bs-parent="#faq1">
+                    <div class="accordion-body">Bisa. Setiap petugas sebaiknya memiliki akun sendiri. Data setiap akun terpisah, sehingga riwayat dan tanggung jawab tiap petugas jelas. Hindari berbagi satu akun untuk banyak orang.</div>
                 </div>
             </div>
         </div>
     </section>
-
     <section class="container">
         <h2>Seputar Keamanan &amp; Data</h2>
         <div class="accordion" id="faq2">
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q7">Apakah data arsip saya aman?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q9" aria-expanded="false" aria-controls="q9">Apakah data arsip saya aman?</button>
                 </h3>
-                <div id="q7" class="accordion-collapse collapse" data-bs-parent="#faq2">
+                <div id="q9" class="accordion-collapse collapse" data-bs-parent="#faq2">
                     <div class="accordion-body">Kami memprioritaskan keamanan data: password akun disimpan dalam bentuk terenkripsi, setiap pengguna hanya dapat mengakses arsip miliknya sendiri, dan aplikasi dilengkapi proteksi standar keamanan web. Rincian lebih lanjut ada di halaman <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q8">Apakah orang lain bisa melihat arsip saya?</button>
-                </h3>
-                <div id="q8" class="accordion-collapse collapse" data-bs-parent="#faq2">
-                    <div class="accordion-body">Tidak. Data setiap akun terpisah dan hanya bisa diakses setelah login dengan akun pemiliknya. Karena itu, jangan bagikan password akun Anda kepada siapa pun — jika petugas lain perlu mengarsipkan juga, buatkan akun terpisah.</div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q9">Bagaimana jika saya lupa password?</button>
-                </h3>
-                <div id="q9" class="accordion-collapse collapse" data-bs-parent="#faq2">
-                    <div class="accordion-body">Hubungi pengelola/admin SAD di instansi Anda untuk bantuan pemulihan akses. Kami menyarankan menyimpan password di tempat yang aman dan mudah Anda akses kembali.</div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q10">Apakah arsip bisa dibuka dari HP orang lain atau komputer kantor?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q10" aria-expanded="false" aria-controls="q10">Apakah orang lain bisa melihat arsip saya?</button>
                 </h3>
                 <div id="q10" class="accordion-collapse collapse" data-bs-parent="#faq2">
+                    <div class="accordion-body">Tidak. Data setiap akun terpisah dan hanya bisa diakses setelah login dengan akun pemiliknya. Karena itu, jangan bagikan password akun Anda kepada siapa pun - jika petugas lain perlu mengarsipkan juga, buatkan akun terpisah.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q11" aria-expanded="false" aria-controls="q11">Bagaimana jika saya lupa password?</button>
+                </h3>
+                <div id="q11" class="accordion-collapse collapse" data-bs-parent="#faq2">
+                    <div class="accordion-body">Hubungi pengelola SAD di instansi Anda untuk bantuan pemulihan akses. Kami menyarankan menyimpan password di tempat yang aman dan mudah Anda akses kembali.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q12" aria-expanded="false" aria-controls="q12">Apakah arsip bisa dibuka dari HP orang lain atau komputer kantor?</button>
+                </h3>
+                <div id="q12" class="accordion-collapse collapse" data-bs-parent="#faq2">
                     <div class="accordion-body">Bisa. Karena data tersimpan di cloud, Anda cukup login dari browser perangkat mana pun dan seluruh arsip Anda langsung tersedia. Jangan lupa keluar dari akun setelah selesai memakai perangkat bersama.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q13" aria-expanded="false" aria-controls="q13">Apakah saya masih perlu mencadangkan dokumen sendiri?</button>
+                </h3>
+                <div id="q13" class="accordion-collapse collapse" data-bs-parent="#faq2">
+                    <div class="accordion-body">Untuk dokumen yang sangat penting, ya. Praktik terbaik adalah memiliki lebih dari satu salinan di media dan lokasi berbeda. Caranya dijelaskan di <a href="/artikel-backup-dokumen.html">artikel backup dokumen 3-2-1</a>.</div>
                 </div>
             </div>
         </div>
     </section>
-
     <section class="container">
         <h2>Seputar Ketentuan</h2>
         <div class="accordion" id="faq3">
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q11">Apakah SAD berbayar?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q14" aria-expanded="false" aria-controls="q14">Apakah SAD berbayar?</button>
                 </h3>
-                <div id="q11" class="accordion-collapse collapse" data-bs-parent="#faq3">
+                <div id="q14" class="accordion-collapse collapse" data-bs-parent="#faq3">
                     <div class="accordion-body">SAD dapat digunakan secara gratis oleh sekolah, instansi, dan perorangan. Ketentuan penggunaan selengkapnya tersedia di halaman <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q12">Apakah ada batas jumlah folder atau dokumen?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q15" aria-expanded="false" aria-controls="q15">Apakah ada batas jumlah folder atau dokumen?</button>
                 </h3>
-                <div id="q12" class="accordion-collapse collapse" data-bs-parent="#faq3">
+                <div id="q15" class="accordion-collapse collapse" data-bs-parent="#faq3">
                     <div class="accordion-body">Anda dapat membuat folder dan mengunggah dokumen sesuai kebutuhan administrasi Anda. Jika kebutuhan penyimpanan instansi Anda sangat besar dan membutuhkan kapasitas khusus, silakan hubungi pengelola.</div>
                 </div>
             </div>
 
             <div class="accordion-item">
                 <h3 class="accordion-header">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q13">Bolehkah menyimpan dokumen rahasia seperti SK atau data pribadi siswa?</button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q16" aria-expanded="false" aria-controls="q16">Bolehkah menyimpan dokumen rahasia seperti SK atau data pribadi siswa?</button>
                 </h3>
-                <div id="q13" class="accordion-collapse collapse" data-bs-parent="#faq3">
-                    <div class="accordion-body">SAD dirancang untuk dokumen kerja termasuk yang bersifat terbatas: data hanya dapat diakses oleh akun pemiliknya. Meski demikian, selalu ikuti kebijakan keamanan informasi yang berlaku di instansi Anda mengenai klasifikasi dokumen.</div>
+                <div id="q16" class="accordion-collapse collapse" data-bs-parent="#faq3">
+                    <div class="accordion-body">SAD dirancang untuk dokumen kerja termasuk yang bersifat terbatas: data hanya dapat diakses oleh akun pemiliknya. Meski demikian, selalu ikuti kebijakan keamanan informasi yang berlaku di instansi Anda mengenai klasifikasi dokumen. Panduan umumnya ada di <a href="/artikel-keamanan-dokumen.html">artikel keamanan dokumen digital</a>.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <h2>Seputar Kearsipan</h2>
+        <div class="accordion" id="faq4">
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q17" aria-expanded="false" aria-controls="q17">Bagaimana cara menyusun folder arsip yang baik?</button>
+                </h3>
+                <div id="q17" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Mulailah dari pengelompokan berdasarkan bidang kerja, lalu tahun, lalu jenis dokumen, dan batasi jumlah tingkatnya. Contoh dan langkahnya ada di <a href="/artikel-klasifikasi-arsip.html">artikel klasifikasi arsip</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q18" aria-expanded="false" aria-controls="q18">Bagaimana sebaiknya memberi nama dokumen?</button>
+                </h3>
+                <div id="q18" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Gunakan judul yang deskriptif dan pola yang konsisten, misalnya diawali tanggal lalu perihal singkat. Aturan dan contohnya ada di <a href="/artikel-penamaan-file.html">artikel penamaan file</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q19" aria-expanded="false" aria-controls="q19">Apakah dokumen kertas boleh dibuang setelah dipindai dan diunggah?</button>
+                </h3>
+                <div id="q19" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Tidak otomatis. Keabsahan dokumen digital dan nasib dokumen asli mengikuti aturan instansi Anda. Untuk dokumen asli yang masih harus disimpan, catat lokasinya di register arsip fisik. Lihat juga <a href="/artikel-retensi-arsip.html">artikel retensi arsip</a> dan <a href="/artikel-pemusnahan-arsip.html">prosedur pemusnahan arsip</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q20" aria-expanded="false" aria-controls="q20">Berapa lama sebuah dokumen harus disimpan?</button>
+                </h3>
+                <div id="q20" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Tergantung jenis dokumen dan pedoman retensi di instansi Anda. Gambaran umum cara menentukan masa simpan ada di <a href="/artikel-retensi-arsip.html">artikel retensi arsip</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q21" aria-expanded="false" aria-controls="q21">Bagaimana mendigitalkan arsip kertas yang sudah lama menumpuk?</button>
+                </h3>
+                <div id="q21" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Mulai dari dokumen yang paling penting, lakukan bertahap, dan jangan memusnahkan dokumen asli sebelum prosedurnya terpenuhi. Langkahnya ada di <a href="/artikel-digitalisasi-arsip-lama.html">artikel digitalisasi arsip kertas lama</a>.</div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q22" aria-expanded="false" aria-controls="q22">Apa saja kesalahan yang sering terjadi dalam mengelola arsip digital?</button>
+                </h3>
+                <div id="q22" class="accordion-collapse collapse" data-bs-parent="#faq4">
+                    <div class="accordion-body">Antara lain tidak ada cadangan, nama file acak, folder tanpa struktur, dan berbagi akun. Ringkasannya ada di <a href="/artikel-kesalahan-arsip-digital.html">artikel delapan kesalahan umum arsip digital</a>.</div>
                 </div>
             </div>
         </div>
@@ -193,7 +297,7 @@
 
     <section class="container text-center">
         <h2>Masih Ada yang Ingin Ditanyakan?</h2>
-        <p>Coba langsung aplikasinya — cara tercepat memahami SAD adalah dengan memakainya. Daftar akun dan unggah dokumen pertama Anda.</p>
+        <p>Baca <a href="/panduan.html">panduan penggunaan</a>, jelajahi <a href="/artikel.html">artikel kearsipan</a>, atau coba langsung aplikasinya - cara tercepat memahami SAD adalah dengan memakainya.</p>
         <a href="/" class="btn-cta">Masuk / Daftar Akun SAD</a>
     </section>
 
@@ -211,10 +315,13 @@
     </section>
 
     <footer>
-        <p>Sistem Pengelolaan Arsip Digital &copy; 2026 - Asp</p>
-        <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/tentang.html">Tentang SAD</a> &nbsp;&middot;&nbsp; <a href="/panduan.html">Panduan</a></p>
-        <p>Artikel: <a href="/artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-scan-dokumen.html">Scan Dokumen</a></p>
+        <div class="container">
+            <p>&copy; 2026 SAD - Sistem Arsip Digital</p>
+            <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/artikel.html">Artikel</a> &nbsp;&middot;&nbsp; <a href="/tentang.html">Tentang</a> &nbsp;&middot;&nbsp; <a href="/panduan.html">Panduan</a> &nbsp;&middot;&nbsp; <a href="/faq.html">FAQ</a> &nbsp;&middot;&nbsp; <a href="/kebijakan-privasi.html">Kebijakan Privasi</a> &nbsp;&middot;&nbsp; <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a></p>
+            <p>Bacaan: <a href="/artikel-arsip-digital-sekolah.html">Manfaat Arsip Digital</a> &nbsp;&middot;&nbsp; <a href="/artikel-klasifikasi-arsip.html">Klasifikasi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-penamaan-file.html">Penamaan File</a> &nbsp;&middot;&nbsp; <a href="/artikel-backup-dokumen.html">Backup 3-2-1</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-surat-masuk-keluar.html">Surat Masuk &amp; Keluar</a></p>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

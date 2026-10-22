@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panduan Penggunaan SAD - Cara Mengelola Arsip Digital dari Nol</title>
-    <meta name="description" content="Panduan lengkap menggunakan SAD (Sistem Arsip Digital): cara daftar akun, membuat folder arsip, mengunggah dokumen, mencari berkas, dan mengelola arsip fisik — untuk sekolah, instansi, dan perorangan.">
+    <meta name="description" content="Panduan lengkap menggunakan SAD (Sistem Arsip Digital): persiapan, cara daftar akun, membuat folder arsip, mengunggah dokumen, mencari berkas, mencatat arsip fisik, serta mengatasi masalah umum.">
     <meta name="keywords" content="panduan arsip digital, cara mengarsipkan dokumen, tutorial sistem kearsipan, aplikasi arsip sekolah, cara upload dokumen online">
     <link rel="canonical" href="https://sad-aplikasi.vercel.app/panduan.html">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
@@ -13,102 +13,181 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <meta property="og:title" content="Panduan Penggunaan SAD - Cara Mengelola Arsip Digital dari Nol" />
-    <meta property="og:description" content="Panduan lengkap menggunakan SAD: daftar akun, buat folder, unggah dokumen, dan kelola arsip dengan rapi." />
+    <meta property="og:description" content="Panduan langkah demi langkah memakai SAD: daftar akun, buat folder, unggah dokumen, cari berkas, dan catat arsip fisik." />
     <meta property="og:url" content="https://sad-aplikasi.vercel.app/panduan.html" />
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="SAD - Aplikasi Arsip Digital" />
+    <meta property="og:site_name" content="SAD - Sistem Arsip Digital" />
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337" crossorigin="anonymous"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root { --bg-body:#f5f2eb; --bg-header:#3e2723; --accent-gold:#d4af37; --text-dark:#3e2723; }
+        :root { --bg-body:#f5f2eb; --bg-header:#3e2723; --accent-gold:#d4af37; --text-dark:#3e2723; --garis:#e0d7c8; }
         body { background:var(--bg-body); color:var(--text-dark); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.7; }
-        header.topbar { background:var(--bg-header); color:#fff; padding:18px 0; }
-        header.topbar a { color:#fff; text-decoration:none; font-weight:700; font-size:20px; }
-        header.topbar a span { color:var(--accent-gold); }
+        header.topbar { background:var(--bg-header); color:#fff; padding:14px 0; }
+        header.topbar .wrap { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+        header.topbar a.brand { color:#fff; text-decoration:none; font-weight:700; font-size:20px; }
+        header.topbar a.brand span { color:var(--accent-gold); }
+        header.topbar nav a { color:#f1e9e4; text-decoration:none; font-size:14px; margin-left:16px; }
+        header.topbar nav a:hover, header.topbar nav a.aktif { color:var(--accent-gold); }
         .hero { padding:48px 0 24px; }
         .hero h1 { font-weight:800; font-size:32px; margin-bottom:12px; }
         .hero p.lead { color:#6d4c41; font-size:17px; }
-        section { padding:36px 0; border-top:1px solid #e0d7c8; }
+        section { padding:36px 0; border-top:1px solid var(--garis); }
         section h2 { font-weight:800; font-size:24px; margin-bottom:16px; }
-        .langkah { background:#fff; border:1px solid #e0d7c8; border-radius:12px; padding:22px; margin-bottom:18px; }
+        section h3.sub { font-size:18px; font-weight:700; margin:20px 0 8px; }
+        a { color:#6d4c41; }
+        .card-fitur { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; height:100%; }
+        .card-fitur i { color:var(--accent-gold); font-size:26px; margin-bottom:10px; }
+        .card-fitur h3 { font-size:18px; font-weight:700; }
+        .langkah { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; margin-bottom:18px; }
         .langkah h3 { font-size:18px; font-weight:700; margin-bottom:10px; }
         .langkah .nomor { display:inline-block; background:var(--bg-header); color:var(--accent-gold); width:32px; height:32px; border-radius:50%; text-align:center; line-height:32px; font-weight:800; margin-right:10px; }
+        .tabel { width:100%; border-collapse:collapse; background:#fff; margin:8px 0 18px; font-size:15px; }
+        .tabel th, .tabel td { border:1px solid var(--garis); padding:10px 12px; text-align:left; vertical-align:top; }
+        .tabel th { background:#efe8d8; }
+        pre.contoh { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:14px; line-height:1.6; }
+        .catatan { background:#fff8e6; border-left:4px solid var(--accent-gold); padding:12px 16px; border-radius:6px; margin:16px 0; }
+        .bacaan a { display:block; background:#fff; border:1px solid var(--garis); border-radius:10px; padding:12px 16px; margin-bottom:10px; text-decoration:none; font-weight:600; color:var(--text-dark); }
+        .bacaan a small { display:block; font-weight:400; color:#8d6e63; }
+        .bacaan a:hover { border-color:var(--accent-gold); }
+        .accordion-item { background:#fff; border:1px solid var(--garis); border-radius:12px !important; margin-bottom:12px; overflow:hidden; }
+        .accordion-button { background:#fff; color:var(--text-dark); font-weight:700; }
+        .accordion-button:not(.collapsed) { background:#f5f2eb; color:var(--text-dark); box-shadow:none; }
+        .accordion-button:focus { box-shadow:none; border-color:var(--garis); }
         .btn-cta { background:var(--bg-header); color:#fff; border:none; padding:12px 28px; border-radius:8px; font-weight:700; text-decoration:none; display:inline-block; }
         .btn-cta:hover { background:#2d1e18; color:#fff; }
         footer { background:var(--bg-header); color:#d7ccc8; padding:24px 0; font-size:13px; text-align:center; }
         footer a { color:var(--accent-gold); text-decoration:none; }
+        footer p { margin-bottom:8px; }
     </style>
 </head>
 <body>
 
     <header class="topbar">
-        <div class="container">
-            <a href="/">SAD <span>Sistem Arsip Digital</span></a>
+        <div class="container wrap">
+            <a href="/" class="brand">SAD <span>Sistem Arsip Digital</span></a>
+            <nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html">Tentang</a><a href="/panduan.html" class="aktif">Panduan</a><a href="/faq.html">FAQ</a></nav>
         </div>
     </header>
 
     <div class="hero container">
         <h1>Panduan Penggunaan SAD: Mengelola Arsip Digital dari Nol Sampai Rapi</h1>
-        <p class="lead">Artikel ini menjelaskan langkah demi langkah cara menggunakan SAD (Sistem Arsip Digital) — mulai dari membuat akun, menyusun folder arsip, mengunggah dokumen, hingga mencari berkas kembali dalam hitungan detik. Cocok untuk operator sekolah, staf tata usaha, admin instansi, maupun pengguna perorangan.</p>
-        <a href="/" class="btn-cta">Buka Aplikasi SAD <i class="fa-solid fa-arrow-right"></i></a>
+        <p class="lead">Halaman ini menjelaskan langkah demi langkah cara menggunakan SAD (Sistem Arsip Digital) - mulai dari persiapan, membuat akun, menyusun folder arsip, mengunggah dokumen, hingga mencari berkas kembali dalam hitungan detik. Cocok untuk operator sekolah, staf tata usaha, admin instansi, maupun pengguna perorangan. <a href="/" class="btn-cta ms-1 mt-2">Buka Aplikasi SAD</a></p>
     </div>
+
+    <section class="container">
+        <h2>Sebelum Mulai: Tiga Keputusan Kecil yang Menghemat Banyak Waktu</h2>
+        <p>Aplikasi arsip hanya sebaik aturan yang dipakai di dalamnya. Sebelum membuat akun dan mengunggah dokumen, luangkan sepuluh menit untuk memutuskan tiga hal berikut:</p>
+        <ol>
+            <li><b>Pola folder.</b> Akan dikelompokkan per tahun, per jenis dokumen, atau per bidang? Pilih satu pola utama dan pakai secara konsisten. Contohnya ada di <a href="/artikel-klasifikasi-arsip.html">artikel klasifikasi arsip</a>.</li>
+            <li><b>Pola penamaan.</b> Bagaimana judul dokumen akan ditulis? Sepakati polanya sejak awal. Panduannya ada di <a href="/artikel-penamaan-file.html">artikel penamaan file</a>.</li>
+            <li><b>Siapa yang mengarsipkan.</b> Tentukan petugas dan pengganti, dan siapkan akun untuk masing-masing.</li>
+        </ol>
+    </section>
 
     <section class="container">
         <h2>Langkah 1: Membuat Akun SAD</h2>
         <p>Buka halaman utama SAD, lalu pilih menu <b>Daftar</b>. Isi nama pengguna (username) dan kata sandi (password) yang mudah Anda ingat namun sulit ditebak orang lain. Setelah akun dibuat, Anda bisa langsung masuk ke dalam aplikasi.</p>
-        <p>Tips memilih password yang aman: gabungkan huruf besar dan kecil, tambahkan angka, dan hindari menggunakan tanggal lahir atau nama yang mudah ditebak. Setiap akun di SAD memiliki ruang data yang terpisah, sehingga arsip Anda hanya bisa diakses oleh Anda sendiri.</p>
+        <p>Tips memilih password yang aman: gabungkan huruf besar dan kecil, tambahkan angka, dan hindari menggunakan tanggal lahir atau nama yang mudah ditebak. Setiap akun di SAD memiliki ruang data yang terpisah, sehingga arsip Anda hanya bisa diakses oleh Anda sendiri. Pembahasan lebih lanjut tentang keamanan akun ada di <a href="/artikel-keamanan-dokumen.html">artikel keamanan dokumen digital</a>.</p>
     </section>
 
     <section class="container">
         <h2>Langkah 2: Menyusun Folder Arsip</h2>
         <p>Setelah masuk ke dashboard, langkah pertama yang disarankan adalah membuat struktur folder arsip. Folder berfungsi seperti map fisik: satu folder untuk satu kelompok dokumen. Beberapa pola penyusunan yang umum digunakan:</p>
         <ul>
-            <li><b>Per tahun</b> — misalnya "Arsip 2025", "Arsip 2026". Cocok untuk arsip administrasi umum yang menumpuk setiap tahun.</li>
-            <li><b>Per jenis dokumen</b> — misalnya "Surat Masuk", "Surat Keluar", "SK Pegawai", "Dokumen Siswa". Cocok untuk sekolah dan kantor desa.</li>
-            <li><b>Per unit atau bidang</b> — misalnya "Bidang Kurikulum", "Bidang Keuangan", "Bagian Umum". Cocok untuk instansi dengan banyak bidang kerja.</li>
+            <li><b>Per tahun</b> - misalnya "Arsip 2025", "Arsip 2026". Cocok untuk arsip administrasi umum yang menumpuk setiap tahun.</li>
+            <li><b>Per jenis dokumen</b> - misalnya "Surat Masuk", "Surat Keluar", "SK Pegawai", "Dokumen Siswa". Cocok untuk sekolah dan kantor desa.</li>
+            <li><b>Per unit atau bidang</b> - misalnya "Bidang Kurikulum", "Bidang Keuangan", "Bagian Umum". Cocok untuk instansi dengan banyak bidang kerja.</li>
         </ul>
         <p>Untuk membuat folder, klik tombol <b>Buat Folder</b> di menu Folder, beri nama yang jelas, lalu simpan. Anda dapat membuat folder sebanyak yang dibutuhkan, dan menambahkan folder baru kapan saja seiring berkembangnya kebutuhan.</p>
+        <h3 class="sub">Contoh susunan folder untuk sekolah</h3>
+<pre class="contoh">01 Kurikulum
+02 Kesiswaan
+03 Kepegawaian
+04 Keuangan
+05 Sarana dan Prasarana
+06 Surat Masuk
+07 Surat Keluar</pre>
+        <p>Angka di depan nama membantu menjaga urutan folder tetap sama. Jika dibutuhkan, tiap folder dapat dipecah lagi per tahun, misalnya "Surat Masuk 2026".</p>
     </section>
 
     <section class="container">
         <h2>Langkah 3: Mengunggah Dokumen ke Dalam Folder</h2>
-        <p>Buka folder yang sudah dibuat, lalu klik tombol <b>Upload</b>. Isi nama atau keterangan dokumen — usahakan deskriptif, misalnya "SK Pembagian Tugas Semester Ganjil 2026" agar mudah dikenali saat dicari nanti. Anda juga dapat mencantumkan <b>nomor surat</b>; menariknya, SAD dilengkapi deteksi nomor surat otomatis yang membaca nomor dari dokumen yang Anda unggah.</p>
+        <p>Buka folder yang sudah dibuat, lalu klik tombol <b>Upload</b>. Isi nama atau keterangan dokumen - usahakan deskriptif, misalnya "SK Pembagian Tugas Semester Ganjil 2026" agar mudah dikenali saat dicari nanti. Anda juga dapat mencantumkan <b>nomor surat</b>; menariknya, SAD dilengkapi deteksi nomor surat otomatis yang membaca nomor dari dokumen yang Anda unggah.</p>
         <p>Dokumen tersimpan di cloud, artinya:</p>
         <ul>
             <li>Tidak memakan kapasitas memori HP atau laptop Anda;</li>
             <li>Bisa dibuka kembali dari perangkat lain kapan pun;</li>
             <li>Aman dari risiko hilang akibat kerusakan perangkat.</li>
         </ul>
+        <h3 class="sub">Contoh judul dokumen yang baik</h3>
+        <table class="tabel">
+            <thead><tr><th>Kurang jelas</th><th>Lebih baik</th></tr></thead>
+            <tbody>
+                <tr><td>Surat dinas</td><td>Undangan Sosialisasi Kurikulum - Dinas Pendidikan - Oktober 2026</td></tr>
+                <tr><td>Scan 1</td><td>Kuitansi Pelatihan Guru - 15 Januari 2026</td></tr>
+                <tr><td>SK baru</td><td>SK Pembagian Tugas Semester Ganjil 2026</td></tr>
+            </tbody>
+        </table>
+        <p>Sebelum mengunggah hasil pindai, pastikan dokumennya terbaca jelas. Tipsnya ada di <a href="/artikel-scan-dokumen.html">artikel scan dokumen</a>, dan pilihan format file dibahas di <a href="/artikel-format-file-arsip.html">artikel format file arsip</a>.</p>
     </section>
 
     <section class="container">
         <h2>Langkah 4: Mencari dan Membuka Kembali Arsip</h2>
-        <p>Ketika sebuah dokumen dibutuhkan — misalnya untuk keperluan audit, akreditasi, atau permintaan atasan — Anda tidak perlu membuka map satu per satu. Gunakan fitur pencarian di SAD: ketik judul dokumen, nomor surat, atau kata kunci lainnya, dan daftar hasil akan muncul seketika.</p>
-        <p>Inilah keunggulan utama arsip digital dibanding arsip fisik: dokumen yang dulu butuh berjam-jam pencarian kini dapat ditemukan dalam hitungan detik, dari mana saja dan kapan saja.</p>
+        <p>Ketika sebuah dokumen dibutuhkan - misalnya untuk keperluan audit, akreditasi, atau permintaan atasan - Anda tidak perlu membuka map satu per satu. Gunakan fitur pencarian di SAD: ketik judul dokumen, nomor surat, atau kata kunci lainnya, dan daftar hasil akan muncul seketika.</p>
+        <p>Inilah keunggulan utama arsip digital dibanding arsip fisik: dokumen yang dulu butuh berjam-jam pencarian kini dapat ditemukan dalam hitungan detik, dari mana saja dan kapan saja. Kuncinya ada pada judul yang deskriptif dan nomor surat yang dicantumkan dengan benar.</p>
     </section>
 
     <section class="container">
         <h2>Langkah 5: Mencatat Arsip Fisik dengan Register</h2>
-        <p>Tidak semua dokumen dapat sepenuhnya didigitalisasi — banyak instansi masih wajib menyimpan dokumen asli di depo arsip atau lemari besi. Untuk kondisi ini, SAD menyediakan fitur <b>register arsip fisik</b>: Anda dapat mencatat lokasi penyimpanan dokumen fisik (misalnya "Boks 3, Rak A, Depo Arsip") sehingga saat dokumen aslinya dicari, lokasinya langsung ketahuan tanpa harus mengobrak-abrik seluruh depo.</p>
-        <p>Kombinasi arsip digital dan register arsip fisik seperti ini adalah praktik yang dianjurkan dalam tata kelola kearsipan: digital untuk akses cepat, fisik untuk keabsahan hukum.</p>
+        <p>Tidak semua dokumen dapat sepenuhnya didigitalisasi - banyak instansi masih wajib menyimpan dokumen asli di depo arsip atau lemari besi. Untuk kondisi ini, SAD menyediakan fitur <b>register arsip fisik</b>: Anda dapat mencatat lokasi penyimpanan dokumen fisik (misalnya "Boks 3, Rak A, Depo Arsip") sehingga saat dokumen aslinya dicari, lokasinya langsung ketahuan tanpa harus mengobrak-abrik seluruh depo.</p>
+        <p>Kombinasi arsip digital dan register arsip fisik seperti ini adalah praktik yang dianjurkan dalam tata kelola kearsipan: digital untuk akses cepat, fisik untuk keabsahan hukum. Konsep pencatatan dan penomoran dibahas di <a href="/artikel-nomor-register.html">artikel nomor register dokumen</a>.</p>
+    </section>
+
+    <section class="container">
+        <h2>Alur Kerja Harian yang Disarankan</h2>
+        <p>Agar arsip tidak menumpuk dan menjadi pekerjaan besar di akhir tahun, biasakan alur sederhana berikut setiap ada dokumen baru:</p>
+        <ol>
+            <li>Terima dokumen dan periksa kelengkapannya.</li>
+            <li>Pindai atau siapkan file digitalnya.</li>
+            <li>Unggah ke folder yang sesuai dengan judul dan nomor surat yang jelas.</li>
+            <li>Untuk dokumen asli yang disimpan fisik, catat lokasinya di register arsip fisik.</li>
+            <li>Lakukan dalam hari yang sama, jangan menunggu menumpuk.</li>
+        </ol>
+        <p>Untuk surat-menyurat, alur lengkapnya ada di <a href="/artikel-surat-masuk-keluar.html">artikel surat masuk dan keluar</a>.</p>
+    </section>
+
+    <section class="container">
+        <h2>Masalah Umum dan Cara Mengatasinya</h2>
+        <table class="tabel">
+            <thead><tr><th>Masalah</th><th>Hal yang bisa dicoba</th></tr></thead>
+            <tbody>
+                <tr><td>Dokumen gagal diunggah</td><td>Periksa koneksi internet, pastikan format file didukung (PDF, DOCX, XLSX, JPG, PNG), lalu coba unggah ulang. Jika file sangat besar, kecilkan ukurannya terlebih dahulu.</td></tr>
+                <tr><td>Dokumen sulit ditemukan</td><td>Coba kata kunci lain, atau cari dengan nomor surat. Jika sering terjadi, rapikan judul dokumen agar lebih deskriptif.</td></tr>
+                <tr><td>Folder terasa berantakan</td><td>Tinjau ulang struktur folder, gabungkan folder yang mirip, dan hindari folder bernama "Lain-lain".</td></tr>
+                <tr><td>Lupa password</td><td>Hubungi pengelola SAD di instansi Anda untuk bantuan pemulihan akses, dan simpan password di tempat yang aman.</td></tr>
+                <tr><td>Beberapa petugas memakai satu akun</td><td>Buat akun terpisah untuk masing-masing petugas agar riwayat dan tanggung jawab jelas.</td></tr>
+            </tbody>
+        </table>
     </section>
 
     <section class="container">
         <h2>Tips Menjaga Arsip Digital Tetap Rapi dalam Jangka Panjang</h2>
         <ul>
             <li><b>Konsisten dengan penamaan.</b> Sepakati pola nama dokumen, misalnya diawali tanggal (YYYY-MM-DD) lalu keterangan. Konsistensi membuat pencarian jauh lebih mudah.</li>
-            <li><b>Evaluasi struktur folder tiap semester atau tahunan.</b> Arsip yang tumbuh terus butuh penataan ulang agar tidak berubah menjadi "gudang digital".</li>
-            <li><b>Jangan bagikan akun.</b> Jika banyak petugas perlu mengarsipkan, buatkan akun terpisah untuk masing-masing agar riwayat dan tanggung jawab jelas.</li>
-            <li><b>Unduh berkas penting sesekali.</b> Sebagai lapisan pengamanan tambahan, dokumen paling vital sebaiknya juga disimpan salinannya di perangkat atau media lain.</li>
+            <li><b>Evaluasi struktur folder tiap semester atau tahunan.</b> Arsip yang tumbuh terus butuh penataan ulang agar tidak berubah menjadi "gudang digital". Daftar periksanya ada di <a href="/artikel-audit-arsip-berkala.html">artikel audit arsip berkala</a>.</li>
+            <li><b>Jangan bagikan akun.</b> Jika banyak petugas perlu mengarsipkan, buatkan akun terpisah untuk masing-masing agar riwayat dan tanggung jawab jelas. Pembagian peran dibahas di <a href="/artikel-peran-admin-operator.html">artikel peran administrator dan operator</a>.</li>
+            <li><b>Unduh berkas penting sesekali.</b> Sebagai lapisan pengamanan tambahan, dokumen paling vital sebaiknya juga disimpan salinannya di perangkat atau media lain. Caranya ada di <a href="/artikel-backup-dokumen.html">artikel backup dokumen 3-2-1</a>.</li>
+            <li><b>Pahami masa simpan arsip.</b> Tidak semua dokumen disimpan selamanya. Baca <a href="/artikel-retensi-arsip.html">artikel retensi arsip</a> dan ikuti pedoman instansi Anda.</li>
         </ul>
+        <div class="catatan">Panduan ini menjelaskan cara memakai SAD. Untuk memahami dasar-dasar kearsipan secara lebih luas, kunjungi <a href="/artikel.html">kumpulan artikel SAD</a>.</div>
     </section>
 
     <section class="container text-center">
         <h2>Siap Merapikan Arsip Anda?</h2>
-        <p>Ikuti panduan di atas langsung di aplikasi — daftar akun, buat folder pertama, dan unggah dokumen pertama Anda hari ini juga.</p>
+        <p>Ikuti panduan di atas langsung di aplikasi - daftar akun, buat folder pertama, dan unggah dokumen pertama Anda hari ini juga.</p>
         <a href="/" class="btn-cta">Masuk / Daftar Akun SAD</a>
     </section>
 
@@ -126,10 +205,13 @@
     </section>
 
     <footer>
-        <p>Sistem Pengelolaan Arsip Digital &copy; 2026 - Asp</p>
-        <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/tentang.html">Tentang SAD</a> &nbsp;&middot;&nbsp; <a href="/faq.html">FAQ</a></p>
-        <p>Artikel: <a href="/artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-scan-dokumen.html">Scan Dokumen</a></p>
+        <div class="container">
+            <p>&copy; 2026 SAD - Sistem Arsip Digital</p>
+            <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/artikel.html">Artikel</a> &nbsp;&middot;&nbsp; <a href="/tentang.html">Tentang</a> &nbsp;&middot;&nbsp; <a href="/panduan.html">Panduan</a> &nbsp;&middot;&nbsp; <a href="/faq.html">FAQ</a> &nbsp;&middot;&nbsp; <a href="/kebijakan-privasi.html">Kebijakan Privasi</a> &nbsp;&middot;&nbsp; <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a></p>
+            <p>Bacaan: <a href="/artikel-arsip-digital-sekolah.html">Manfaat Arsip Digital</a> &nbsp;&middot;&nbsp; <a href="/artikel-klasifikasi-arsip.html">Klasifikasi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-penamaan-file.html">Penamaan File</a> &nbsp;&middot;&nbsp; <a href="/artikel-backup-dokumen.html">Backup 3-2-1</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-surat-masuk-keluar.html">Surat Masuk &amp; Keluar</a></p>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

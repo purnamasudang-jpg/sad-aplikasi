@@ -3,126 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAD - Aplikasi Arsip Digital untuk Sekolah, Instansi & Semua Kalangan</title>
-    <meta name="description" content="SAD (Sistem Arsip Digital) untuk sekolah, instansi pemerintahan, perkantoran, dan siapa saja yang butuh penyimpanan dokumen aman, ringan (tidak membebani kapasitas perangkat), dan mudah diakses kapan saja. Keamanan dan kerahasiaan data pekerjaan Anda adalah prioritas kami.">
-    <meta name="keywords" content="aplikasi arsip digital, sistem kearsipan online, arsip digital sekolah, arsip digital instansi pemerintah, penyimpanan dokumen aman, register dokumen online, digitalisasi arsip">
+    <title>Tentang SAD - Sistem Arsip Digital: Tujuan, Fitur, dan Cara Kerja</title>
+    <meta name="description" content="Kenali SAD (Sistem Arsip Digital): tujuan pembuatan, fitur utama, cara kerja, untuk siapa aplikasi ini, serta batasan dan tanggung jawab pengguna. Dilengkapi pusat belajar kearsipan untuk sekolah dan kantor.">
+    <meta name="keywords" content="tentang sad, sistem arsip digital, aplikasi arsip sekolah, aplikasi arsip instansi, arsip digital">
     <link rel="canonical" href="https://sad-aplikasi.vercel.app/tentang.html">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-    <meta property="og:title" content="SAD - Aplikasi Arsip Digital untuk Sekolah, Instansi & Semua Kalangan" />
-    <meta property="og:description" content="Penyimpanan dan pengelolaan dokumen yang aman, ringan, dan mudah diakses — untuk sekolah, instansi pemerintahan, perkantoran, dan semua kalangan yang memprioritaskan keamanan data pekerjaannya." />
+    <meta property="og:title" content="Tentang SAD - Sistem Arsip Digital" />
+    <meta property="og:description" content="Tujuan, fitur, cara kerja, dan batasan SAD, aplikasi arsip digital untuk sekolah, instansi, dan perorangan." />
     <meta property="og:url" content="https://sad-aplikasi.vercel.app/tentang.html" />
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="SAD - Aplikasi Arsip Digital" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SAD - Sistem Arsip Digital" />
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1865163606645337" crossorigin="anonymous"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        :root {
-            --bg-body: #f5f2eb;
-            --bg-header: #3e2723;
-            --accent-gold: #d4af37;
-            --text-dark: #3e2723;
-        }
-        body {
-            background: var(--bg-body);
-            color: var(--text-dark);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.7;
-        }
-        header.topbar {
-            background: var(--bg-header);
-            color: #fff;
-            padding: 18px 0;
-        }
-        header.topbar a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 20px;
-        }
-        header.topbar a span { color: var(--accent-gold); }
-        .hero {
-            padding: 48px 0 24px;
-        }
-        .hero h1 {
-            font-weight: 800;
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-        .hero p.lead {
-            color: #6d4c41;
-            font-size: 17px;
-        }
-        .card-fitur {
-            background: #fff;
-            border: 1px solid #e0d7c8;
-            border-radius: 12px;
-            padding: 22px;
-            height: 100%;
-        }
-        .card-fitur i {
-            color: var(--accent-gold);
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-        .card-fitur h3 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-        section {
-            padding: 36px 0;
-            border-top: 1px solid #e0d7c8;
-        }
-        section h2 {
-            font-weight: 800;
-            font-size: 24px;
-            margin-bottom: 16px;
-        }
-        .btn-cta {
-            background: var(--bg-header);
-            color: #fff;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-cta:hover { background: #2d1e18; color: #fff; }
-        footer {
-            background: var(--bg-header);
-            color: #d7ccc8;
-            padding: 24px 0;
-            font-size: 13px;
-            text-align: center;
-        }
-        footer a { color: var(--accent-gold); text-decoration: none; }
+        :root { --bg-body:#f5f2eb; --bg-header:#3e2723; --accent-gold:#d4af37; --text-dark:#3e2723; --garis:#e0d7c8; }
+        body { background:var(--bg-body); color:var(--text-dark); font-family:'Segoe UI',system-ui,sans-serif; line-height:1.7; }
+        header.topbar { background:var(--bg-header); color:#fff; padding:14px 0; }
+        header.topbar .wrap { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+        header.topbar a.brand { color:#fff; text-decoration:none; font-weight:700; font-size:20px; }
+        header.topbar a.brand span { color:var(--accent-gold); }
+        header.topbar nav a { color:#f1e9e4; text-decoration:none; font-size:14px; margin-left:16px; }
+        header.topbar nav a:hover, header.topbar nav a.aktif { color:var(--accent-gold); }
+        .hero { padding:48px 0 24px; }
+        .hero h1 { font-weight:800; font-size:32px; margin-bottom:12px; }
+        .hero p.lead { color:#6d4c41; font-size:17px; }
+        section { padding:36px 0; border-top:1px solid var(--garis); }
+        section h2 { font-weight:800; font-size:24px; margin-bottom:16px; }
+        section h3.sub { font-size:18px; font-weight:700; margin:20px 0 8px; }
+        a { color:#6d4c41; }
+        .card-fitur { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; height:100%; }
+        .card-fitur i { color:var(--accent-gold); font-size:26px; margin-bottom:10px; }
+        .card-fitur h3 { font-size:18px; font-weight:700; }
+        .langkah { background:#fff; border:1px solid var(--garis); border-radius:12px; padding:22px; margin-bottom:18px; }
+        .langkah h3 { font-size:18px; font-weight:700; margin-bottom:10px; }
+        .langkah .nomor { display:inline-block; background:var(--bg-header); color:var(--accent-gold); width:32px; height:32px; border-radius:50%; text-align:center; line-height:32px; font-weight:800; margin-right:10px; }
+        .tabel { width:100%; border-collapse:collapse; background:#fff; margin:8px 0 18px; font-size:15px; }
+        .tabel th, .tabel td { border:1px solid var(--garis); padding:10px 12px; text-align:left; vertical-align:top; }
+        .tabel th { background:#efe8d8; }
+        pre.contoh { background:#fff; border:1px solid var(--garis); border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:14px; line-height:1.6; }
+        .catatan { background:#fff8e6; border-left:4px solid var(--accent-gold); padding:12px 16px; border-radius:6px; margin:16px 0; }
+        .bacaan a { display:block; background:#fff; border:1px solid var(--garis); border-radius:10px; padding:12px 16px; margin-bottom:10px; text-decoration:none; font-weight:600; color:var(--text-dark); }
+        .bacaan a small { display:block; font-weight:400; color:#8d6e63; }
+        .bacaan a:hover { border-color:var(--accent-gold); }
+        .accordion-item { background:#fff; border:1px solid var(--garis); border-radius:12px !important; margin-bottom:12px; overflow:hidden; }
+        .accordion-button { background:#fff; color:var(--text-dark); font-weight:700; }
+        .accordion-button:not(.collapsed) { background:#f5f2eb; color:var(--text-dark); box-shadow:none; }
+        .accordion-button:focus { box-shadow:none; border-color:var(--garis); }
+        .btn-cta { background:var(--bg-header); color:#fff; border:none; padding:12px 28px; border-radius:8px; font-weight:700; text-decoration:none; display:inline-block; }
+        .btn-cta:hover { background:#2d1e18; color:#fff; }
+        footer { background:var(--bg-header); color:#d7ccc8; padding:24px 0; font-size:13px; text-align:center; }
+        footer a { color:var(--accent-gold); text-decoration:none; }
+        footer p { margin-bottom:8px; }
     </style>
 </head>
 <body>
 
     <header class="topbar">
-        <div class="container">
-            <a href="/">SAD <span>Sistem Arsip Digital</span></a>
+        <div class="container wrap">
+            <a href="/" class="brand">SAD <span>Sistem Arsip Digital</span></a>
+            <nav><a href="/">Beranda</a><a href="/artikel.html">Artikel</a><a href="/tentang.html" class="aktif">Tentang</a><a href="/panduan.html">Panduan</a><a href="/faq.html">FAQ</a></nav>
         </div>
     </header>
 
     <div class="hero container">
-        <h1>SAD — Aplikasi Arsip Digital untuk Sekolah, Instansi Pemerintahan, dan Semua Kalangan</h1>
-        <p class="lead">Simpan dan kelola dokumen penting Anda secara aman, tanpa membebani kapasitas penyimpanan perangkat. Cocok untuk sekolah, instansi kepemerintahan, perkantoran, hingga perorangan — siapa saja yang membutuhkan tempat penyimpanan data dokumen pekerjaan yang aman dan nyaman diakses kapan saja.</p>
-        <a href="/" class="btn-cta">Buka Aplikasi SAD <i class="fa-solid fa-arrow-right"></i></a>
+        <h1>Tentang SAD: Sistem Arsip Digital untuk Sekolah, Instansi, dan Perorangan</h1>
+        <p class="lead">Simpan dan kelola dokumen penting Anda secara aman, tanpa membebani kapasitas penyimpanan perangkat. Cocok untuk sekolah, instansi kepemerintahan, perkantoran, hingga perorangan yang membutuhkan tempat penyimpanan dokumen kerja yang aman dan nyaman diakses kapan saja.</p>
     </div>
 
     <section class="container">
         <h2>Apa itu Sistem Arsip Digital (SAD)?</h2>
         <p>SAD (Sistem Arsip Digital) adalah aplikasi berbasis web yang dirancang untuk membantu sekolah, instansi pemerintah, maupun perkantoran dalam mengelola arsip dan dokumen secara lebih rapi dan terstruktur. Alih-alih menyimpan dokumen dalam tumpukan map fisik yang mudah hilang atau rusak, SAD memungkinkan setiap dokumen dicatat, dikelompokkan dalam folder digital, dan tetap tercatat lokasi penyimpanan fisiknya jika arsip aslinya perlu disimpan di depo arsip.</p>
         <p>Aplikasi ini cocok digunakan oleh operator sekolah, staf tata usaha, admin instansi, maupun perorangan yang membutuhkan sistem pengarsipan dokumen digital yang sederhana namun fungsional.</p>
+        <a href="/" class="btn-cta">Buka Aplikasi SAD <i class="fa-solid fa-arrow-right"></i></a>
+    </section>
+
+    <section class="container">
+        <h2>Mengapa SAD Dibuat?</h2>
+        <p>Di banyak sekolah dan kantor, arsip masih dikelola secara manual. Dokumen tersimpan di map dan lemari, dicari dengan mengandalkan ingatan petugas, dan sebagian hilang atau rusak seiring waktu. Ketika dokumen dibutuhkan mendadak untuk akreditasi, pemeriksaan, atau permintaan atasan, pencarian bisa memakan waktu berjam-jam.</p>
+        <p>SAD dibuat dengan tujuan sederhana: menyediakan alat arsip digital yang mudah dipakai orang awam, tidak membebani memori perangkat, dan tidak menuntut pengguna memahami teknologi yang rumit. Fokusnya bukan fitur sebanyak-banyaknya, melainkan hal-hal yang benar-benar dipakai setiap hari: menyimpan, menata, mencari, dan mencatat lokasi arsip fisik.</p>
     </section>
 
     <section class="container">
@@ -131,7 +96,7 @@
             <div class="col-md-4">
                 <div class="card-fitur">
                     <i class="fa-solid fa-folder-open"></i>
-                    <h3>Pengelolaan Folder & Dokumen</h3>
+                    <h3>Pengelolaan Folder &amp; Dokumen</h3>
                     <p>Buat folder arsip sesuai kebutuhan (per tahun, per unit, per jenis surat), lalu unggah dan kelola dokumen digital di dalamnya secara terstruktur.</p>
                 </div>
             </div>
@@ -174,25 +139,59 @@
     </section>
 
     <section class="container">
-        <h2>Keamanan & Kenyamanan Data Anda adalah Prioritas Utama</h2>
-        <p>Dokumen pekerjaan — baik milik sekolah, instansi pemerintahan, perusahaan, maupun perorangan — adalah data penting yang harus dijaga. SAD dirancang dengan mengutamakan tiga hal berikut:</p>
-        <ul>
-            <li><b>Keamanan data</b> — setiap akun terlindungi dengan password terenkripsi, dan data arsip setiap pengguna terpisah serta hanya bisa diakses oleh pemiliknya.</li>
-            <li><b>Kenyamanan penggunaan</b> — antarmuka sederhana, dapat diakses dari perangkat apa saja (laptop, HP, tablet) tanpa perlu instalasi aplikasi tambahan.</li>
-            <li><b>Efisiensi ruang penyimpanan perangkat</b> — dokumen disimpan di cloud, bukan di memori internal perangkat Anda, sehingga tidak membebani atau memenuhi kapasitas penyimpanan HP/komputer.</li>
-        </ul>
-        <p>Baik untuk kebutuhan sekolah, instansi kepemerintahan, dunia usaha, maupun kebutuhan pribadi, kepentingan menjaga data dokumen pekerjaan Anda tetap aman dan mudah diakses selalu menjadi prioritas kami dalam mengembangkan SAD.</p>
+        <h2>Cara Kerja SAD Singkatnya</h2>
+        <div class="row g-3">
+            <div class="col-md-3"><div class="langkah"><h3><span class="nomor">1</span>Daftar</h3><p class="mb-0">Buat akun dengan username dan password Anda sendiri.</p></div></div>
+            <div class="col-md-3"><div class="langkah"><h3><span class="nomor">2</span>Susun Folder</h3><p class="mb-0">Buat folder per tahun, jenis dokumen, atau bidang kerja.</p></div></div>
+            <div class="col-md-3"><div class="langkah"><h3><span class="nomor">3</span>Unggah</h3><p class="mb-0">Unggah dokumen, beri judul yang jelas, dan cantumkan nomor surat.</p></div></div>
+            <div class="col-md-3"><div class="langkah"><h3><span class="nomor">4</span>Cari</h3><p class="mb-0">Temukan kembali dokumen lewat judul, nomor surat, atau kata kunci.</p></div></div>
+        </div>
+        <p>Langkah lengkapnya ada di halaman <a href="/panduan.html">Panduan Penggunaan SAD</a>.</p>
     </section>
 
     <section class="container">
-        <h2>Kenapa Sekolah dan Instansi Perlu Digitalisasi Arsip?</h2>
-        <p>Pengarsipan dokumen secara manual sering menimbulkan masalah: dokumen hilang, rusak dimakan usia, sulit dicari saat dibutuhkan mendadak, dan memakan banyak ruang fisik. Dengan sistem arsip digital seperti SAD, sekolah dan instansi dapat:</p>
+        <h2>Untuk Siapa SAD?</h2>
+        <table class="tabel">
+            <thead>
+                <tr><th>Pengguna</th><th>Contoh penggunaan</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Sekolah</td><td>Operator dan tata usaha menyimpan surat masuk dan keluar, SK, dokumen kegiatan, dan berkas pendukung akreditasi.</td></tr>
+                <tr><td>Instansi pemerintahan dan kantor desa</td><td>Mengarsipkan surat dinas, laporan, dan dokumen administrasi per bidang atau per tahun, serta mencatat lokasi arsip fisik di depo.</td></tr>
+                <tr><td>Perkantoran dan usaha</td><td>Menata kontrak, laporan, dan dokumen internal agar mudah dicari saat dibutuhkan.</td></tr>
+                <tr><td>Perorangan</td><td>Menyimpan dokumen pekerjaan atau administrasi pribadi tanpa memenuhi memori HP dan laptop.</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="container">
+        <h2>Prinsip yang Kami Pegang</h2>
         <ul>
-            <li>Mempercepat proses pencarian dokumen saat dibutuhkan untuk keperluan administrasi, akreditasi, atau audit.</li>
-            <li>Mengurangi risiko kehilangan dokumen penting akibat bencana, kerusakan fisik, atau human error.</li>
-            <li>Menghemat ruang penyimpanan fisik karena sebagian besar dokumen dapat diakses dalam bentuk digital.</li>
-            <li>Memudahkan serah terima arsip antar petugas/operator tanpa kehilangan riwayat dokumen.</li>
+            <li><b>Keamanan data.</b> Setiap akun dilindungi password terenkripsi, dan data arsip setiap pengguna terpisah serta hanya bisa diakses oleh pemiliknya.</li>
+            <li><b>Kenyamanan penggunaan.</b> Antarmuka sederhana, dapat diakses dari laptop, HP, atau tablet tanpa instalasi aplikasi tambahan.</li>
+            <li><b>Efisiensi ruang penyimpanan perangkat.</b> Dokumen disimpan di cloud, bukan di memori internal perangkat Anda.</li>
+            <li><b>Keterusterangan.</b> Kami menjelaskan apa yang bisa dan tidak bisa dilakukan SAD, termasuk batasannya (lihat bagian berikut).</li>
         </ul>
+    </section>
+
+    <section class="container">
+        <h2>Batasan dan Tanggung Jawab Pengguna</h2>
+        <p>SAD adalah alat bantu pengelolaan arsip. Agar arsip Anda tetap tertib dan aman, ada beberapa hal yang tetap menjadi tanggung jawab pengguna:</p>
+        <ul>
+            <li><b>Aturan kearsipan instansi tetap berlaku.</b> Keabsahan dokumen digital, masa simpan arsip, dan prosedur pemusnahan mengikuti ketentuan di instansi Anda, bukan ditentukan oleh aplikasi.</li>
+            <li><b>Jaga kerahasiaan akun.</b> Jangan membagikan password. Jika beberapa petugas perlu mengarsipkan, buatkan akun terpisah untuk masing-masing.</li>
+            <li><b>Simpan salinan dokumen vital.</b> Untuk dokumen yang sangat penting, tetap simpan salinan di perangkat atau media lain sebagai lapisan pengamanan tambahan.</li>
+            <li><b>Unggah dokumen yang sah.</b> Gunakan SAD hanya untuk dokumen yang memang berhak Anda simpan, sesuai <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a>.</li>
+        </ul>
+        <p>Pengelolaan data pengguna dijelaskan di halaman <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</p>
+    </section>
+
+    <section class="container">
+        <h2>Pusat Belajar Kearsipan SAD</h2>
+        <p>Selain aplikasi, situs ini menyediakan serangkaian artikel praktis tentang kearsipan digital untuk sekolah dan kantor, mulai dari cara menyusun folder, memberi nama file, mencatat surat, mencadangkan dokumen, sampai menentukan masa simpan dan pemusnahan arsip. Setiap artikel ditulis dengan bahasa sederhana, memuat contoh nyata, dan diberi tanggal terbit serta tanggal pembaruan.</p>
+        <p>Isi artikel bersifat umum dan tidak menggantikan peraturan kearsipan yang berlaku bagi instansi Anda. Jika instansi Anda memiliki pedoman resmi, jadikan pedoman itu sebagai acuan utama.</p>
+        <div class="bacaan"><a href="/artikel-arsip-digital-sekolah.html">Manfaat Arsip Digital untuk Sekolah dan Cara Memulainya<small>Manfaat, tantangan, dan rencana mulai 30 hari</small></a><a href="/artikel-klasifikasi-arsip.html">Klasifikasi Arsip: Cara Menyusun Folder yang Rapi<small>Pola pengelompokan dan contoh struktur folder</small></a><a href="/artikel-backup-dokumen.html">Strategi Backup Dokumen: Aturan 3-2-1<small>Cara mencadangkan arsip penting dengan aman</small></a></div>
+        <p class="mt-3"><a href="/artikel.html"><b>Lihat semua artikel &rarr;</b></a></p>
     </section>
 
     <section class="container text-center">
@@ -215,10 +214,13 @@
     </section>
 
     <footer>
-        <p>Sistem Pengelolaan Arsip Digital &copy; 2026 - Asp</p>
-        <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/panduan.html">Panduan</a> &nbsp;&middot;&nbsp; <a href="/faq.html">FAQ</a> &nbsp;&middot;&nbsp; <a href="/kebijakan-privasi.html">Kebijakan Privasi</a> &nbsp;&middot;&nbsp; <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a></p>
-        <p>Artikel: <a href="/artikel-surat-masuk-keluar.html">Arsip Surat Masuk &amp; Keluar</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-scan-dokumen.html">Scan Dokumen</a></p>
+        <div class="container">
+            <p>&copy; 2026 SAD - Sistem Arsip Digital</p>
+            <p><a href="/">Beranda</a> &nbsp;&middot;&nbsp; <a href="/artikel.html">Artikel</a> &nbsp;&middot;&nbsp; <a href="/tentang.html">Tentang</a> &nbsp;&middot;&nbsp; <a href="/panduan.html">Panduan</a> &nbsp;&middot;&nbsp; <a href="/faq.html">FAQ</a> &nbsp;&middot;&nbsp; <a href="/kebijakan-privasi.html">Kebijakan Privasi</a> &nbsp;&middot;&nbsp; <a href="/syarat-ketentuan.html">Syarat &amp; Ketentuan</a></p>
+            <p>Bacaan: <a href="/artikel-arsip-digital-sekolah.html">Manfaat Arsip Digital</a> &nbsp;&middot;&nbsp; <a href="/artikel-klasifikasi-arsip.html">Klasifikasi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-penamaan-file.html">Penamaan File</a> &nbsp;&middot;&nbsp; <a href="/artikel-backup-dokumen.html">Backup 3-2-1</a> &nbsp;&middot;&nbsp; <a href="/artikel-retensi-arsip.html">Retensi Arsip</a> &nbsp;&middot;&nbsp; <a href="/artikel-surat-masuk-keluar.html">Surat Masuk &amp; Keluar</a></p>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
